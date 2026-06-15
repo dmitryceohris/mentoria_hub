@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mentoria Hub Hero Page Additional Context</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --accent-soft: #e5f4ef;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 32px;
+      background: #12362f;
+      color: #ffffff;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 820px;
+      color: #d9eee8;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    nav a {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--accent);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-top: 34px;
+      padding-top: 4px;
+      font-size: 22px;
+      color: #12362f;
+    }
+
+    h3 {
+      margin-top: 20px;
+      font-size: 17px;
+      color: #26313d;
+    }
+
+    section,
+    .summary-grid,
+    .note {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--panel);
+      font-family: Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    table {
+      width: 100%;
+      margin: 14px 0 6px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--panel);
+      color: #26313d;
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding-top: 24px;
+      padding-bottom: 8px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: var(--panel);
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #26313d;
+    }
+
+    .note {
+      margin: 24px 32px 0;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+
+    footer {
+      margin-top: 34px;
+      padding: 18px 32px 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+      }
+
+      header,
+      nav,
+      section,
+      .summary-grid,
+      .note,
+      footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .note {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Mentoria Hub Hero Page Additional Context</h1>
+      <p>Additional first-viewport guidance for translating the hero sketches into a polished Mentoria Hub product hero.</p>
+    </header>
+
+    <nav aria-label="Related context">
+      <a href="hackathonbasics.html">Hackathon Basics</a>
+      <a href="stack.html">Stack Context</a>
+      <a href="pet.html">Pet Companion Context</a>
+      <a href="context-guidelines.html">Context Guidelines</a>
+    </nav>
+
+    <div class="summary-grid" aria-label="Hero sketch summary">
+      <div class="summary-card">
+        <strong>Core Signal</strong>
+        Oversized Mentoria identity with product UI previews, not a centered marketing poster.
+      </div>
+      <div class="summary-card">
+        <strong>Sketch Motifs</strong>
+        Learning path, orbit nodes, feature keywords, course preview, MentorPet widget, and support bubble.
+      </div>
+      <div class="summary-card">
+        <strong>Palette Rule</strong>
+        Ignore sketch text colors; use off-white, charcoal, muted green, and soft borders.
+      </div>
+      <div class="summary-card">
+        <strong>Viewport Rule</strong>
+        First screen must show the brand, promise, product preview, CTAs, and a hint of the next section.
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Hero principle:</strong> the sketches should become an asymmetric product-first hero. MentorPet appears inside the app preview as a functional companion widget, not as a mascot floating outside the product.
+    </div>
+
+    <section>
+      <h2>Sketch Interpretation</h2>
+      <p>The first sketch establishes the big idea: Mentoria as the dominant wordmark, feature categories around it, a curved learning route, and large study keywords such as SAT, IELTS, profile, roadmap, and courses. The second sketch adds connected route nodes, course video previews, and a small support/mentor message.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Sketch Element</th>
+            <th>Hero Translation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Large handwritten Mentoria</td>
+            <td>Use <strong>Mentoria Hub</strong> as the dominant first-viewport signal, with visual weight on Mentoria.</td>
+          </tr>
+          <tr>
+            <td>Features / Courses / Companion / Mentors</td>
+            <td>Turn these into a small top feature rail or anchor row, not a paragraph.</td>
+          </tr>
+          <tr>
+            <td>Curved path and dotted route</td>
+            <td>Add a left-edge vertical path with milestone nodes and a second orbit line across the upper-right preview area.</td>
+          </tr>
+          <tr>
+            <td>SAT / IELTS / profile / roadmap / books / courses</td>
+            <td>Use these as a lower hero keyword band to communicate breadth at a glance.</td>
+          </tr>
+          <tr>
+            <td>Course video and notes boxes</td>
+            <td>Show overlapping product-preview cards for course video, lesson notes, roadmap/deadlines, and mentor support.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Hero Blueprint</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Hero Element</th>
+            <th>Required Content</th>
+            <th>Design Treatment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Feature rail</td>
+            <td>Clickable top hyperlinks: Features, Courses, Companion, Mentors</td>
+            <td>Compact top row with restrained dividers or soft pill anchors; this is part of the hero UI, not the context-page navigation.</td>
+          </tr>
+          <tr>
+            <td>Headline</td>
+            <td><strong>Mentoria Hub</strong></td>
+            <td>Oversized left/center wordmark; Mentoria is visually dominant and Hub is secondary.</td>
+          </tr>
+          <tr>
+            <td>Supporting line</td>
+            <td>With you on your way to your dream</td>
+            <td>Placed directly under the wordmark as a warm, concise promise.</td>
+          </tr>
+          <tr>
+            <td>Primary CTA</td>
+            <td>Start your profile</td>
+            <td>Muted green filled button with tactile hover/active feedback.</td>
+          </tr>
+          <tr>
+            <td>Secondary CTA</td>
+            <td>Explore opportunities</td>
+            <td>Quiet outline or text button that does not compete with the primary CTA.</td>
+          </tr>
+          <tr>
+            <td>Product preview</td>
+            <td>Course card, notes card, roadmap/deadline card, MentorPet widget</td>
+            <td>Right-side overlapping UI cards with soft borders and subtle hover lift.</td>
+          </tr>
+          <tr>
+            <td>Next-section hint</td>
+            <td>Course preview strip or opportunity cards</td>
+            <td>Visible at the bottom edge of the first viewport on desktop and mobile.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Top Hero Hyperlinks</h2>
+      <p>The sketch shows a small link row at the very top of the hero. Implement it as the hero's local navigation rail, separate from the app's global nav.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Visible Label</th>
+            <th>Target</th>
+            <th>Expected Destination</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Features</td>
+            <td><code>#features</code></td>
+            <td>Scrolls to the section explaining opportunity discovery, courses, recommendations, dashboards, and admin tools.</td>
+          </tr>
+          <tr>
+            <td>Courses</td>
+            <td><code>#courses</code></td>
+            <td>Scrolls to the course/LMS section with video lessons, notes, progress, quizzes, and MentorPet explanations.</td>
+          </tr>
+          <tr>
+            <td>Companion</td>
+            <td><code>#companion</code></td>
+            <td>Scrolls to the MentorPet / Hub Companion section showing progress support and next-step guidance.</td>
+          </tr>
+          <tr>
+            <td>Mentors</td>
+            <td><code>#mentors</code></td>
+            <td>Scrolls to the human mentor/support section, preserving the idea that MentorPet supports but does not replace mentors.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>On mobile, keep these links in a horizontal scroll row above the headline. Do not hide them behind a menu for the MVP hero.</p>
+    </section>
+
+    <section>
+      <h2>Composition Rules</h2>
+      <ul>
+        <li>Use a desktop 12-column grid: left/center identity spans the larger area, while the right side holds layered product previews.</li>
+        <li>Place a curved learning path on the far left with small milestone nodes to echo the first sketch without making the page look hand-drawn.</li>
+        <li>Add connected circular route nodes across the upper-right area to reference the second sketch's learning progression idea.</li>
+        <li>Keep generous whitespace around the wordmark so the hero feels intentional and premium.</li>
+        <li>On mobile, collapse into this order: feature rail, headline, supporting line, CTAs, product preview, feature keyword band.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Product Preview Details</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Preview Card</th>
+            <th>Content</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Course video</td>
+            <td>Physics Course; Newton's 2nd Law; How does it work?</td>
+            <td>Shows that Mentoria Hub is an asynchronous learning product, not only an opportunity catalog.</td>
+          </tr>
+          <tr>
+            <td>Course explanation flow</td>
+            <td>MentorPet explanation prompt: “I didn't understand a basic concept about Newton's 2nd Law.” Side status: “Done.” Personal note added to the course.</td>
+            <td>Shows that course UI can adapt around topics the student did not understand, with MentorPet explanations and saved course notes.</td>
+          </tr>
+          <tr>
+            <td>MentorPet widget</td>
+            <td>MentorPet &middot; Level 3 Explorer; Next step: Finish Lesson 2</td>
+            <td>Introduces the companion as a progress helper inside the product interface.</td>
+          </tr>
+          <tr>
+            <td>Roadmap/deadline card</td>
+            <td>Course Roadmap; SAT plan; IELTS prep; next deadline</td>
+            <td>Connects learning goals to planning and student outcomes.</td>
+          </tr>
+          <tr>
+            <td>Support bubble</td>
+            <td>Need help? Ask a mentor</td>
+            <td>Keeps human mentorship visible alongside the companion.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Course Explanation Flow</h2>
+      <p>The last course preview should communicate course viability through a tiny adaptive-learning interaction. The user can flag confusion from inside the course UI, MentorPet responds with a focused explanation, and the course records the outcome.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>UI Moment</th>
+            <th>Required Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Student message</td>
+            <td>Show a compact message such as “I didn't understand a basic concept about Newton's 2nd Law.”</td>
+          </tr>
+          <tr>
+            <td>MentorPet response</td>
+            <td>Show a short explanation card connected to the lesson topic, written as study support rather than open-ended chat.</td>
+          </tr>
+          <tr>
+            <td>Side status</td>
+            <td>Show a small status chip or report message reading “Done” after the explanation is generated or saved.</td>
+          </tr>
+          <tr>
+            <td>Course note</td>
+            <td>Add a visible personal note to the course, tied to the lesson and topic, so the student can revisit the explanation later.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>In the hero, this should be visualized as a product preview card, not a full chat window. The point is to show that Mentoria courses can become more personal when a student marks a concept as unclear.</p>
+    </section>
+
+    <section>
+      <h2>Feature Keyword Band</h2>
+      <p>The lower hero band should use large, scannable keywords rather than full sentences. Include these terms: <code>SAT</code>, <code>IELTS</code>, <code>Profile</code>, <code>Course Roadmap</code>, <code>Books</code>, and <code>Courses</code>.</p>
+      <p>The band should sit low enough to feel like the sketch's bold bottom layer, while still leaving a visible hint of the next section below the hero.</p>
+    </section>
+
+    <section>
+      <h2>Visual Direction</h2>
+      <ul>
+        <li>Use an off-white background, charcoal text, muted green accent, and soft neutral borders.</li>
+        <li>Ignore the rough sketch colors entirely; preserve layout intent, not marker color.</li>
+        <li>Avoid a centered generic hero. The layout should feel asymmetric, product-led, and spacious.</li>
+        <li>Use a premium sans-serif such as Geist, Satoshi, Outfit, or a similar clean UI font if available in the app.</li>
+        <li>Avoid making MentorPet babyish. The widget should feel friendly and credible for students in grades 8-11.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Interaction And Motion</h2>
+      <ol>
+        <li>Feature rail fades in first.</li>
+        <li><strong>Mentoria Hub</strong> wordmark slides/fades in next.</li>
+        <li>Path nodes and orbit nodes draw in with a subtle stagger.</li>
+        <li>Product preview cards float in with a slight stagger.</li>
+        <li>MentorPet can blink or wave subtly inside the widget.</li>
+      </ol>
+      <p>Keep all animation transform/opacity based. Product cards may lift gently on hover. Avoid needy companion copy such as “I missed you” or guilt-based absence messaging.</p>
+    </section>
+
+    <section>
+      <h2>QA Checklist</h2>
+      <ul>
+        <li>Desktop hero works at 1440px and uses the planned asymmetric composition.</li>
+        <li>Tablet hero works at 1024px without overlapping cards or clipped text.</li>
+        <li>Mobile hero works at 390px with a clean single-column order.</li>
+        <li>The first viewport includes a hint of the next section.</li>
+        <li>MentorPet appears only as part of product UI, not as an unrelated mascot.</li>
+        <li>No text overlaps the path, orbit nodes, cards, or CTAs.</li>
+      </ul>
+    </section>
+
+    <footer>
+      Generated as an HTML context artifact on 2026-06-14 from hero-page sketch guidance for Mentoria Hub.
+    </footer>
+  </main>
+</body>
+</html>

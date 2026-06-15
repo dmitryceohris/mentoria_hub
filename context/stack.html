@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mentoria Hub Stack Context</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --accent-soft: #e5f4ef;
+      --warn: #8a4b00;
+      --warn-soft: #fff2d9;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 32px;
+      background: #12362f;
+      color: #ffffff;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 820px;
+      color: #d9eee8;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    nav a {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--accent);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-top: 34px;
+      padding-top: 4px;
+      font-size: 22px;
+      color: #12362f;
+    }
+
+    h3 {
+      margin-top: 22px;
+      font-size: 17px;
+    }
+
+    section,
+    .summary-grid,
+    .note {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    section {
+      padding-bottom: 4px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul,
+    ol {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--panel);
+      font-family: Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    table {
+      width: 100%;
+      margin: 14px 0 6px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--panel);
+      color: #26313d;
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding-top: 24px;
+      padding-bottom: 8px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: var(--panel);
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #26313d;
+    }
+
+    .note {
+      margin: 24px 32px 0;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+
+    .warning {
+      border-color: #f0c36a;
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .checklist li::before {
+      content: "☐";
+      margin-right: 8px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .formula {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      font-family: Menlo, Consolas, monospace;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    footer {
+      margin-top: 34px;
+      padding: 18px 32px 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+      }
+
+      header,
+      nav,
+      section,
+      .summary-grid,
+      .note,
+      footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .note {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Mentoria Hub Stack Context</h1>
+      <p>Architecture and technology stack reference for autonomous AI development of the Mentoria Hub MVP.</p>
+    </header>
+
+    <nav aria-label="Related context">
+      <a href="hackathonbasics.html">Hackathon Basics</a>
+      <a href="context-guidelines.html">Context Guidelines</a>
+    </nav>
+
+    <div class="summary-grid" aria-label="Stack summary">
+      <div class="summary-card">
+        <strong>Frontend</strong>
+        Next.js App Router with React Server Components and Server Actions.
+      </div>
+      <div class="summary-card">
+        <strong>Backend</strong>
+        Supabase with PostgreSQL, Auth, RLS, Edge Functions, and declarative migrations.
+      </div>
+      <div class="summary-card">
+        <strong>AI Search</strong>
+        pgvector plus PostgreSQL full-text search fused with Reciprocal Rank Fusion.
+      </div>
+      <div class="summary-card">
+        <strong>Languages</strong>
+        English, Russian, and Kazakh through next-intl and dynamic JSONB translations.
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Implementation stance:</strong> this file is context for an autonomous AI developer. Treat the choices below as defaults for code generation, database migrations, security policies, and deployment setup unless a later context file explicitly overrides them.
+    </div>
+
+    <section>
+      <h2>Executive Context</h2>
+      <p>Mentoria Hub moves Mentoria from synchronous, Telegram-heavy operations and live video sessions toward a scalable asynchronous EdTech platform. The MVP must unite two core domains: a searchable catalog of educational opportunities and an asynchronous learning system for consultations and courses.</p>
+      <p>The platform is primarily for students in grades 8-11 globally, with a specific focus on Kazakhstan. It should help students discover hackathons, scholarships, internships, summer schools, academic programs, and structured Mentoria courses while giving Mentoria an operational dashboard for growth.</p>
+      <p>The architecture must separate frontend presentation from backend data, authentication, recommendation, and embedding services. The MVP should demonstrate real-world usefulness and international scaling potential.</p>
+    </section>
+
+    <section>
+      <h2>Required Technology Stack</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Selected Technology</th>
+            <th>AI Developer Context</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Frontend Framework</td>
+            <td>Next.js App Router</td>
+            <td>Use Server-Side Rendering, Static Site Generation where useful, and React Server Components to minimize client-side JavaScript and improve LCP.</td>
+          </tr>
+          <tr>
+            <td>UI System</td>
+            <td>Tailwind CSS and Shadcn UI</td>
+            <td>Use accessible, responsive Shadcn UI blocks for dashboards, forms, tables, and light/dark themes.</td>
+          </tr>
+          <tr>
+            <td>Backend and Database</td>
+            <td>Supabase PostgreSQL</td>
+            <td>Use Supabase Auth, RLS, Edge Functions, migrations, and PostgreSQL as the main computational layer.</td>
+          </tr>
+          <tr>
+            <td>AI and Hybrid Search</td>
+            <td>pgvector and OpenAI API</td>
+            <td>Store embeddings in PostgreSQL and combine vector similarity with keyword search through RRF.</td>
+          </tr>
+          <tr>
+            <td>Internationalization</td>
+            <td>next-intl</td>
+            <td>Use locale-based routing, static JSON dictionaries for UI, and JSONB translations for dynamic database content.</td>
+          </tr>
+          <tr>
+            <td>Mutations</td>
+            <td>Next.js Server Actions</td>
+            <td>Prefer Server Actions over API routes for app mutations, backed by server-side validation and Supabase access.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>AI Developer Mandates</h2>
+      <ul class="checklist">
+        <li>Use Next.js App Router and server-side data fetching as the default application shape.</li>
+        <li>Use <code>@supabase/ssr</code> to manage Supabase sessions securely through cookies.</li>
+        <li>Write declarative SQL migrations for tables, functions, triggers, indexes, extensions, and policies.</li>
+        <li>Normalize frequently queried domain data; reserve JSONB for translations and variable metadata.</li>
+        <li>Enable RLS on every public table and enforce role access in PostgreSQL, not only in the UI.</li>
+        <li>Use Server Actions with schema validation, preferably Zod, for student and admin mutations.</li>
+        <li>Use external video embeds for the MVP, but keep the video component abstract enough for future Supabase Storage or CDN migration.</li>
+        <li>Build recommendations around content-based signals and embeddings so new users receive useful results immediately.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Relational Data Modeling</h2>
+      <p>The database must use strict relational modeling for all fields that are frequently queried, filtered, joined, sorted, or aggregated. Avoid placing core domain fields inside broad JSONB blobs because large JSONB documents can be TOASTed, reducing planner visibility and slowing scans on nested keys.</p>
+      <p>JSONB is allowed for dynamic translations and unpredictable auxiliary metadata, but not as the primary structure for events, users, enrollments, lessons, or progress.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Table</th>
+            <th>Core Columns</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>profiles</code></td>
+            <td><code>id uuid</code>, <code>role text</code>, <code>interests text[]</code>, <code>grade_level int</code>, <code>preferred_locale text</code></td>
+            <td>Public user profile linked one-to-one to <code>auth.users</code>; stores academic signals for recommendations.</td>
+          </tr>
+          <tr>
+            <td><code>events</code></td>
+            <td><code>id uuid</code>, <code>title text</code>, <code>category text</code>, <code>deadline date</code>, <code>embedding vector(1536)</code></td>
+            <td>Catalog of hackathons, scholarships, internships, summer schools, and opportunities.</td>
+          </tr>
+          <tr>
+            <td><code>saved_events</code></td>
+            <td><code>user_id uuid</code>, <code>event_id uuid</code>, <code>saved_at timestamptz</code></td>
+            <td>Many-to-many bookmark table with a composite primary key.</td>
+          </tr>
+          <tr>
+            <td><code>consultations</code></td>
+            <td><code>id uuid</code>, <code>title text</code>, <code>description jsonb</code>, <code>difficulty text</code></td>
+            <td>Master records for asynchronous courses and mentorship modules.</td>
+          </tr>
+          <tr>
+            <td><code>lessons</code></td>
+            <td><code>id uuid</code>, <code>consultation_id uuid</code>, <code>video_url text</code>, <code>position int</code></td>
+            <td>Instructional content linked to a course or consultation.</td>
+          </tr>
+          <tr>
+            <td><code>enrollments</code></td>
+            <td><code>user_id uuid</code>, <code>consultation_id uuid</code>, <code>progress_pct float</code></td>
+            <td>Tracks student enrollment and aggregate progress.</td>
+          </tr>
+          <tr>
+            <td><code>lesson_completions</code></td>
+            <td><code>user_id uuid</code>, <code>lesson_id uuid</code>, <code>completed_at timestamptz</code></td>
+            <td>Granular immutable completion records used to update enrollment progress.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Use strict foreign keys and cascading deletes where appropriate to prevent orphaned records when legacy events, courses, or lessons are removed.</p>
+    </section>
+
+    <section>
+      <h2>Identity, RBAC, and RLS</h2>
+      <p>Supabase Auth is the identity provider. PostgreSQL Row Level Security is the authorization boundary and must be enabled on every table in the public schema. Application checks can improve UX, but database policies are the source of truth.</p>
+      <p>Create a PostgreSQL trigger on <code>auth.users</code> that inserts a matching <code>public.profiles</code> record after signup. Extract safe initial metadata such as first name, last name, and preferred language from the auth metadata payload.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Target</th>
+            <th>Action</th>
+            <th>Policy Logic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>profiles</code></td>
+            <td><code>SELECT</code></td>
+            <td>Users can view their own profile; admins can view all profiles. Example: <code>auth.uid() = id OR is_admin()</code>.</td>
+          </tr>
+          <tr>
+            <td><code>profiles</code></td>
+            <td><code>UPDATE</code></td>
+            <td>Users can update only their own preferences, grade level, and locale.</td>
+          </tr>
+          <tr>
+            <td><code>events</code></td>
+            <td><code>SELECT</code></td>
+            <td>The event catalog is publicly readable unless later product requirements make it authenticated-only.</td>
+          </tr>
+          <tr>
+            <td><code>events</code></td>
+            <td><code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code></td>
+            <td>Only admins can modify the event and opportunity catalog. Example: <code>is_admin()</code>.</td>
+          </tr>
+          <tr>
+            <td><code>saved_events</code></td>
+            <td><code>ALL</code></td>
+            <td>Users can access only rows where <code>auth.uid() = user_id</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Use a locked-down <code>user_roles</code> table for role administration, but avoid joining it in every RLS policy. Instead, implement a Supabase Custom Access Token Auth Hook that injects <code>user_role</code> into JWT claims. RLS helpers can then check <code>auth.jwt() -&gt;&gt; 'user_role'</code> for admin, mentor, or student access.</p>
+      <div class="note warning">
+        <strong>Security constraint:</strong> do not use broad shortcuts such as email-domain based admin access or blanket RLS bypasses for normal application flows.
+      </div>
+    </section>
+
+    <section>
+      <h2>Asynchronous LMS Flow</h2>
+      <p>The LMS should decouple educational progress from live instruction. Courses or consultations contain ordered lessons with multimedia content, materials, and progress checkpoints.</p>
+      <ol>
+        <li>A student starts a course through a Server Action that creates an <code>enrollments</code> row.</li>
+        <li>The student completes lessons through Server Actions that insert timestamped <code>lesson_completions</code> records.</li>
+        <li>A database trigger or materialized SQL view recalculates <code>enrollments.progress_pct</code> whenever completion state changes.</li>
+        <li>The dashboard reads precomputed enrollment progress instead of aggregating lesson completion records on the client.</li>
+      </ol>
+      <p>For MVP video delivery, store external URLs in <code>lessons.video_url</code> and render them through iframe-based embed components. Keep the rendering abstraction ready for future Supabase Storage or CDN-backed video delivery.</p>
+      <p>Quizzes, assessments, and surveys should be validated and graded server-side through Server Actions to prevent client-side manipulation before progress, certificates, or completion state are updated.</p>
+    </section>
+
+    <section>
+      <h2>AI Recommendations and Hybrid Search</h2>
+      <p>Recommendations should solve the cold-start problem by using explicit onboarding signals and semantic event data rather than collaborative filtering. Students provide grade level, interests, subjects, and goals. Events and courses carry structured metadata plus generated embeddings.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Search Method</th>
+            <th>Technology</th>
+            <th>Implementation Focus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Semantic Search</td>
+            <td>pgvector and OpenAI embeddings</td>
+            <td>Use <code>vector(1536)</code> columns and cosine distance with the <code>&lt;=&gt;</code> operator. Add HNSW indexes for performance.</td>
+          </tr>
+          <tr>
+            <td>Full-Text Search</td>
+            <td>PostgreSQL <code>tsvector</code> and <code>tsquery</code></td>
+            <td>Use generated <code>tsvector</code> columns and GIN indexes for exact keywords, acronyms, and named opportunities.</td>
+          </tr>
+          <tr>
+            <td>Result Fusion</td>
+            <td>Reciprocal Rank Fusion</td>
+            <td>Implement a PostgreSQL search function with CTEs that merges semantic and keyword ranks into one ordered result set.</td>
+          </tr>
+          <tr>
+            <td>Embedding Pipeline</td>
+            <td>Supabase Edge Functions, <code>pg_net</code>, and <code>pg_cron</code></td>
+            <td>Generate embeddings automatically after insert or update, and retry scheduled failures without an external worker system.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="formula">score = 1 / (60 + rank_semantic) + 1 / (60 + rank_keyword)</div>
+      <p>The query embedding can be generated by the Next.js server and passed to PostgreSQL, or generated through a controlled backend function. Avoid exposing OpenAI keys to the browser.</p>
+    </section>
+
+    <section>
+      <h2>Localization Architecture</h2>
+      <p>The i18n strategy is split between static interface localization and dynamic database content localization.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Content Type</th>
+            <th>Storage</th>
+            <th>Rendering Rule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Static UI text</td>
+            <td>Codebase JSON dictionaries such as <code>en.json</code>, <code>ru.json</code>, and <code>kk.json</code>.</td>
+            <td>Use next-intl middleware and locale-based routing to render translated UI in Server Components.</td>
+          </tr>
+          <tr>
+            <td>Dynamic event and course text</td>
+            <td>JSONB translation columns such as <code>title_translations</code> and <code>description</code>.</td>
+            <td>Read the active locale and select the matching JSON key, with a deterministic fallback locale.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Do not store admin-editable event or course translations in repository dictionaries because that would require code changes and redeployments for content updates. Do not create language-specific columns such as <code>title_en</code>, <code>title_ru</code>, and <code>title_kk</code> unless a later migration explicitly chooses that tradeoff.</p>
+    </section>
+
+    <section>
+      <h2>Admin Dashboard and Performance</h2>
+      <p>The admin dashboard should use the same Next.js application and the same business logic layer as the student-facing product. Admin Server Actions must validate JWT role claims, validate input with Zod, and then perform CRUD operations for events, courses, lessons, and user roles.</p>
+      <p>Performance should favor server-rendered HTML and minimal browser JavaScript. Use React Server Components for data-heavy views, Vercel for deployment and edge delivery, and CI checks for type safety and database migration validity before deployment.</p>
+      <ul>
+        <li>Admin CRUD: events, consultations, lessons, and role management.</li>
+        <li>Student views: opportunity catalog, recommendations, saved events, enrolled courses, progress, and deadlines.</li>
+        <li>Operational target: fast loading on lower-end mobile devices and unstable network conditions.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>MVP Architecture Defaults</h2>
+      <ul>
+        <li>Deploy frontend on Vercel.</li>
+        <li>Use Supabase CLI for local database development and migrations.</li>
+        <li>Use Supabase Auth with profile trigger synchronization.</li>
+        <li>Use RLS and JWT role claims for authorization.</li>
+        <li>Use normalized PostgreSQL tables for core entities.</li>
+        <li>Use JSONB only for dynamic translations and flexible metadata.</li>
+        <li>Use pgvector, tsvector, HNSW, GIN, and RRF for search and recommendation relevance.</li>
+      </ul>
+    </section>
+
+    <footer>
+      Generated as an HTML context artifact on 2026-06-14 from the supplied Mentoria Hub architecture and technology stack brief.
+    </footer>
+  </main>
+</body>
+</html>

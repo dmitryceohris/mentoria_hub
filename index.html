@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mentoria Hub</title>
+    <meta
+      name="description"
+      content="Mentoria Hub helps students find competitions, scholarships, internships, summer schools, and other educational opportunities."
+    >
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2307131e'/%3E%3Cpath d='M7 20V8h4l5 7 5-7h4v16h-4V14l-5 7-5-7v10H7Z' fill='%2311c6cf'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="grain" aria-hidden="true"></div>
+        <svg class="ethno-route" viewBox="0 0 180 760" aria-hidden="true" focusable="false">
+          <path d="M92 14 C24 98 144 174 72 260 C12 332 128 414 80 500 C36 580 116 640 66 734" />
+          <circle cx="92" cy="14" r="6" />
+          <circle cx="72" cy="260" r="6" />
+          <circle cx="80" cy="500" r="6" />
+          <circle cx="66" cy="734" r="6" />
+        </svg>
+
+        <div class="hero-inner">
+          <nav class="hero-rail" aria-label="Mentoria Hub sections">
+            <a class="wordmark" href="#hero-title" aria-label="Mentoria Hub home">Mentoria Hub</a>
+            <div class="rail-links">
+              <a href="#features">Matches</a>
+              <a href="#courses">Courses</a>
+              <a href="#companion">MentorPet</a>
+              <a href="#mentors">Mentors</a>
+            </div>
+          </nav>
+
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <p class="eyebrow">Opportunity intelligence / grades 8-11</p>
+              <h1 id="hero-title">
+                <span>Mentoria</span>
+                <span>Hub</span>
+              </h1>
+              <p class="promise">With you on your way to your dream</p>
+              <div class="keyword-band" aria-label="Mentoria Hub learning and opportunity areas">
+                <span>SAT</span>
+                <span>IELTS</span>
+                <span>Courses</span>
+                <span>Opportunity Search</span>
+              </div>
+              <p class="all-in-one">.. all in one place</p>
+              <p class="hero-lede">
+                Find competitions, scholarships, internships, and summer schools that fit your profile, then keep learning through Mentoria's own SAT, IELTS, and subject courses.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="#match-console" id="focusSearch">
+                  <span>Find opportunities</span>
+                  <span class="button-mark" aria-hidden="true">></span>
+                </a>
+                <a class="button button-secondary" href="#courses">
+                  <span>Start courses</span>
+                  <span class="button-mark" aria-hidden="true">+</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="illustration-reserve" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="match-section" id="match-console" aria-labelledby="match-section-title">
+        <div class="match-copy">
+          <p class="section-kicker">Opportunity Search</p>
+          <h2 id="match-section-title">Find programs that fit your profile</h2>
+          <p>
+            Search competitions, scholarships, internships, summer schools, and courses from one focused Mentoria workspace.
+          </p>
+        </div>
+
+        <div class="match-console match-console-dock" aria-labelledby="console-title">
+          <div class="console-core">
+            <div class="console-frame" aria-hidden="true"></div>
+            <header class="console-header">
+              <div>
+                <p class="console-kicker">Opportunity engine</p>
+                <h2 id="console-title">Live match console</h2>
+              </div>
+              <div class="signal-stack" aria-label="Current match status">
+                <span></span>
+                <strong>Matching</strong>
+              </div>
+            </header>
+
+            <form class="search-form" id="searchForm">
+              <label for="searchInput">Search by field, goal, or program type</label>
+              <div class="search-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Zm5.2-1.4 4.2 4.2" />
+                </svg>
+                <input
+                  id="searchInput"
+                  name="query"
+                  type="search"
+                  autocomplete="off"
+                  value="STEM"
+                  aria-describedby="searchHelp"
+                >
+              </div>
+              <p id="searchHelp">Try STEM, Business, Finance, Programming, Science, Social Impact, scholarship, internship, or summer school.</p>
+            </form>
+
+            <div class="profile-grid" id="profile-signals" aria-label="Profile signals">
+              <button class="chip is-active" type="button" data-filter="grade 10">Grade 10</button>
+              <button class="chip is-active" type="button" data-filter="STEM">STEM</button>
+              <button class="chip" type="button" data-filter="Business">Business</button>
+              <button class="chip" type="button" data-filter="Programming">Programming</button>
+              <button class="chip" type="button" data-filter="Kazakhstan">Kazakhstan</button>
+              <button class="chip" type="button" data-filter="Online">Online</button>
+            </div>
+
+            <div class="result-panel" aria-live="polite">
+              <div class="result-meta">
+                <span id="resultCount">3 matches</span>
+                <span>Rule-based recommendation</span>
+              </div>
+              <div class="result-list" id="resultList"></div>
+              <div class="empty-state" id="emptyState" hidden>
+                <strong>No matches yet</strong>
+                <span>Remove a chip or search a broader direction.</span>
+              </div>
+            </div>
+
+            <footer class="console-footer">
+              <div>
+                <span>MentorPet signal</span>
+                <strong id="mentorSignal">Matched because: STEM + grade 10</strong>
+              </div>
+              <button class="text-command" type="button" id="resetFilters">Reset filters</button>
+            </footer>
+          </div>
+        </div>
+      </section>
+
+      <section class="next-preview" id="features" aria-label="Next section preview">
+        <article>
+          <span>Saved opportunities</span>
+          <strong>Track programs, deadlines, and application status from one student dashboard.</strong>
+        </article>
+        <article id="courses">
+          <span>Mentoria courses</span>
+          <strong>SAT, IELTS, English, STEM, and admissions tracks continue the journey after discovery.</strong>
+        </article>
+        <article id="companion">
+          <span>Companion support</span>
+          <strong>MentorPet explains why an opportunity fits without replacing mentors.</strong>
+        </article>
+        <article id="mentors">
+          <span>Human mentors</span>
+          <strong>Students can still ask for mentor help when an application needs judgment.</strong>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

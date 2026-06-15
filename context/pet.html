@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mentoria Hub Pet Companion Context</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --accent-soft: #e5f4ef;
+      --warn: #8a4b00;
+      --warn-soft: #fff2d9;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 32px;
+      background: #12362f;
+      color: #ffffff;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 820px;
+      color: #d9eee8;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    nav a {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--accent);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-top: 34px;
+      padding-top: 4px;
+      font-size: 22px;
+      color: #12362f;
+    }
+
+    h3 {
+      margin-top: 22px;
+      font-size: 17px;
+    }
+
+    section,
+    .summary-grid,
+    .note {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    section {
+      padding-bottom: 4px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul,
+    ol {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--panel);
+      font-family: Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    table {
+      width: 100%;
+      margin: 14px 0 6px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--panel);
+      color: #26313d;
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding-top: 24px;
+      padding-bottom: 8px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: var(--panel);
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #26313d;
+    }
+
+    .note {
+      margin: 24px 32px 0;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+
+    .warning {
+      border-color: #f0c36a;
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .checklist li::before {
+      content: "☐";
+      margin-right: 8px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 34px;
+      padding: 18px 32px 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+      }
+
+      header,
+      nav,
+      section,
+      .summary-grid,
+      .note,
+      footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .note {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Mentoria Hub Pet Companion Context</h1>
+      <p>Product and technical context for adding MentorPet / Hub Companion: a companion-tamagotchi layer that supports student motivation, self-regulation, and visible learning progress.</p>
+    </header>
+
+    <nav aria-label="Related context">
+      <a href="hackathonbasics.html">Hackathon Basics</a>
+      <a href="stack.html">Stack Context</a>
+      <a href="context-guidelines.html">Context Guidelines</a>
+    </nav>
+
+    <div class="summary-grid" aria-label="Pet companion summary">
+      <div class="summary-card">
+        <strong>Feature Role</strong>
+        Motivation and self-regulation layer, not a replacement for human mentors.
+      </div>
+      <div class="summary-card">
+        <strong>MVP Behavior</strong>
+        Deterministic growth, XP, mood, and recommendations based on explicit learning events.
+      </div>
+      <div class="summary-card">
+        <strong>Ethical Guardrail</strong>
+        No death, decay, guilt, manipulative streak pressure, or excessive notifications.
+      </div>
+      <div class="summary-card">
+        <strong>Stack Fit</strong>
+        Next.js Server Actions, Supabase/PostgreSQL tables, RLS, and admin-tunable reward rules.
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Recommended concept:</strong> MentorPet / Hub Companion should make progress feel alive. It should reward meaningful learning actions and help students choose the next useful step, while preserving autonomy and emotional safety.
+    </div>
+
+    <section>
+      <h2>Research-Backed Rationale</h2>
+      <p>Virtual companion mechanics are most useful when they represent meaningful progress inside an already useful product. The strongest product direction for Mentoria is not a standalone mini-game, but a companion that reflects course progress, saved opportunities, deadline readiness, and reflective study habits.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Finding</th>
+            <th>Mentoria Implication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://dare.uva.nl/id/5fbf4cf3-1058-46a1-b77b-1d635335427c">StudyGotchi</a></td>
+            <td>A Tamagotchi-like study avatar in a programming course produced mixed results, highlighting that mechanics and integration quality matter.</td>
+            <td>Do not add a cosmetic pet only. Tie it to real learning events and dashboard utility.</td>
+          </tr>
+          <tr>
+            <td><a href="https://library.apsce.net/index.php/ICCE/article/view/6074">Virtual pet reading platform</a></td>
+            <td>Reading logs and discussion tasks can be converted into care resources, growth visualization, quests, and analytics.</td>
+            <td>Use lessons, quizzes, saved opportunities, and reflections as the resources that grow the companion.</td>
+          </tr>
+          <tr>
+            <td><a href="https://link.springer.com/article/10.1007/s11423-023-10337-7">Gamification meta-analysis</a></td>
+            <td>Gamification can improve intrinsic motivation modestly, with stronger effects on autonomy and relatedness than competence.</td>
+            <td>Offer choice, supportive feedback, and connection instead of raw point pressure.</td>
+          </tr>
+          <tr>
+            <td><a href="https://medicalxpress.com/news/2024-11-digital-pet-game-cessation-app.html">Inner Dragon RCT summary</a></td>
+            <td>A digital pet layer increased app engagement and use of core tools, while final outcome effects remained mixed.</td>
+            <td>Measure both engagement and actual learning actions; do not assume pet usage equals educational impact.</td>
+          </tr>
+          <tr>
+            <td><a href="https://ico.org.uk/for-organisations/advice-and-services/audits/data-protection-audit-framework/toolkits/age-appropriate-design/nudge-techniques/">ICO nudge guidance</a></td>
+            <td>Children should not be nudged into unnecessary data sharing, lowered privacy, excessive engagement, or manipulative choices.</td>
+            <td>Default to high privacy, gentle reminders, pause controls, and no guilt-based mechanics.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>MVP Product Concept</h2>
+      <p>MentorPet / Hub Companion is a small persistent companion in the student dashboard and course flow. It encourages students to take useful next steps, celebrates effort, and visualizes progress across Mentoria Hub.</p>
+      <ul>
+        <li>During onboarding, the student chooses the companion style, name, and optional nickname. Russian-friendly naming examples: “Менторик”, “Хабик”, “Учёный спутник”.</li>
+        <li>The companion appears in the dashboard as a compact status widget with level, mood, XP progress, and one recommended action.</li>
+        <li>Inside course pages, it gives short supportive feedback after lesson completion, quiz attempts, and progress milestones.</li>
+        <li>In the opportunities catalog, it can suggest saving a relevant opportunity or checking an upcoming deadline.</li>
+        <li>The companion grows through stages such as egg, starter, explorer, scholar, and mentor-in-training.</li>
+        <li>Accessories and visual states unlock through learning milestones, not random rewards or paid mechanics.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>MVP Mechanics</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Mechanic</th>
+            <th>Student Action Reinforced</th>
+            <th>Implementation Rule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>XP</td>
+            <td>Completing lessons, quizzes, reflections, and opportunity planning.</td>
+            <td>Award deterministic XP through server-side rules only.</td>
+          </tr>
+          <tr>
+            <td>Mood</td>
+            <td>Consistent healthy engagement and completed next steps.</td>
+            <td>Use positive or neutral states; never show suffering or punishment for absence.</td>
+          </tr>
+          <tr>
+            <td>Evolution stage</td>
+            <td>Longer-term course and roadmap progress.</td>
+            <td>Advance stage at explicit XP thresholds or milestone counts.</td>
+          </tr>
+          <tr>
+            <td>Accessories</td>
+            <td>Trying different product areas such as courses, events, and deadlines.</td>
+            <td>Unlock non-random cosmetic items after meaningful actions.</td>
+          </tr>
+          <tr>
+            <td>Recommended next step</td>
+            <td>Self-regulation and planning.</td>
+            <td>Suggest one useful action from existing course progress, deadlines, or saved events.</td>
+          </tr>
+          <tr>
+            <td>Pause mode</td>
+            <td>Healthy breaks during exams, vacation, or burnout.</td>
+            <td>Freeze reminders and continuity messaging without penalty.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Ethical Design Rules</h2>
+      <p>The target audience includes teenage students, so the companion must support autonomy and wellbeing. It should motivate without creating emotional debt.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Do</th>
+            <th>Avoid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Use supportive, informational feedback that explains progress.</td>
+            <td>Do not shame users for missed days or unfinished tasks.</td>
+          </tr>
+          <tr>
+            <td>Offer pause mode and clear notification controls.</td>
+            <td>Do not make streak repair paid, hidden, or emotionally pressured.</td>
+          </tr>
+          <tr>
+            <td>Default to high privacy and collect only necessary companion data.</td>
+            <td>Do not collect sensitive emotional data for personalization in v1.</td>
+          </tr>
+          <tr>
+            <td>Let students customize name and appearance in simple ways.</td>
+            <td>Do not use loot boxes, random rewards, or artificial scarcity.</td>
+          </tr>
+          <tr>
+            <td>Use companion prompts to point back to learning, deadlines, and reflection.</td>
+            <td>Do not make the companion an open-ended social substitute or mentor replacement.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note warning">
+        <strong>Non-negotiable:</strong> the companion must never die, become sick, decay, cry, or imply that the student harmed it by not using the platform.
+      </div>
+    </section>
+
+    <section>
+      <h2>Technical Model</h2>
+      <p>For v1, keep companion behavior deterministic. XP, mood, evolution, unlocks, and recommended actions should be derived from explicit product events and server-side rules, not from LLM generation.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Entity</th>
+            <th>Suggested Columns</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>companions</code></td>
+            <td><code>user_id</code>, <code>name</code>, <code>species</code>, <code>stage</code>, <code>mood</code>, <code>energy</code>, <code>xp</code>, <code>last_interaction_at</code>, <code>pause_until</code></td>
+            <td>One active companion state per student profile.</td>
+          </tr>
+          <tr>
+            <td><code>companion_events</code></td>
+            <td><code>user_id</code>, <code>event_type</code>, <code>source_type</code>, <code>source_id</code>, <code>xp_delta</code>, <code>created_at</code></td>
+            <td>Append-only audit log for XP and companion state changes.</td>
+          </tr>
+          <tr>
+            <td><code>companion_items</code></td>
+            <td><code>id</code>, <code>item_type</code>, <code>name</code>, <code>unlock_rule</code>, <code>asset_key</code></td>
+            <td>Catalog of non-random cosmetic unlocks.</td>
+          </tr>
+          <tr>
+            <td><code>user_companion_items</code></td>
+            <td><code>user_id</code>, <code>item_id</code>, <code>unlocked_at</code>, <code>equipped_at</code></td>
+            <td>Tracks unlocked and equipped companion items.</td>
+          </tr>
+          <tr>
+            <td><code>companion_messages</code></td>
+            <td><code>id</code>, <code>trigger</code>, <code>locale</code>, <code>body</code>, <code>tone</code>, <code>enabled</code></td>
+            <td>Admin-controlled message templates for safe encouragement.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Use RLS so each student can read and update only their own companion state through approved Server Actions. Admins can manage item definitions, reward rules, and message templates.</p>
+    </section>
+
+    <section>
+      <h2>Server Actions and Data Flow</h2>
+      <ol>
+        <li>Student completes a platform action such as lesson completion, quiz submission, saving an event, or adding a deadline.</li>
+        <li>The existing domain Server Action completes the main action first.</li>
+        <li>The Server Action calls a companion service function such as <code>awardCompanionXp(actionType, sourceId)</code>.</li>
+        <li>The service validates the action, inserts a <code>companion_events</code> record, updates <code>companions</code>, and returns the updated companion summary.</li>
+        <li>The UI renders a small confirmation: XP gained, stage progress, optional unlocked item, and one suggested next step.</li>
+      </ol>
+      <p>Recommended initial action types: <code>lesson_completed</code>, <code>quiz_completed</code>, <code>event_saved</code>, <code>deadline_added</code>, <code>reflection_added</code>, <code>course_enrolled</code>, and <code>roadmap_step_done</code>.</p>
+    </section>
+
+    <section>
+      <h2>Admin Considerations</h2>
+      <ul>
+        <li>Admins should be able to enable or disable companion messages by trigger and locale.</li>
+        <li>Admins should tune XP values and stage thresholds without code changes once the MVP stabilizes.</li>
+        <li>Admins should see aggregate analytics such as companion activation rate, XP events by type, and whether companion prompts correlate with course completion.</li>
+        <li>Admins must not see private student reflections unless a separate safety or moderation policy explicitly allows it.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Future AI Extensions</h2>
+      <p>AI is not required for v1. When added, it should remain bounded and safe.</p>
+      <ul>
+        <li>Generate short encouragement from approved templates and student-visible context only.</li>
+        <li>Explain why an opportunity or course was recommended using tags, grade level, interests, and deadlines.</li>
+        <li>Offer reflective coaching prompts such as “What helped you finish this lesson?” without diagnosing emotions or mental health.</li>
+        <li>Use moderation and fallback templates for every generated message.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>AI Developer Mandates</h2>
+      <ul class="checklist">
+        <li>Implement MentorPet / Hub Companion as an optional support layer inside the existing product journey.</li>
+        <li>Keep v1 deterministic and auditable through PostgreSQL rows and Server Actions.</li>
+        <li>Make companion progress reflect meaningful learning and planning actions, not raw login frequency.</li>
+        <li>Include pause mode before adding any streak-like behavior.</li>
+        <li>Use high-privacy defaults and avoid collecting sensitive emotional data.</li>
+        <li>Never use companion distress, loss, death, or guilt as a retention mechanic.</li>
+        <li>Localize companion messages for English, Russian, and Kazakh through admin-controlled templates.</li>
+        <li>Measure educational outcomes separately from companion engagement.</li>
+      </ul>
+    </section>
+
+    <footer>
+      Generated as an HTML context artifact on 2026-06-14 from companion-tamagotchi research and Mentoria Hub product context.
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hackathon Basics - Mentoria Hub</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --accent-soft: #e5f4ef;
+      --warn: #8a4b00;
+      --warn-soft: #fff2d9;
+      --surface: #ffffff;
+      --mentoria-bg: #07131e;
+      --mentoria-bg-deep: #030b12;
+      --mentoria-cyan: #11c6cf;
+      --mentoria-cyan-light: #58d9ef;
+      --mentoria-mint: #84e6ea;
+      --mentoria-teal-blue: #1594b9;
+      --mentoria-blue: #1676b8;
+      --mentoria-shadow-blue: #315a75;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 32px;
+      background: #12362f;
+      color: #ffffff;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 760px;
+      color: #d9eee8;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-top: 34px;
+      padding-top: 4px;
+      font-size: 22px;
+      color: #12362f;
+    }
+
+    h3 {
+      margin-top: 22px;
+      font-size: 17px;
+    }
+
+    section,
+    .summary-grid,
+    .note {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    section {
+      padding-bottom: 4px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul,
+    ol {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    table {
+      width: 100%;
+      margin: 14px 0 6px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--panel);
+      color: #26313d;
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding-top: 24px;
+      padding-bottom: 8px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: var(--panel);
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #26313d;
+    }
+
+    .note {
+      margin: 24px 32px 0;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+
+    .warning {
+      border-color: #f0c36a;
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pill-list li {
+      margin: 0;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: #334150;
+      font-size: 13px;
+    }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .checklist li::before {
+      content: "☐";
+      margin-right: 8px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .palette-swatch {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .palette-color {
+      min-height: 54px;
+    }
+
+    .palette-label {
+      padding: 8px 10px;
+      font-size: 13px;
+      color: #334150;
+    }
+
+    .palette-label code {
+      display: block;
+      margin-top: 2px;
+      color: #26313d;
+    }
+
+    footer {
+      margin-top: 34px;
+      padding: 18px 32px 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+      }
+
+      header,
+      section,
+      .summary-grid,
+      .note,
+      footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .note {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Hackathon Basics: Mentoria Hub</h1>
+      <p>Контекст по кейс-брифингу Mentoria Hub Hackathon: первый раунд, Working MVP Challenge. Источник: <strong>Mentoria_Hub_Hackathon_Case_Brief_RU.docx</strong>.</p>
+    </header>
+
+    <div class="summary-grid" aria-label="Краткая сводка">
+      <div class="summary-card">
+        <strong>Организация</strong>
+        Mentoria
+      </div>
+      <div class="summary-card">
+        <strong>Формат</strong>
+        Working MVP + pitch deck + live demo или video demo
+      </div>
+      <div class="summary-card">
+        <strong>Срок подачи</strong>
+        14 июня - 18 июня 2026, до 00:00
+      </div>
+      <div class="summary-card">
+        <strong>Куда отправлять</strong>
+        mentoriaorganization@gmail.com
+      </div>
+      <div class="summary-card">
+        <strong>Целевая аудитория</strong>
+        Ученики 8-11 классов из Казахстана и других стран
+      </div>
+      <div class="summary-card">
+        <strong>Главный результат</strong>
+        Первая версия реального EdTech-продукта, не landing page
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Context storage rule:</strong> all context-related artifacts in this repository should be saved as HTML files, not Markdown files. See <a href="context-guidelines.html">context-guidelines.html</a>.
+    </div>
+
+    <section>
+      <h2>Brand Palette</h2>
+      <p>Approximate color palette extracted from the Mentoria logo. Use the dark navy background with cyan, mint, teal-blue, and saturated blue accents for product UI, pitch materials, and visual consistency.</p>
+      <div class="palette-grid" aria-label="Mentoria logo color palette">
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-bg);"></div>
+          <div class="palette-label">Deep navy background<code>#07131E</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-bg-deep);"></div>
+          <div class="palette-label">Near-black blue shadow<code>#030B12</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-cyan);"></div>
+          <div class="palette-label">Bright turquoise<code>#11C6CF</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-cyan-light);"></div>
+          <div class="palette-label">Light cyan<code>#58D9EF</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-mint);"></div>
+          <div class="palette-label">Mint blue highlight<code>#84E6EA</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-teal-blue);"></div>
+          <div class="palette-label">Teal blue<code>#1594B9</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-blue);"></div>
+          <div class="palette-label">Mentoria blue<code>#1676B8</code></div>
+        </div>
+        <div class="palette-swatch">
+          <div class="palette-color" style="background: var(--mentoria-shadow-blue);"></div>
+          <div class="palette-label">Muted blue shadow<code>#315A75</code></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Core Question</h2>
+      <p>Как Mentoria может использовать технологии, чтобы сделать образовательные возможности и качественное обучение доступными для большего числа учеников, даже если они не могут посещать живые занятия?</p>
+    </section>
+
+    <section>
+      <h2>Product Context</h2>
+      <p>Mentoria is an international educational organization that supports students through mentorship, online lessons, educational projects, and access to valuable opportunities. Today, much of the activity happens through Telegram and live online mentor sessions.</p>
+      <p>The growth problem: Telegram and live calls do not scale well enough for every student. Students miss live sessions because of school, exams, time zones, internet access, and personal schedules. Opportunities are scattered across sites, channels, chats, and documents. Students struggle to identify what fits their age, interests, goals, and readiness level.</p>
+      <p>The platform should combine two pillars: discovery of educational opportunities and asynchronous learning through Mentoria courses.</p>
+    </section>
+
+    <section>
+      <h2>MVP Mission</h2>
+      <p>Create a working MVP of <strong>Mentoria Hub</strong>: a digital platform where students can find educational opportunities and complete Mentoria courses asynchronously.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Students should be able to</th>
+            <th>Mentoria should be able to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Find competitions, extracurricular programs, scholarships, internships, research programs, summer schools, volunteering, and other opportunities.</td>
+            <td>Scale beyond Telegram and live video lessons.</td>
+          </tr>
+          <tr>
+            <td>Understand which opportunities match their profile and goals.</td>
+            <td>Organize courses and opportunities in one place.</td>
+          </tr>
+          <tr>
+            <td>Learn through structured courses without attending live sessions.</td>
+            <td>Increase student engagement and retention.</td>
+          </tr>
+          <tr>
+            <td>Track course progress and upcoming deadlines.</td>
+            <td>Look more professional to partners, schools, and sponsors.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Target Users</h2>
+      <ul>
+        <li>Students in grades 8-11.</li>
+        <li>Students from Kazakhstan and other countries.</li>
+        <li>Students preparing for university admission.</li>
+        <li>Students seeking olympiads, hackathons, research programs, summer schools, internships, volunteering, scholarships, and extracurricular projects.</li>
+        <li>Students needing accessible courses in math, English, physics, biology, economics, computer science, SAT/IELTS prep, or university admission basics.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Product Vision</h2>
+      <p>Mentoria Hub must feel like the first version of a real EdTech product. A strong user journey should let a student create a profile, choose interests and goals, receive recommendations, save opportunities, track deadlines, begin courses, and see learning progress. Mentoria admins should be able to add courses and opportunities without rebuilding the site.</p>
+      <ul class="pill-list" aria-label="Product keywords">
+        <li>Profile</li>
+        <li>Interests</li>
+        <li>Recommendations</li>
+        <li>Saved opportunities</li>
+        <li>Course progress</li>
+        <li>Deadline tracking</li>
+        <li>Admin content management</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Required MVP Features</h2>
+      <h3>A. Home Page</h3>
+      <ul>
+        <li>Explain what Mentoria Hub is and who it is for.</li>
+        <li>Show the value proposition: opportunities plus asynchronous courses in one platform.</li>
+        <li>Include clear calls to action such as “Найти возможности”, “Начать обучение”, or “Присоединиться к Mentoria”.</li>
+      </ul>
+
+      <h3>B. Opportunity Catalog</h3>
+      <ul>
+        <li>Opportunity cards with title, category, format, deadline, description, requirements, and an “Apply” action.</li>
+        <li>Filters by category, grade or age, format, deadline, and direction.</li>
+        <li>Directions include Business, STEM, Social Impact, Finance, Programming, Science, and similar categories.</li>
+        <li>Save or favorite functionality.</li>
+      </ul>
+
+      <h3>C. Mentoria Courses</h3>
+      <ul>
+        <li>At least 2-3 courses, each with multiple lessons.</li>
+        <li>Each course includes title, description, difficulty, lesson list, materials, video placeholder or embedded video, mini assignment or quiz, and a progress bar.</li>
+        <li>Example courses: Math Basics, English for Academic Success, Physics Basics, Biology Basics, Intro to Economics, Computer Science Basics, SAT/IELTS Prep, University Admission Basics.</li>
+      </ul>
+
+      <h3>D. Student Dashboard</h3>
+      <ul>
+        <li>Saved opportunities.</li>
+        <li>Enrolled courses and course progress.</li>
+        <li>Upcoming deadlines and recommended opportunities.</li>
+        <li>Mock data is acceptable, but the dashboard should feel realistic.</li>
+      </ul>
+
+      <h3>E. Recommendation System</h3>
+      <ul>
+        <li>Onboarding should ask for grade, interests, subjects, and goals.</li>
+        <li>Recommendations can use tags or simple rule-based logic.</li>
+        <li>Example: if a student chooses “Business”, show business competitions, finance courses, and startup programs.</li>
+      </ul>
+
+      <h3>F. Admin Panel</h3>
+      <ul>
+        <li>Admins can add, edit, and delete opportunities.</li>
+        <li>Admins can add or edit courses.</li>
+        <li>Optional: basic statistics or simple user list.</li>
+        <li>The panel can be simple, but it should demonstrate a scalable platform model.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Bonus Ideas</h2>
+      <ul>
+        <li>AI assistant that recommends opportunities based on the student profile.</li>
+        <li>Deadline calendar.</li>
+        <li>Email or Telegram reminders.</li>
+        <li>Leaderboard for course completion.</li>
+        <li>Certificates after course completion.</li>
+        <li>Keyword search.</li>
+        <li>Light and dark theme.</li>
+        <li>Multilingual interface: English, Russian, and Kazakh.</li>
+        <li>Responsive mobile-friendly design.</li>
+        <li>Mentor portal for uploading lessons.</li>
+        <li>Personal roadmap builder for grades 9, 10, 11, and 12.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Technical Expectations</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Expectation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Stack</td>
+            <td>Any stack is allowed: React, Next.js, HTML/CSS/JavaScript, Firebase, Supabase, Node.js, Flask, Django, or no-code tools.</td>
+          </tr>
+          <tr>
+            <td>Frontend</td>
+            <td>Working navigation and interactive pages matter more than the chosen tool.</td>
+          </tr>
+          <tr>
+            <td>Data</td>
+            <td>Use structured mock data, JSON, Firebase, Supabase, or local storage for courses, lessons, opportunities, users, and saved items.</td>
+          </tr>
+          <tr>
+            <td>AI tools</td>
+            <td>Allowed, but teams must explain how they used AI and what they created themselves.</td>
+          </tr>
+          <tr>
+            <td>Demo</td>
+            <td>Deploy through Vercel, Netlify, GitHub Pages, or another accessible demo format.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Submission Package</h2>
+      <ul>
+        <li><strong>Working MVP:</strong> deployed site, GitHub repository, Figma prototype, or another accessible demo format. It must be testable and demonstrate real interactions.</li>
+        <li><strong>Pitch deck:</strong> 5-8 slides covering problem, solution, target audience, core features, demo screenshots, Mentoria impact, and future development plan.</li>
+        <li><strong>Video demo:</strong> maximum 4 minutes, showing the slides and preferably the product flow.</li>
+        <li><strong>Technical explanation:</strong> stack used, working features, mock data, planned additions, and how the product helps Mentoria scale.</li>
+      </ul>
+      <div class="note warning">
+        <strong>Deadline rule:</strong> projects submitted after 18 июня 2026, 00:00 are not accepted.
+      </div>
+    </section>
+
+    <section>
+      <h2>Judging Criteria</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th>Weight</th>
+            <th>What judges will look for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Problem understanding</td>
+            <td>20%</td>
+            <td>Clear grasp of Mentoria growth problems, student pain points, and why Telegram plus live lessons are not enough.</td>
+          </tr>
+          <tr>
+            <td>MVP functionality</td>
+            <td>25%</td>
+            <td>Working pages, filters, saved opportunities, courses, progress tracking, dashboard, and admin panel.</td>
+          </tr>
+          <tr>
+            <td>UX and design</td>
+            <td>20%</td>
+            <td>Clear structure, modern design, responsive interface, simple navigation, and a smooth student experience.</td>
+          </tr>
+          <tr>
+            <td>Impact for Mentoria</td>
+            <td>20%</td>
+            <td>Convincing explanation of how the platform helps Mentoria scale, attract students, improve retention, and look professional to partners.</td>
+          </tr>
+          <tr>
+            <td>Innovation and creativity</td>
+            <td>15%</td>
+            <td>AI recommendations, calendar, certificates, roadmap builder, multilingual UI, Telegram integration, and other useful ideas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Recommended Demo Journey</h2>
+      <ol>
+        <li>A student opens Mentoria Hub.</li>
+        <li>The student registers and selects interests such as Business, STEM, English, or university admission.</li>
+        <li>The platform shows recommended opportunities and courses.</li>
+        <li>The student saves a hackathon and a summer program.</li>
+        <li>The student opens “English for Academic Success”.</li>
+        <li>The student completes the first lesson and mini quiz.</li>
+        <li>The dashboard updates progress and displays upcoming deadlines.</li>
+        <li>A Mentoria admin adds a new olympiad or course through the admin panel.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Minimum MVP Checklist</h2>
+      <ul class="checklist">
+        <li>Home page with clear value proposition.</li>
+        <li>Opportunity catalog with at least 8-10 example opportunities.</li>
+        <li>Filters or search for opportunities.</li>
+        <li>Save or favorite feature.</li>
+        <li>At least 2-3 courses with lessons.</li>
+        <li>Course progress or completion status.</li>
+        <li>Student dashboard.</li>
+        <li>Simple recommendation logic.</li>
+        <li>Admin panel for adding or editing content.</li>
+        <li>Deploy or accessible prototype ready for demonstration.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Implementation Notes</h2>
+      <p>For a credible MVP, prioritize a complete loop over depth in one feature. The product should let judges see both student-side and admin-side value in a short demo.</p>
+      <ul>
+        <li>Suggested data objects: <code>StudentProfile</code>, <code>Opportunity</code>, <code>Course</code>, <code>Lesson</code>, <code>Enrollment</code>, <code>SavedOpportunity</code>, and <code>AdminUser</code>.</li>
+        <li>Use realistic mock data with deadlines, requirements, tags, levels, formats, and progress states.</li>
+        <li>Make recommendation rules visible enough to explain during the pitch.</li>
+        <li>Keep the first screen product-focused: this is an app experience, not a marketing landing page.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Final Task Statement</h2>
+      <p>Создать рабочий MVP платформы Mentoria Hub: цифровой платформы, которая помогает ученикам находить образовательные возможности и учиться в асинхронном формате через курсы Mentoria.</p>
+      <p>Платформа должна демонстрировать реальную функциональность, понятный пользовательский путь и сильный потенциал помочь Mentoria масштабироваться на международном уровне.</p>
+    </section>
+
+    <footer>
+      Generated as an HTML context artifact on 2026-06-14 from the provided Russian DOCX brief.
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Context Guidelines</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(840px, calc(100% - 32px));
+      margin: 32px auto;
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: #12362f;
+    }
+
+    h2 {
+      margin: 28px 0 8px;
+      font-size: 20px;
+      color: #12362f;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--panel);
+      font-family: Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .rule {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: #e5f4ef;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Context Guidelines</h1>
+    <p class="muted">Repository note for context-related artifacts.</p>
+
+    <div class="rule">
+      <strong>Rule:</strong> everything context-related in this repository should be saved as an HTML file with a <code>.html</code> extension, not as Markdown with a <code>.md</code> extension.
+    </div>
+
+    <h2>Recommended Practice</h2>
+    <ul>
+      <li>Place context files in the <code>context/</code> directory.</li>
+      <li>Use semantic HTML sections, headings, lists, and tables so the file is easy to read in a browser and easy for tools to parse.</li>
+      <li>Include source information and generation date when the context is derived from another file.</li>
+      <li>Link related context files together when useful.</li>
+      <li>Avoid creating Markdown context files unless a future user explicitly overrides this convention.</li>
+    </ul>
+
+    <h2>Current Context Files</h2>
+    <ul>
+      <li><a href="hackathonbasics.html">hackathonbasics.html</a> - Mentoria Hub hackathon case basics from the provided DOCX brief.</li>
+      <li><a href="stack.html">stack.html</a> - Mentoria Hub architecture and technology stack context for autonomous AI development.</li>
+      <li><a href="pet.html">pet.html</a> - Mentoria Hub companion-tamagotchi product and technical context.</li>
+      <li><a href="heropageadditional.html">heropageadditional.html</a> - Additional Mentoria Hub hero page guidance.</li>
+    </ul>
+  </main>
+</body>
+</html>
