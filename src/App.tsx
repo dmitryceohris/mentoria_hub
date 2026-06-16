@@ -35,6 +35,20 @@ import {
 
 type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities";
 
+const demoProfile: StudentProfile = {
+  id: "demo",
+  name: "Demo Student",
+  email: "demo@mentoria.kz",
+  grade: "10",
+  interests: ["stem", "programming", "science"],
+  academicDirection: "technology",
+  opportunityPreferences: {
+    directions: ["stem", "programming"],
+    formats: ["online", "hybrid"],
+    locations: ["global", "kazakhstan"],
+  },
+};
+
 const onboardingDraftKey = "mentoria.onboardingDraft";
 
 const initialRegistrationForm: RegistrationForm = {
@@ -208,6 +222,11 @@ export function App() {
       unsubscribe();
     };
   }, []);
+
+  function loginAsDemo() {
+    setProfile(demoProfile);
+    setScreen("dashboard");
+  }
 
   function startOnboarding() {
     setAuthError("");
@@ -392,7 +411,7 @@ export function App() {
 
   return (
     <main>
-      <HeroSection onStartJourney={startOnboarding} />
+      <HeroSection onStartJourney={startOnboarding} onDemoLogin={loginAsDemo} />
       <OpportunitySearchSection />
       <SavedOpportunitiesSection />
       <CoursesSection />
