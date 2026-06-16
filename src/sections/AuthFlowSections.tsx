@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   courses,
   getOptionLabel,
@@ -40,14 +40,16 @@ type FlowTopBarProps = {
   eyebrow: string;
   onBack?: () => void;
   onLogout?: () => void;
+  children?: React.ReactNode;
 };
 
-function FlowTopBar({ eyebrow, onBack, onLogout }: FlowTopBarProps) {
+function FlowTopBar({ eyebrow, onBack, onLogout, children }: FlowTopBarProps) {
   return (
     <nav className="flow-topbar" aria-label="Mentoria Hub workspace navigation">
       <span className="flow-wordmark">Mentoria Hub</span>
       <span className="flow-eyebrow">{eyebrow}</span>
       <div className="flow-topbar-actions">
+        {children}
         {onBack ? (
           <button className="flow-link-button" type="button" onClick={onBack}>
             Back
@@ -306,10 +308,11 @@ type DashboardSectionProps = {
   extraOpportunities?: Opportunity[];
   onCourses: () => void;
   onOpportunities: () => void;
+  onMentorLM: () => void;
   onLogout: () => void;
 };
 
-export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
+export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onMentorLM, onLogout }: DashboardSectionProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
   const interestLabels = getOptionLabels("interests", profile.interests);
   const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
@@ -356,7 +359,11 @@ export function DashboardSection({ profile, extraOpportunities = [], onCourses, 
 
   return (
     <section className="flow-screen dashboard-screen" aria-labelledby="dashboard-title">
-      <FlowTopBar eyebrow="Student dashboard" onLogout={onLogout} />
+      <FlowTopBar eyebrow="Student dashboard" onLogout={onLogout}>
+        <button className="secondary-action compact-action" type="button" onClick={onMentorLM}>
+          MentorLM ✦
+        </button>
+      </FlowTopBar>
 
       <div className="dashboard-shell">
         <div className="dashboard-hero">

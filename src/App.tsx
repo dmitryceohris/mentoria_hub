@@ -14,6 +14,7 @@ import type {
   RegistrationForm,
   StudentProfile
 } from "./sections/AuthFlowSections";
+import { MentorLMSection } from "./sections/MentorLMSection";
 import { CompanionSection } from "./sections/CompanionSection";
 import { CoursesSection } from "./sections/CoursesSection";
 import { FaqSection } from "./sections/FaqSection";
@@ -34,7 +35,7 @@ import {
   updateOwnProfile
 } from "./lib/auth";
 
-type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities";
+type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities" | "mentorlm";
 
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
@@ -390,6 +391,7 @@ export function App() {
           extraOpportunities={telegramOpportunities}
           onCourses={() => setScreen("courses")}
           onOpportunities={() => setScreen("opportunities")}
+          onMentorLM={() => setScreen("mentorlm")}
           onLogout={logout}
         />
       </main>
@@ -400,6 +402,19 @@ export function App() {
     return (
       <main>
         <CoursesWorkspace profile={profile} onBack={() => setScreen("dashboard")} onLogout={logout} />
+      </main>
+    );
+  }
+
+  if (screen === "mentorlm" && profile) {
+    return (
+      <main>
+        <MentorLMSection
+          profile={profile}
+          opportunities={telegramOpportunities}
+          onBack={() => setScreen("dashboard")}
+          onLogout={logout}
+        />
       </main>
     );
   }
