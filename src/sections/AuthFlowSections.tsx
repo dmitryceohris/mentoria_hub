@@ -306,6 +306,53 @@ type DashboardSectionProps = {
   onLogout: () => void;
 };
 
+function DeadlineCalendar({ opportunities }: { opportunities: Opportunity[] }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const oppMap = new Map<number, Opportunity>();
+  opportunities.forEach(opp => {
+    const d = new Date(opp.deadline);
+    d.setHours(0, 0, 0, 0);
+    oppMap.set(d.getTime(), opp);
+  });
+
+  const cells = [];
+  const totalDays = 52 * 7;
+  for (let i = 0; i < totalDays; i++) {
+    const date = new Date(today);
+    // Center the calendar roughly around today
+    date.setDate(date.getDate() - Math.floor(totalDays / 2) + i);
+    date.setHours(0, 0, 0, 0);
+    
+    const opp = oppMap.get(date.getTime());
+    cells.push({
+      date,
+      opportunity: opp
+    });
+  }
+
+  return (
+    <section className="dashboard-panel calendar-panel" aria-labelledby="calendar-title">
+      <div className="panel-heading">
+        <div>
+          <span>Timeline</span>
+          <h2 id="calendar-title">Deadline Calendar</h2>
+        </div>
+      </div>
+      <div className="deadline-calendar-grid">
+        {cells.map((cell, idx) => (
+          <div 
+            key={idx} 
+            className={`calendar-cell ${cell.opportunity ? 'has-deadline' : ''}`}
+            title={cell.opportunity ? `${cell.opportunity.title} (Due: ${cell.date.toLocaleDateString()})` : cell.date.toLocaleDateString()}
+          ></div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function DashboardSection({ profile, onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
   const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile);
@@ -335,23 +382,25 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
         </div>
 
         <div className="metric-grid" aria-label="Dashboard statistics">
-          <article>
+          <article className="metric-card">
             <span>Learning streak</span>
             <strong>7 days</strong>
           </article>
-          <article>
+          <article className="metric-card">
             <span>Completed courses</span>
             <strong>3</strong>
           </article>
-          <article>
+          <article className="metric-card">
             <span>Saved opportunities</span>
             <strong>{recommendedOpportunities.length}</strong>
           </article>
-          <article>
+          <article className="metric-card">
             <span>Upcoming deadlines</span>
             <strong>4</strong>
           </article>
         </div>
+
+        <DeadlineCalendar opportunities={recommendedOpportunities} />
 
         <div className="dashboard-columns">
           <section className="dashboard-panel" aria-labelledby="saved-opportunities-title">
