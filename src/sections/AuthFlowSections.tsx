@@ -1,4 +1,5 @@
 import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
 import {
   courses,
   getOptionLabel,
@@ -9,6 +10,7 @@ import {
   opportunities
 } from "../data/content";
 import type { Course, OnboardingProfile, OnboardingQuestion, Opportunity } from "../data/content";
+import { getAIRecommendedCourses, getAIRecommendedOpportunities } from "../lib/aiRecommendations";
 
 export type AuthMode = "signup" | "signin";
 
@@ -301,17 +303,56 @@ function buildOnboardingProfile(profile: StudentProfile): OnboardingProfile {
 
 type DashboardSectionProps = {
   profile: StudentProfile;
+  extraOpportunities?: Opportunity[];
   onCourses: () => void;
   onOpportunities: () => void;
   onLogout: () => void;
 };
 
-export function DashboardSection({ profile, onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
+export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile);
-  const recommendedCourses = getRecommendedCourses(onboardingProfile);
   const interestLabels = getOptionLabels("interests", profile.interests);
   const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
+
+  const [recommendedOpportunities, setRecommendedOpportunities] = useState<Opportunity[]>(
+    () => getRecommendedOpportunities(onboardingProfile)
+  );
+  const [recommendedCourses, setRecommendedCourses] = useState<Course[]>(
+    () => getRecommendedCourses(onboardingProfile)
+  );
+  const [aiExplanation, setAiExplanation] = useState<string>("");
+  const [aiLoading, setAiLoading] = useState(false);
+
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined;
+    if (!apiKey) return;
+
+    setAiLoading(true);
+
+    const allOpportunities = extraOpportunities.length > 0 ? extraOpportunities : opportunities;
+
+    Promise.all([
+      getAIRecommendedOpportunities(onboardingProfile, allOpportunities),
+      getAIRecommendedCourses(onboardingProfile, courses),
+    ])
+      .then(([oppResult, courseResult]) => {
+        const aiOpps = oppResult.ids
+          .map((id) => allOpportunities.find((o) => o.id === id))
+          .filter((o): o is Opportunity => Boolean(o));
+        const aiCourses = courseResult.ids
+          .map((id) => courses.find((c) => c.id === id))
+          .filter((c): c is Course => Boolean(c));
+
+        if (aiOpps.length > 0) setRecommendedOpportunities(aiOpps);
+        if (aiCourses.length > 0) setRecommendedCourses(aiCourses);
+        setAiExplanation(oppResult.explanation);
+      })
+      .catch(() => {
+        // fallback to tag-based already set in initial state
+      })
+      .finally(() => setAiLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile.id]);
 
   return (
     <section className="flow-screen dashboard-screen" aria-labelledby="dashboard-title">
@@ -323,8 +364,12 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
             <p className="flow-kicker">Welcome back</p>
             <h1 id="dashboard-title">{profile.name}</h1>
             <p>
-              Grade {profile.grade} profile focused on {directionLabel}. Your first recommendations are tuned from the
-              onboarding answers saved in Supabase.
+              Grade {profile.grade} profile focused on {directionLabel}.{" "}
+              {aiLoading
+                ? "AI is personalizing your recommendations…"
+                : aiExplanation
+                  ? aiExplanation
+                  : "Your first recommendations are tuned from the onboarding answers saved in Supabase."}
             </p>
           </div>
           <div className="profile-summary" aria-label="Onboarding profile summary">
@@ -438,13 +483,15 @@ export function CoursesWorkspace({ profile, onBack, onLogout }: CoursesWorkspace
 
 type OpportunitiesWorkspaceProps = {
   profile: StudentProfile;
+  extraOpportunities?: Opportunity[];
   onBack: () => void;
   onLogout: () => void;
 };
 
-export function OpportunitiesWorkspace({ profile, onBack, onLogout }: OpportunitiesWorkspaceProps) {
+export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBack, onLogout }: OpportunitiesWorkspaceProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, opportunities.length);
+  const allOpportunities = extraOpportunities.length > 0 ? extraOpportunities : opportunities;
+  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities.length);
 
   return (
     <section className="flow-screen workspace-screen" aria-labelledby="workspace-opportunities-title">
