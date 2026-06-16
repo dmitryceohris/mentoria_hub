@@ -43,13 +43,14 @@ function buildSystemPrompt(
   const today = new Date().toISOString().slice(0, 10);
 
   const oppList = opportunities
-    .slice(0, 30)
+    .slice(0, 25)
     .map((o) => {
       const date = o.deadline || o.eventDate || "не указан";
       const recurring = o.isRecurring ? " (ежегодное)" : "";
-      return `- ${o.title} (${o.category}, дедлайн: ${date})${recurring}: ${o.description.slice(0, 120)}`;
+      // Full post text so the model can answer about prizes, certificates, dates, links.
+      return `### ${o.title} (${o.category}, дедлайн: ${date})${recurring}\n${o.description}\nИсточник: ${o.applyUrl}`;
     })
-    .join("\n");
+    .join("\n\n");
 
   return `You are MentorLM, an AI assistant for Mentoria Hub — an EdTech platform for students in grades 8–12 from Kazakhstan and Central Asia.
 

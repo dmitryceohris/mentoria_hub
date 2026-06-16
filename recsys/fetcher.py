@@ -45,7 +45,7 @@ def extract_with_llm(text: str) -> dict:
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": EXTRACT_PROMPT},
-                {"role": "user", "content": text[:1500]},
+                {"role": "user", "content": text[:3000]},
             ],
         )
         return json.loads(resp.choices[0].message.content)
@@ -70,7 +70,8 @@ def post_to_opportunity(msg: Message) -> dict:
         "isRecurring": extracted.get("is_recurring", False),
         "grades": ["8", "9", "10", "11", "12"],
         "location": "Global",
-        "description": text[:300].strip(),
+        "description": text.strip(),          # full post text — keeps prizes, dates, links
+        "summary": (extracted.get("title") or first_line),
         "requirements": "",
         "tags": extracted.get("tags", []),
         "applyUrl": f"https://t.me/{CHANNEL}/{msg.id}",
