@@ -43,7 +43,6 @@ function buildSystemPrompt(
   const today = new Date().toISOString().slice(0, 10);
 
   const oppList = opportunities
-    .slice(0, 25)
     .map((o) => {
       const date = o.deadline || o.eventDate || "не указан";
       const recurring = o.isRecurring ? " (ежегодное)" : "";
@@ -70,7 +69,9 @@ Rules:
 - Be concise, friendly, and specific.
 - ONLY recommend opportunities whose deadline is on or after ${today}. Never suggest events that have already passed.
 - When a deadline is "не указан", you may mention the opportunity but note the deadline is unconfirmed.
-- Reference real opportunities from the list above. Help with: finding competitions, writing motivation letters, building a roadmap, preparing for SAT/IELTS, and university admissions.`;
+- Reference real opportunities from the list above. Help with: finding competitions, writing motivation letters, building a roadmap, preparing for SAT/IELTS, and university admissions.
+- If the student names an opportunity that is not an EXACT match, do a fuzzy search: look for similar titles (e.g. "Central Asia Student Lab" ≈ "Central Asia Business & Economics Case Championship"). Suggest the closest matches instead of saying you found nothing.
+- If you truly cannot find anything related, list 2-3 of the most relevant available opportunities so the student always has options.`;
 }
 
 export async function sendMessage(
