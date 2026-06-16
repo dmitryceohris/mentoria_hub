@@ -1,10 +1,12 @@
 import type { FormEvent } from "react";
 import {
   courses,
+  formatOpportunityDeadline,
   getOptionLabel,
   getOptionLabels,
   getRecommendedCourses,
   getRecommendedOpportunities,
+  hasUpcomingDeadline,
   onboardingQuestions,
   opportunities
 } from "../data/content";
@@ -121,6 +123,7 @@ export function OnboardingSection({ profile, step, onChange, onNext, onBack, onR
   const selectedValues = getQuestionValues(profile, question);
   const canContinue = isQuestionAnswered(profile, question);
   const isLastStep = step === onboardingQuestions.length - 1;
+  const selectionLabel = selectedValues.length === 0 ? "selection: none" : `selection: ${selectedValues.length}`;
 
   return (
     <section className="flow-screen onboarding-screen" aria-labelledby="onboarding-title">
@@ -138,7 +141,7 @@ export function OnboardingSection({ profile, step, onChange, onNext, onBack, onR
 
           <div className="question-block">
             <h1 id="onboarding-title">{question.title}</h1>
-            <p>{question.description}</p>
+            <p className="selection-status">{selectionLabel}</p>
           </div>
 
           <div className="option-grid" role="group" aria-label={question.title}>
@@ -299,8 +302,18 @@ function buildOnboardingProfile(profile: StudentProfile): OnboardingProfile {
   };
 }
 
+function getOpportunityPool(extraOpportunities: Opportunity[]) {
+  const opportunityMap = new Map<string, Opportunity>();
+
+  opportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
+  extraOpportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
+
+  return [...opportunityMap.values()];
+}
+
 type DashboardSectionProps = {
   profile: StudentProfile;
+  extraOpportunities?: Opportunity[];
   onCourses: () => void;
   onOpportunities: () => void;
   onLogout: () => void;
@@ -353,12 +366,19 @@ function DeadlineCalendar({ opportunities }: { opportunities: Opportunity[] }) {
   );
 }
 
+<<<<<<< HEAD
 export function DashboardSection({ profile, onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
+=======
+export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
+>>>>>>> bac16fde47e2c06bb5c22bbb0e4bda01544823d2
   const onboardingProfile = buildOnboardingProfile(profile);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile);
-  const recommendedCourses = getRecommendedCourses(onboardingProfile);
   const interestLabels = getOptionLabels("interests", profile.interests);
   const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
+  const allOpportunities = getOpportunityPool(extraOpportunities);
+  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities);
+  const recommendedCourses = getRecommendedCourses(onboardingProfile);
+  const inProgressCourses = recommendedCourses.filter((course) => course.progress > 0 && course.progress < 100).length;
+  const upcomingDeadlines = recommendedOpportunities.filter((opportunity) => hasUpcomingDeadline(opportunity)).length;
 
   return (
     <section className="flow-screen dashboard-screen" aria-labelledby="dashboard-title">
@@ -370,8 +390,9 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
             <p className="flow-kicker">Welcome back</p>
             <h1 id="dashboard-title">{profile.name}</h1>
             <p>
-              Grade {profile.grade} profile focused on {directionLabel}. Your first recommendations are tuned from the
-              onboarding answers saved in Supabase.
+              Grade {profile.grade} profile focused on {directionLabel}.{" "}
+              Recommended matches are ranked from your onboarding answers, curated Mentoria programs, and the cleaned
+              Telegram opportunity feed.
             </p>
           </div>
           <div className="profile-summary" aria-label="Onboarding profile summary">
@@ -383,6 +404,7 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
 
         <div className="metric-grid" aria-label="Dashboard statistics">
           <article className="metric-card">
+<<<<<<< HEAD
             <span>Learning streak</span>
             <strong>7 days</strong>
           </article>
@@ -392,31 +414,49 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
           </article>
           <article className="metric-card">
             <span>Saved opportunities</span>
+=======
+            <span>Active courses</span>
+            <strong>{courses.length}</strong>
+          </article>
+          <article className="metric-card">
+            <span>In progress</span>
+            <strong>{inProgressCourses}</strong>
+          </article>
+          <article className="metric-card">
+            <span>Recommended matches</span>
+>>>>>>> bac16fde47e2c06bb5c22bbb0e4bda01544823d2
             <strong>{recommendedOpportunities.length}</strong>
           </article>
           <article className="metric-card">
             <span>Upcoming deadlines</span>
-            <strong>4</strong>
+            <strong>{upcomingDeadlines}</strong>
           </article>
         </div>
 
         <DeadlineCalendar opportunities={recommendedOpportunities} />
 
         <div className="dashboard-columns">
-          <section className="dashboard-panel" aria-labelledby="saved-opportunities-title">
+          <section className="dashboard-panel" aria-labelledby="recommended-matches-title">
             <div className="panel-heading">
               <div>
                 <span>Shortlist</span>
-                <h2 id="saved-opportunities-title">Saved opportunities</h2>
+                <h2 id="recommended-matches-title">Recommended matches</h2>
               </div>
               <button className="secondary-action compact-action" type="button" onClick={onOpportunities}>
                 Opportunities
               </button>
             </div>
-            <div className="saved-list">
-              {recommendedOpportunities.map((opportunity) => (
-                <OpportunitySummary opportunity={opportunity} key={opportunity.id} />
-              ))}
+            <div className="match-list">
+              {recommendedOpportunities.length > 0 ? (
+                recommendedOpportunities.map((opportunity) => (
+                  <OpportunitySummary opportunity={opportunity} key={opportunity.id} />
+                ))
+              ) : (
+                <EmptyState
+                  title="No matches yet"
+                  message="Adjust your onboarding interests or check again after the catalog refreshes."
+                />
+              )}
             </div>
           </section>
 
@@ -431,9 +471,13 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
               </button>
             </div>
             <div className="course-progress-list">
-              {recommendedCourses.map((course) => (
-                <CourseProgressRow course={course} key={course.id} />
-              ))}
+              {recommendedCourses.length > 0 ? (
+                recommendedCourses.map((course) => (
+                  <CourseProgressRow course={course} key={course.id} />
+                ))
+              ) : (
+                <EmptyState title="No course path yet" message="Choose more interests so Mentoria can connect courses to matches." />
+              )}
             </div>
           </section>
         </div>
@@ -487,13 +531,15 @@ export function CoursesWorkspace({ profile, onBack, onLogout }: CoursesWorkspace
 
 type OpportunitiesWorkspaceProps = {
   profile: StudentProfile;
+  extraOpportunities?: Opportunity[];
   onBack: () => void;
   onLogout: () => void;
 };
 
-export function OpportunitiesWorkspace({ profile, onBack, onLogout }: OpportunitiesWorkspaceProps) {
+export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBack, onLogout }: OpportunitiesWorkspaceProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, opportunities.length);
+  const allOpportunities = getOpportunityPool(extraOpportunities);
+  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities, allOpportunities.length);
 
   return (
     <section className="flow-screen workspace-screen" aria-labelledby="workspace-opportunities-title">
@@ -505,21 +551,25 @@ export function OpportunitiesWorkspace({ profile, onBack, onLogout }: Opportunit
           <p>These cards are a dashboard-level preview of what a full catalog would turn into later.</p>
         </div>
         <div className="workspace-opportunity-list">
-          {recommendedOpportunities.map((opportunity) => (
-            <article className="workspace-opportunity-row" key={opportunity.id}>
-              <div>
-                <span className="deadline-chip">{new Date(opportunity.deadline).toLocaleDateString("en-US")}</span>
-                <h2>{opportunity.title}</h2>
-                <p>{opportunity.description}</p>
-                <div className="opportunity-tags">
-                  <span>{opportunity.direction}</span>
-                  <span>{opportunity.format}</span>
-                  <span>Grades {opportunity.grades.join(", ")}</span>
+          {recommendedOpportunities.length > 0 ? (
+            recommendedOpportunities.map((opportunity) => (
+              <article className="workspace-opportunity-row" key={opportunity.id}>
+                <div>
+                  <span className="deadline-chip">{formatOpportunityDeadline(opportunity)}</span>
+                  <h2>{opportunity.title}</h2>
+                  <p>{opportunity.description}</p>
+                  <div className="opportunity-tags">
+                    <span>{opportunity.direction}</span>
+                    <span>{opportunity.format}</span>
+                    <span>Grades {opportunity.grades.join(", ")}</span>
+                  </div>
                 </div>
-              </div>
-              <span className="saved-badge">Saved</span>
-            </article>
-          ))}
+                <span className="match-badge">Match</span>
+              </article>
+            ))
+          ) : (
+            <EmptyState title="No matches yet" message="Try broadening the profile filters or refresh the opportunity feed." />
+          )}
         </div>
       </div>
     </section>
@@ -528,16 +578,25 @@ export function OpportunitiesWorkspace({ profile, onBack, onLogout }: Opportunit
 
 function OpportunitySummary({ opportunity }: { opportunity: Opportunity }) {
   return (
-    <article className="saved-summary-row">
+    <article className="match-summary-row">
       <div>
         <h3>{opportunity.title}</h3>
         <p>
-          {opportunity.category} - {opportunity.format} - deadline{" "}
-          {new Date(opportunity.deadline).toLocaleDateString("en-US")}
+          {opportunity.category} - {opportunity.format} - {formatOpportunityDeadline(opportunity)}
         </p>
       </div>
-      <span>Saved</span>
+      <span>Match</span>
     </article>
+  );
+}
+
+function EmptyState({ title, message }: { title: string; message: string }) {
+  return (
+    <div className="empty-state" role="status">
+      <span />
+      <strong>{title}</strong>
+      <p>{message}</p>
+    </div>
   );
 }
 

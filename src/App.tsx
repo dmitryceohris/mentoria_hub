@@ -19,9 +19,10 @@ import { CoursesSection } from "./sections/CoursesSection";
 import { FaqSection } from "./sections/FaqSection";
 import { HeroSection } from "./sections/HeroSection";
 import { OpportunitySearchSection } from "./sections/OpportunitySearchSection";
-import { SavedOpportunitiesSection } from "./sections/SavedOpportunitiesSection";
+import { RecommendedMatchesSection } from "./sections/RecommendedMatchesSection";
 import { emptyOnboardingProfile, onboardingQuestions } from "./data/content";
-import type { OnboardingProfile } from "./data/content";
+import type { OnboardingProfile, Opportunity } from "./data/content";
+import { loadTelegramOpportunities } from "./lib/telegramOpportunities";
 import { isSupabaseConfigured, supabase } from "./lib/supabase";
 import {
   fetchOwnProfile,
@@ -34,6 +35,7 @@ import {
 } from "./lib/auth";
 
 type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities";
+
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
 
@@ -131,6 +133,13 @@ export function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [bootstrapping, setBootstrapping] = useState(true);
+  const [telegramOpportunities, setTelegramOpportunities] = useState<Opportunity[]>([]);
+
+  useEffect(() => {
+    loadTelegramOpportunities().then((opps) => {
+      if (opps.length > 0) setTelegramOpportunities(opps);
+    });
+  }, []);
   const [onboardingProfile, setOnboardingProfile] = useState<OnboardingProfile>(() => readOnboardingDraft());
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [authMode, setAuthMode] = useState<AuthMode>("signup");
@@ -145,6 +154,14 @@ export function App() {
   useEffect(() => {
     window.sessionStorage.setItem(onboardingDraftKey, JSON.stringify(onboardingProfile));
   }, [onboardingProfile]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [screen]);
 
   useEffect(() => {
     if (!supabase) {
@@ -213,14 +230,17 @@ export function App() {
     setAuthError("");
     setAuthNotice("");
     setFieldErrors({});
+    setAuthMode("signup");
     setOnboardingStep(0);
     setScreen("onboarding");
   }
 
   function continueOnboarding() {
     if (onboardingStep === onboardingQuestions.length - 1) {
+      setAuthError("");
+      setAuthNotice("");
+      setFieldErrors({});
       setScreen("registration");
-      setAuthMode("signup");
       return;
     }
 
@@ -366,6 +386,7 @@ export function App() {
       <main>
         <DashboardSection
           profile={profile}
+          extraOpportunities={telegramOpportunities}
           onCourses={() => setScreen("courses")}
           onOpportunities={() => setScreen("opportunities")}
           onLogout={logout}
@@ -385,7 +406,7 @@ export function App() {
   if (screen === "opportunities" && profile) {
     return (
       <main>
-        <OpportunitiesWorkspace profile={profile} onBack={() => setScreen("dashboard")} onLogout={logout} />
+        <OpportunitiesWorkspace profile={profile} extraOpportunities={telegramOpportunities} onBack={() => setScreen("dashboard")} onLogout={logout} />
       </main>
     );
   }
@@ -394,7 +415,7 @@ export function App() {
     <main>
       <HeroSection onStartJourney={startOnboarding} />
       <OpportunitySearchSection />
-      <SavedOpportunitiesSection />
+      <RecommendedMatchesSection />
       <CoursesSection />
       <CompanionSection />
       <FaqSection />
