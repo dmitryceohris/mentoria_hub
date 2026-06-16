@@ -57,7 +57,7 @@ async def fetch():
         top = sorted(posts, key=lambda m: m.views, reverse=True)[:TOP_K]
         opportunities = [post_to_opportunity(msg, i) for i, msg in enumerate(top)]
 
-        OUT_FILE.write_text(json.dumps(opportunities, ensure_ascii=False, indent=2))
+        OUT_FILE.write_text(json.dumps(opportunities, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"Saved {len(opportunities)} opportunities → {OUT_FILE}")
 
 
