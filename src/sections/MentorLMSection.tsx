@@ -24,14 +24,19 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
   });
   const [activeId, setActiveId] = useState<string>(() => {
     const loaded = loadSessions();
-    return loaded.length > 0 ? loaded[0].id : sessions[0]?.id ?? "";
+    return loaded.length > 0 ? loaded[0].id : "";
   });
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const activeSession = sessions.find((s) => s.id === activeId) ?? sessions[0];
+
+  useEffect(() => {
+    if (!activeId && sessions.length > 0) setActiveId(sessions[0].id);
+  }, [sessions, activeId]);
 
   useEffect(() => {
     saveSessions(sessions);
@@ -39,11 +44,7 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeSession?.messages]);
-
-  function updateSession(id: string, updater: (s: ChatSession) => ChatSession) {
-    setSessions((prev) => prev.map((s) => (s.id === id ? updater(s) : s)));
-  }
+  }, [activeSession?.messages.length]);
 
   function newChat() {
     const session = createSession();
@@ -51,33 +52,38 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
     setActiveId(session.id);
   }
 
+  function deleteSession(id: string) {
+    setSessions((prev) => {
+      const next = prev.filter((s) => s.id !== id);
+      if (activeId === id) setActiveId(next[0]?.id ?? "");
+      return next.length > 0 ? next : [createSession()];
+    });
+    setMenuOpenId(null);
+  }
+
   async function submit() {
     const text = input.trim();
-    if (!text || streaming) return;
+    if (!text || streaming || !activeSession) return;
 
     const userMsg: ChatMessage = { role: "user", content: text };
+    const assistantPlaceholder: ChatMessage = { role: "assistant", content: "" };
     const title = activeSession.messages.length === 0 ? text.slice(0, 40) : activeSession.title;
+    const historyForAPI = [...activeSession.messages, userMsg];
 
-    updateSession(activeId, (s) => ({
-      ...s,
-      title,
-      messages: [...s.messages, userMsg],
-    }));
+    // Add both messages in one update — prevents double render
+    setSessions((prev) =>
+      prev.map((s) =>
+        s.id !== activeId
+          ? s
+          : { ...s, title, messages: [...s.messages, userMsg, assistantPlaceholder] }
+      )
+    );
     setInput("");
     setStreaming(true);
 
-    const placeholderId = crypto.randomUUID();
-    updateSession(activeId, (s) => ({
-      ...s,
-      messages: [...s.messages, userMsg, { role: "assistant", content: "" }],
-    }));
-
     try {
-      const allMessages = [...activeSession.messages, userMsg];
-      let full = "";
-
       await sendMessage(
-        allMessages,
+        historyForAPI,
         {
           name: profile.name,
           grade: profile.grade,
@@ -86,29 +92,24 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
         },
         opportunities,
         (chunk) => {
-          full += chunk;
-          updateSession(activeId, (s) => {
-            const msgs = [...s.messages];
-            msgs[msgs.length - 1] = { role: "assistant", content: full };
-            return { ...s, msgs } as ChatSession;
-          });
-          // direct DOM update for smooth streaming
           setSessions((prev) =>
             prev.map((s) => {
               if (s.id !== activeId) return s;
               const msgs = [...s.messages];
-              msgs[msgs.length - 1] = { role: "assistant", content: full };
+              const last = msgs[msgs.length - 1];
+              msgs[msgs.length - 1] = { ...last, content: last.content + chunk };
               return { ...s, messages: msgs };
             })
           );
         }
       );
-    } catch {
+    } catch (err) {
+      const errorText = err instanceof Error ? err.message : "Неизвестная ошибка";
       setSessions((prev) =>
         prev.map((s) => {
           if (s.id !== activeId) return s;
           const msgs = [...s.messages];
-          msgs[msgs.length - 1] = { role: "assistant", content: "Ошибка соединения. Попробуй ещё раз." };
+          msgs[msgs.length - 1] = { role: "assistant", content: `Ошибка: ${errorText}` };
           return { ...s, messages: msgs };
         })
       );
@@ -116,8 +117,6 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
       setStreaming(false);
       textareaRef.current?.focus();
     }
-
-    void placeholderId;
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -128,7 +127,7 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
   }
 
   return (
-    <div className="mentorlm-root">
+    <div className="mentorlm-root" onClick={() => setMenuOpenId(null)}>
       {/* Sidebar */}
       <aside className={`mentorlm-sidebar${sidebarOpen ? " mentorlm-sidebar-open" : ""}`}>
         <div className="mentorlm-sidebar-header">
@@ -139,18 +138,42 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
             + New chat
           </button>
         </div>
+
         <nav className="mentorlm-session-list">
           {sessions.map((s) => (
-            <button
+            <div
               key={s.id}
-              type="button"
-              className={`mentorlm-session-item${s.id === activeId ? " mentorlm-session-active" : ""}`}
-              onClick={() => setActiveId(s.id)}
+              className={`mentorlm-session-row${s.id === activeId ? " mentorlm-session-active" : ""}`}
             >
-              {s.title}
-            </button>
+              <button
+                type="button"
+                className="mentorlm-session-item"
+                onClick={() => setActiveId(s.id)}
+              >
+                {s.title}
+              </button>
+              <button
+                type="button"
+                className="mentorlm-session-menu-btn"
+                aria-label="Chat options"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpenId(menuOpenId === s.id ? null : s.id);
+                }}
+              >
+                ···
+              </button>
+              {menuOpenId === s.id && (
+                <div className="mentorlm-session-menu" onClick={(e) => e.stopPropagation()}>
+                  <button type="button" className="mentorlm-menu-delete" onClick={() => deleteSession(s.id)}>
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
         </nav>
+
         <div className="mentorlm-sidebar-footer">
           <button type="button" className="flow-link-button" onClick={onBack}>← Dashboard</button>
           <button type="button" className="flow-link-button" onClick={onLogout}>Logout</button>
@@ -180,7 +203,12 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
                   "Помоги написать мотивационное письмо",
                   "Что делать в 10 классе для поступления?",
                 ].map((s) => (
-                  <button key={s} type="button" className="mentorlm-suggestion" onClick={() => { setInput(s); textareaRef.current?.focus(); }}>
+                  <button
+                    key={s}
+                    type="button"
+                    className="mentorlm-suggestion"
+                    onClick={() => { setInput(s); textareaRef.current?.focus(); }}
+                  >
                     {s}
                   </button>
                 ))}
@@ -191,7 +219,9 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
           {activeSession?.messages.map((msg, i) => (
             <div key={i} className={`mentorlm-msg mentorlm-msg-${msg.role}`}>
               <div className="mentorlm-msg-bubble">
-                {msg.content || (streaming && msg.role === "assistant" ? <span className="mentorlm-cursor" /> : null)}
+                {msg.content || (streaming && msg.role === "assistant" && i === activeSession.messages.length - 1
+                  ? <span className="mentorlm-cursor" />
+                  : null)}
               </div>
             </div>
           ))}
