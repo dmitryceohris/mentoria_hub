@@ -11,9 +11,8 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2307131e'/%3E%3Cpath d='M7 20V8h4l5 7 5-7h4v16h-4V14l-5 7-5-7v10H7Z' fill='%2311c6cf'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <script src="app.js" defer></script>
   </head>
   <body>
     <main>
@@ -31,7 +30,7 @@
           <nav class="hero-rail" aria-label="Mentoria Hub sections">
             <a class="wordmark" href="#hero-title" aria-label="Mentoria Hub home">Mentoria Hub</a>
             <div class="rail-links">
-              <a href="#features">Matches</a>
+              <a href="#match-console">Matches</a>
               <a href="#courses">Courses</a>
               <a href="#companion">MentorPet</a>
               <a href="#mentors">Mentors</a>
@@ -41,10 +40,7 @@
           <div class="hero-grid">
             <div class="hero-copy">
               <p class="eyebrow">Opportunity intelligence / grades 8-11</p>
-              <h1 id="hero-title">
-                <span>Mentoria</span>
-                <span>Hub</span>
-              </h1>
+              <h1 id="hero-title">Mentoria Hub</h1>
               <p class="promise">With you on your way to your dream</p>
               <div class="keyword-band" aria-label="Mentoria Hub learning and opportunity areas">
                 <span>SAT</span>
@@ -57,13 +53,9 @@
                 Find competitions, scholarships, internships, and summer schools that fit your profile, then keep learning through Mentoria's own SAT, IELTS, and subject courses.
               </p>
               <div class="hero-actions">
-                <a class="button button-primary" href="#match-console" id="focusSearch">
-                  <span>Find opportunities</span>
+                <a class="button button-primary" href="#match-console">
+                  <span>Start your journey</span>
                   <span class="button-mark" aria-hidden="true">></span>
-                </a>
-                <a class="button button-secondary" href="#courses">
-                  <span>Start courses</span>
-                  <span class="button-mark" aria-hidden="true">+</span>
                 </a>
               </div>
             </div>
@@ -87,87 +79,217 @@
           </p>
         </div>
 
-        <div class="match-console match-console-dock" aria-labelledby="console-title">
+        <div class="match-console match-console-dock has-floating-popover" aria-labelledby="console-title">
+          <aside class="opportunity-popover" aria-label="More information about International Young Physicists' Tournament 2026">
+            <strong>More about IYPT</strong>
+            <p>
+              Teams prepare original research, then defend their solutions in Physics Fights with reporter, opponent, and reviewer roles. The 2026 tournament is hosted in Zurich and usually requires a national selection route.
+            </p>
+            <a href="https://www.iypt.org/" target="_blank" rel="noreferrer">View competition page</a>
+          </aside>
           <div class="console-core">
             <div class="console-frame" aria-hidden="true"></div>
             <header class="console-header">
               <div>
-                <p class="console-kicker">Opportunity engine</p>
-                <h2 id="console-title">Live match console</h2>
-              </div>
-              <div class="signal-stack" aria-label="Current match status">
-                <span></span>
-                <strong>Matching</strong>
+                <h2 id="console-title">Opportunity Search</h2>
+                <p class="console-intro">A focused result view for physics competitions that match a 10th grade profile.</p>
               </div>
             </header>
 
-            <form class="search-form" id="searchForm">
-              <label for="searchInput">Search by field, goal, or program type</label>
-              <div class="search-field">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Zm5.2-1.4 4.2 4.2" />
-                </svg>
-                <input
-                  id="searchInput"
-                  name="query"
-                  type="search"
-                  autocomplete="off"
-                  value="STEM"
-                  aria-describedby="searchHelp"
-                >
-              </div>
-              <p id="searchHelp">Try STEM, Business, Finance, Programming, Science, Social Impact, scholarship, internship, or summer school.</p>
-            </form>
-
-            <div class="profile-grid" id="profile-signals" aria-label="Profile signals">
-              <button class="chip is-active" type="button" data-filter="grade 10">Grade 10</button>
-              <button class="chip is-active" type="button" data-filter="STEM">STEM</button>
-              <button class="chip" type="button" data-filter="Business">Business</button>
-              <button class="chip" type="button" data-filter="Programming">Programming</button>
-              <button class="chip" type="button" data-filter="Kazakhstan">Kazakhstan</button>
-              <button class="chip" type="button" data-filter="Online">Online</button>
+            <div class="showcase-search" aria-label="Search query">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Zm5.2-1.4 4.2 4.2" />
+              </svg>
+              <span>physics competitions</span>
             </div>
 
-            <div class="result-panel" aria-live="polite">
-              <div class="result-meta">
-                <span id="resultCount">3 matches</span>
-                <span>Rule-based recommendation</span>
+            <div class="criteria-grid" aria-label="Selected opportunity filters">
+              <div class="criteria-select">
+                <span class="criteria-label">Direction</span>
+                <span class="criteria-value">Physics</span>
               </div>
-              <div class="result-list" id="resultList"></div>
-              <div class="empty-state" id="emptyState" hidden>
-                <strong>No matches yet</strong>
-                <span>Remove a chip or search a broader direction.</span>
+              <div class="criteria-select">
+                <span class="criteria-label">Format</span>
+                <span class="criteria-value">Any</span>
+              </div>
+              <div class="criteria-select">
+                <span class="criteria-label">Location</span>
+                <span class="criteria-value">Global</span>
+              </div>
+              <div class="criteria-select">
+                <span class="criteria-label">Grade</span>
+                <span class="criteria-value">Grade 10</span>
+              </div>
+              <div class="criteria-select">
+                <span class="criteria-label">Type</span>
+                <span class="criteria-value">Competition</span>
               </div>
             </div>
 
-            <footer class="console-footer">
-              <div>
-                <span>MentorPet signal</span>
-                <strong id="mentorSignal">Matched because: STEM + grade 10</strong>
-              </div>
-              <button class="text-command" type="button" id="resetFilters">Reset filters</button>
-            </footer>
+            <div class="result-panel" aria-label="Opportunity showcase">
+              <p class="result-heading">4 matched opportunities</p>
+              <article class="opportunity-row">
+                <div class="opportunity-row-main">
+                  <h3>Almaty Physics Battles 2026</h3>
+                  <p>
+                    An international team-based physics competition for secondary school students, held in Almaty, Kazakhstan. Teams join through online selection stages.
+                  </p>
+                </div>
+                <button class="save-button" type="button">Save</button>
+              </article>
+              <article class="opportunity-row opportunity-row-iypt">
+                <div class="opportunity-row-main">
+                  <h3>International Young Physicists' Tournament 2026</h3>
+                  <p>
+                    A team-based physics tournament for high school students, taking place July 5-12, 2026 in Zurich, Switzerland, with research, experiments, and scientific discussion.
+                  </p>
+                </div>
+                <button class="save-button" type="button">Save</button>
+              </article>
+              <article class="opportunity-row">
+                <div class="opportunity-row-main">
+                  <h3>Beamline for Schools 2026</h3>
+                  <p>
+                    A CERN, DESY, and ELSA physics proposal competition where high-school teams design an experiment for a particle accelerator beamline.
+                  </p>
+                </div>
+                <button class="save-button" type="button">Save</button>
+              </article>
+              <article class="opportunity-row">
+                <div class="opportunity-row-main">
+                  <h3>Online Physics Olympiad Invitational 2026</h3>
+                  <p>
+                    An online physics contest pathway with an invitational round held August 30-September 1 and international participation from physics students.
+                  </p>
+                </div>
+                <button class="save-button" type="button">Save</button>
+              </article>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="next-preview" id="features" aria-label="Next section preview">
-        <article>
-          <span>Saved opportunities</span>
-          <strong>Track programs, deadlines, and application status from one student dashboard.</strong>
-        </article>
-        <article id="courses">
-          <span>Mentoria courses</span>
-          <strong>SAT, IELTS, English, STEM, and admissions tracks continue the journey after discovery.</strong>
-        </article>
-        <article id="companion">
-          <span>Companion support</span>
-          <strong>MentorPet explains why an opportunity fits without replacing mentors.</strong>
-        </article>
-        <article id="mentors">
-          <span>Human mentors</span>
-          <strong>Students can still ask for mentor help when an application needs judgment.</strong>
-        </article>
+      <section class="product-section" id="features" aria-labelledby="saved-title">
+        <div class="match-copy product-copy">
+          <p class="section-kicker">Saved Opportunities</p>
+          <h2 id="saved-title">Keep every next step visible</h2>
+          <p>
+            Save programs from search, watch deadlines, and keep course preparation attached to the same student workspace.
+          </p>
+        </div>
+
+        <div class="product-console saved-console" aria-label="Saved opportunities dashboard preview">
+          <div class="console-core product-core">
+            <div class="console-frame" aria-hidden="true"></div>
+            <header class="console-header">
+              <div>
+                <h2>Student dashboard</h2>
+                <p class="console-intro">A quiet workspace for saved programs, prep tasks, and mentor handoff.</p>
+              </div>
+            </header>
+            <div class="dashboard-grid">
+              <article class="dashboard-row">
+                <strong>International Young Physicists' Tournament 2026</strong>
+                <span>Research outline and national selection prep</span>
+              </article>
+              <article class="dashboard-row">
+                <strong>Beamline for Schools 2026</strong>
+                <span>Draft experiment proposal with mentor review</span>
+              </article>
+              <article class="dashboard-row dashboard-row-soft">
+                <strong>Course prep</strong>
+                <span>Physics fundamentals, academic English, and writing support stay linked to saved opportunities.</span>
+              </article>
+            </div>
+            <div class="dashboard-placeholder">
+              More saved programs will appear here as the student builds a shortlist.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="product-section courses-section" id="courses" aria-labelledby="courses-title">
+        <div class="match-copy product-copy">
+          <p class="section-kicker">Mentoria Courses</p>
+          <h2 id="courses-title">Free courses that support the journey</h2>
+          <p>
+            Mentoria courses sit beside opportunity search, so students can prepare for language tests, science tracks, and applications in one place.
+          </p>
+        </div>
+
+        <div class="product-console course-console" aria-label="Mentoria courses preview">
+          <div class="console-core product-core">
+            <div class="console-frame" aria-hidden="true"></div>
+            <header class="console-header">
+              <div>
+                <h2>Course library</h2>
+                <p class="console-intro">Search is a visual placeholder for the course catalog.</p>
+              </div>
+            </header>
+            <div class="showcase-search course-search" aria-label="Course search placeholder">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Zm5.2-1.4 4.2 4.2" />
+              </svg>
+              <span>Search Mentoria courses</span>
+            </div>
+            <div class="course-grid">
+              <article class="course-card">
+                <div class="course-visual" aria-hidden="true"></div>
+                <span>Mentoria English</span>
+                <h3>Beginner IELTS</h3>
+                <p>Free course for first IELTS structure, vocabulary, and weekly practice habits.</p>
+              </article>
+              <article class="course-card">
+                <div class="course-visual" aria-hidden="true"></div>
+                <span>Mentoria Science</span>
+                <h3>Introduction to Biology</h3>
+                <p>Free course for cells, genetics, ecosystems, and research thinking basics.</p>
+              </article>
+              <article class="course-card">
+                <div class="course-visual" aria-hidden="true"></div>
+                <span>Mentoria Physics</span>
+                <h3>Introduction to Theoretical Physics</h3>
+                <p>Free course for mechanics, models, problem solving, and mathematical intuition.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="product-section companion-section" id="companion" aria-labelledby="companion-title">
+        <div class="match-copy product-copy">
+          <p class="section-kicker">Companion Support</p>
+          <h2 id="companion-title">MentorPet keeps context close</h2>
+          <p>
+            MentorPet can add personal notes to course programs, remind students what to do next, and notify them through a Telegram add-on.
+          </p>
+        </div>
+
+        <div class="product-console companion-console" aria-label="MentorPet notes and Telegram reminders preview">
+          <div class="console-core product-core">
+            <div class="console-frame" aria-hidden="true"></div>
+            <header class="console-header">
+              <div>
+                <h2>Notes and reminders</h2>
+                <p class="console-intro">A placeholder view for course notes and Telegram nudges.</p>
+              </div>
+            </header>
+            <div class="companion-notes">
+              <article>
+                <strong>Beginner IELTS</strong>
+                <p>Add a personal note: practice listening before school on Tuesday and Thursday.</p>
+              </article>
+              <article>
+                <strong>Physics prep</strong>
+                <p>Telegram reminder: review experiment notes two days before the mentor session.</p>
+              </article>
+              <article id="mentors">
+                <strong>Human mentor handoff</strong>
+                <p>When an application needs judgment, MentorPet keeps the context ready for a mentor.</p>
+              </article>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </body>

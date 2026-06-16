@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Rules</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(840px, calc(100% - 32px));
+      margin: 32px auto;
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: #12362f;
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .rule {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: #e5f4ef;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Agent Rules</h1>
+    <p class="muted">Repository context for Mentoria Hub agent and design output behavior.</p>
+
+    <section class="rule" aria-labelledby="plain-output-rule">
+      <h2 id="plain-output-rule">Plain Output Rule</h2>
+      <p>Do not generate and delete any UI badges with thin , metadata labels, or categorical tags. Output only the requested content in plain text format without any stylized monospace interface elements, headers, or annotations.</p>
+    </section>
+  </main>
+</body>
+</html>

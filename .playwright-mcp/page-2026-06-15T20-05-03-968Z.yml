@@ -1,0 +1,88 @@
+- main [ref=e2]:
+  - region "Mentoria Hub" [ref=e3]:
+    - img [ref=e4]
+    - generic [ref=e10]:
+      - navigation "Mentoria Hub sections" [ref=e11]:
+        - link "Mentoria Hub home" [ref=e12] [cursor=pointer]:
+          - /url: "#hero-title"
+          - text: Mentoria Hub
+        - generic [ref=e13]:
+          - link "Matches" [ref=e14] [cursor=pointer]:
+            - /url: "#features"
+          - link "Courses" [ref=e15] [cursor=pointer]:
+            - /url: "#courses"
+          - link "MentorPet" [ref=e16] [cursor=pointer]:
+            - /url: "#companion"
+          - link "Mentors" [ref=e17] [cursor=pointer]:
+            - /url: "#mentors"
+      - generic [ref=e19]:
+        - paragraph [ref=e20]: Opportunity intelligence / grades 8-11
+        - heading "Mentoria Hub" [level=1] [ref=e21]
+        - paragraph [ref=e22]: With you on your way to your dream
+        - generic "Mentoria Hub learning and opportunity areas" [ref=e23]:
+          - generic [ref=e24]: SAT
+          - generic [ref=e25]: IELTS
+          - generic [ref=e26]: Courses
+          - generic [ref=e27]: Opportunity Search
+        - paragraph [ref=e28]: .. all in one place
+        - paragraph [ref=e29]: Find competitions, scholarships, internships, and summer schools that fit your profile, then keep learning through Mentoria's own SAT, IELTS, and subject courses.
+        - link "Start your journey" [ref=e31] [cursor=pointer]:
+          - /url: "#match-console"
+          - generic [ref=e32]: Start your journey
+          - generic [ref=e33]: ">"
+  - region "Find programs that fit your profile" [ref=e38]:
+    - generic [ref=e39]:
+      - paragraph [ref=e40]: Opportunity Search
+      - heading "Find programs that fit your profile" [level=2] [ref=e41]
+      - paragraph [ref=e42]: Search competitions, scholarships, internships, summer schools, and courses from one focused Mentoria workspace.
+    - generic "Opportunity Search" [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e46]:
+          - heading "Opportunity Search" [level=2] [ref=e47]
+          - paragraph [ref=e48]: A focused result view for physics competitions that match a 10th grade profile.
+        - generic "Search query" [ref=e49]:
+          - img [ref=e50]
+          - generic [ref=e52]: physics competitions for 10th grade
+        - generic "Selected opportunity filters" [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]: Direction
+            - generic [ref=e56]: Physics
+          - generic [ref=e57]:
+            - generic [ref=e58]: Format
+            - generic [ref=e59]: Any
+          - generic [ref=e60]:
+            - generic [ref=e61]: Location
+            - generic [ref=e62]: Global
+          - generic [ref=e63]:
+            - generic [ref=e64]: Grade
+            - generic [ref=e65]: Grade 10
+          - generic [ref=e66]:
+            - generic [ref=e67]: Type
+            - generic [ref=e68]: Competition
+        - generic "Opportunity showcase" [ref=e69]:
+          - paragraph [ref=e70]: 4 matched opportunities
+          - article [ref=e71]:
+            - heading "International Physics Olympiad 2026" [level=3] [ref=e72]
+            - paragraph [ref=e73]: A global physics competition for secondary school students, held July 4-12, 2026 in Bucaramanga, Colombia. Students join through national team selection.
+          - article [ref=e74]:
+            - heading "International Young Physicists' Tournament 2026" [level=3] [ref=e75]
+            - paragraph [ref=e76]: A team-based physics tournament for high school students, taking place July 5-12, 2026 in Zurich, Switzerland, with research, experiments, and scientific discussion.
+          - article [ref=e77]:
+            - heading "Beamline for Schools 2026" [level=3] [ref=e78]
+            - paragraph [ref=e79]: A CERN, DESY, and ELSA physics proposal competition where high-school teams design an experiment for a particle accelerator beamline.
+          - article [ref=e80]:
+            - heading "Online Physics Olympiad Invitational 2026" [level=3] [ref=e81]
+            - paragraph [ref=e82]: An online physics contest pathway with an invitational round held August 30-September 1 and international participation from physics students.
+  - region "Next section preview" [ref=e83]:
+    - article [ref=e84]:
+      - generic [ref=e85]: Saved opportunities
+      - strong [ref=e86]: Track programs, deadlines, and application status from one student dashboard.
+    - article [ref=e87]:
+      - generic [ref=e88]: Mentoria courses
+      - strong [ref=e89]: SAT, IELTS, English, STEM, and admissions tracks continue the journey after discovery.
+    - article [ref=e90]:
+      - generic [ref=e91]: Companion support
+      - strong [ref=e92]: MentorPet explains why an opportunity fits without replacing mentors.
+    - article [ref=e93]:
+      - generic [ref=e94]: Human mentors
+      - strong [ref=e95]: Students can still ask for mentor help when an application needs judgment.
