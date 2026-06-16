@@ -35,19 +35,6 @@ import {
 
 type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities";
 
-const demoProfile: StudentProfile = {
-  id: "demo",
-  name: "Demo Student",
-  email: "demo@mentoria.kz",
-  grade: "10",
-  interests: ["stem", "programming", "science"],
-  academicDirection: "technology",
-  opportunityPreferences: {
-    directions: ["stem", "programming"],
-    formats: ["online", "hybrid"],
-    locations: ["global", "kazakhstan"],
-  },
-};
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
 
@@ -223,11 +210,6 @@ export function App() {
     };
   }, []);
 
-  function loginAsDemo() {
-    setProfile(demoProfile);
-    setScreen("dashboard");
-  }
-
   function startOnboarding() {
     setAuthError("");
     setAuthNotice("");
@@ -238,8 +220,20 @@ export function App() {
 
   function continueOnboarding() {
     if (onboardingStep === onboardingQuestions.length - 1) {
-      setScreen("registration");
-      setAuthMode("signup");
+      setProfile({
+        id: "guest",
+        name: "Student",
+        email: "",
+        grade: onboardingProfile.grade,
+        interests: onboardingProfile.interests,
+        academicDirection: onboardingProfile.academicDirection,
+        opportunityPreferences: {
+          directions: onboardingProfile.directions,
+          formats: onboardingProfile.formats,
+          locations: onboardingProfile.locations,
+        },
+      });
+      setScreen("dashboard");
       return;
     }
 
@@ -411,7 +405,7 @@ export function App() {
 
   return (
     <main>
-      <HeroSection onStartJourney={startOnboarding} onDemoLogin={loginAsDemo} />
+      <HeroSection onStartJourney={startOnboarding} />
       <OpportunitySearchSection />
       <SavedOpportunitiesSection />
       <CoursesSection />

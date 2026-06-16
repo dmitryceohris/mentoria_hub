@@ -2,10 +2,9 @@ import { navLinks } from "../data/content";
 
 type HeroSectionProps = {
   onStartJourney: () => void;
-  onDemoLogin: () => void;
 };
 
-export function HeroSection({ onStartJourney, onDemoLogin }: HeroSectionProps) {
+export function HeroSection({ onStartJourney }: HeroSectionProps) {
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="grain" aria-hidden="true" />
@@ -52,9 +51,6 @@ export function HeroSection({ onStartJourney, onDemoLogin }: HeroSectionProps) {
                 <span className="button-mark" aria-hidden="true">
                   &gt;
                 </span>
-              </button>
-              <button className="button button-secondary" type="button" onClick={onDemoLogin}>
-                <span>Try demo</span>
               </button>
             </div>
           </div>
