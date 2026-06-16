@@ -40,12 +40,20 @@ function buildSystemPrompt(
   profile: { name: string; grade: string; interests: string[]; academicDirection: string },
   opportunities: Opportunity[]
 ): string {
+  const today = new Date().toISOString().slice(0, 10);
+
   const oppList = opportunities
     .slice(0, 30)
-    .map((o) => `- ${o.title} (${o.category}, deadline: ${o.deadline || "N/A"}): ${o.description.slice(0, 120)}`)
+    .map((o) => {
+      const date = o.deadline || o.eventDate || "не указан";
+      const recurring = o.isRecurring ? " (ежегодное)" : "";
+      return `- ${o.title} (${o.category}, дедлайн: ${date})${recurring}: ${o.description.slice(0, 120)}`;
+    })
     .join("\n");
 
   return `You are MentorLM, an AI assistant for Mentoria Hub — an EdTech platform for students in grades 8–12 from Kazakhstan and Central Asia.
+
+Today's date is ${today}.
 
 Student profile:
 - Name: ${profile.name}
@@ -53,10 +61,15 @@ Student profile:
 - Interests: ${profile.interests.join(", ")}
 - Academic direction: ${profile.academicDirection}
 
-Here are current opportunities from the Mentoria channel:
+Here are current opportunities from the Mentoria channel (already filtered to upcoming/active ones):
 ${oppList}
 
-Answer in the same language the student uses (Russian or English). Be concise, friendly, and specific. When recommending opportunities, reference real ones from the list above. Help with: finding competitions, writing motivation letters, building a roadmap, preparing for SAT/IELTS, and university admissions.`;
+Rules:
+- Answer in the same language the student uses (Russian or English).
+- Be concise, friendly, and specific.
+- ONLY recommend opportunities whose deadline is on or after ${today}. Never suggest events that have already passed.
+- When a deadline is "не указан", you may mention the opportunity but note the deadline is unconfirmed.
+- Reference real opportunities from the list above. Help with: finding competitions, writing motivation letters, building a roadmap, preparing for SAT/IELTS, and university admissions.`;
 }
 
 export async function sendMessage(

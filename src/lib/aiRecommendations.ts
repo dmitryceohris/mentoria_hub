@@ -51,18 +51,22 @@ Formats: ${profile.formats.join(", ")}
 Locations: ${profile.locations.join(", ")}
   `.trim();
 
+  const today = new Date().toISOString().slice(0, 10);
+
   const opportunityList = opportunities
-    .map((o) => `ID: ${o.id} | Title: ${o.title} | Direction: ${o.direction} | Format: ${o.format} | Location: ${o.location} | Tags: ${o.tags.join(", ")} | Grades: ${o.grades.join(", ")}`)
+    .map((o) => `ID: ${o.id} | Title: ${o.title} | Direction: ${o.direction} | Deadline: ${o.deadline || "N/A"} | Tags: ${o.tags.join(", ")} | Grades: ${o.grades.join(", ")}`)
     .join("\n");
 
   const prompt = `
+Today's date is ${today}.
+
 Student profile:
 ${profileSummary}
 
 Available opportunities:
 ${opportunityList}
 
-Return the ${limit} most suitable opportunity IDs for this student and a short explanation (1–2 sentences, in the same language the student would likely use — Russian or English based on context).
+Return the ${limit} most suitable opportunity IDs for this student. Prefer opportunities with an upcoming deadline (on or after ${today}); never pick ones whose deadline has already passed. Add a short explanation (1–2 sentences, in the same language the student would likely use — Russian or English based on context).
 
 Respond with this exact JSON shape:
 {"ids": ["id1", "id2", "id3"], "explanation": "..."}
