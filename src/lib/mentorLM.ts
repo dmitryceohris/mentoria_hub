@@ -42,12 +42,18 @@ function buildSystemPrompt(
 ): string {
   const today = new Date().toISOString().slice(0, 10);
 
+  const todayDate = new Date();
+  todayDate.setHours(0, 0, 0, 0);
+
   const oppList = opportunities
     .map((o) => {
       const date = o.deadline || o.eventDate || "не указан";
       const recurring = o.isRecurring ? " (ежегодное)" : "";
+      const refDate = o.deadline || o.eventDate;
+      const isPast = refDate ? new Date(refDate) < todayDate && !o.isRecurring : false;
+      const status = isPast ? "ПРОШЛО" : "АКТУАЛЬНО";
       // Full post text so the model can answer about prizes, certificates, dates, links.
-      return `### ${o.title} (${o.category}, дедлайн: ${date})${recurring}\n${o.description}\nИсточник: ${o.applyUrl}`;
+      return `### [${status}] ${o.title} (${o.category}, дедлайн: ${date})${recurring}\n${o.description}\nИсточник: ${o.applyUrl}`;
     })
     .join("\n\n");
 
@@ -61,17 +67,17 @@ Student profile:
 - Interests: ${profile.interests.join(", ")}
 - Academic direction: ${profile.academicDirection}
 
-Here are current opportunities from the Mentoria channel (already filtered to upcoming/active ones):
+Here are opportunities from the Mentoria channel. Each is tagged [АКТУАЛЬНО] (still open) or [ПРОШЛО] (already passed):
 ${oppList}
 
 Rules:
 - Answer in the same language the student uses (Russian or English).
 - Be concise, friendly, and specific.
-- ONLY recommend opportunities whose deadline is on or after ${today}. Never suggest events that have already passed.
-- When a deadline is "не указан", you may mention the opportunity but note the deadline is unconfirmed.
-- Reference real opportunities from the list above. Help with: finding competitions, writing motivation letters, building a roadmap, preparing for SAT/IELTS, and university admissions.
-- If the student names an opportunity that is not an EXACT match, do a fuzzy search: look for similar titles (e.g. "Central Asia Student Lab" ≈ "Central Asia Business & Economics Case Championship"). Suggest the closest matches instead of saying you found nothing.
-- If you truly cannot find anything related, list 2-3 of the most relevant available opportunities so the student always has options.`;
+- You may ANSWER questions about ANY opportunity, including [ПРОШЛО] ones (prizes, what it was, dates) — you have full info above.
+- But only RECOMMEND opportunities tagged [АКТУАЛЬНО]. If the best match is [ПРОШЛО], say it already passed and suggest a similar [АКТУАЛЬНО] one.
+- When a deadline is "не указан", treat the opportunity as still open; mention that the exact deadline is unconfirmed.
+- If the student names an opportunity that is not an EXACT match, do a fuzzy search by similar titles (e.g. "Central Asia Student Lab" ≈ "Central Asia Business & Economics Case Championship"). Never say you found nothing without first offering the closest matches.
+- Always end by giving the student at least one concrete next step or option.`;
 }
 
 export async function sendMessage(

@@ -1,15 +1,29 @@
 import type { Opportunity } from "../data/content";
 
+/** Loads ALL opportunities (unfiltered), sorted by relevance.
+ *  Use filterActive() to get only the upcoming ones for catalog/recommendations.
+ *  MentorLM gets the full list so it can answer about past events too. */
 export async function loadTelegramOpportunities(): Promise<Opportunity[]> {
   try {
     const res = await fetch("/recsys/opportunities.json");
     if (!res.ok) return [];
     const raw: RawPost[] = await res.json();
-    const mapped = raw.map(toOpportunity);
-    return sortByRelevance(filterActive(mapped));
+    return sortByRelevance(raw.map(toOpportunity));
   } catch {
     return [];
   }
+}
+
+/** True if the opportunity's deadline/event date has not passed yet. */
+export function isUpcoming(o: Opportunity): boolean {
+  if (o.isRecurring) return true;
+  const relevantDate = o.deadline || o.eventDate;
+  if (!relevantDate) return true;
+  const date = new Date(relevantDate);
+  if (Number.isNaN(date.getTime())) return true;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return date >= today;
 }
 
 type RawPost = {
@@ -51,27 +65,9 @@ function toOpportunity(raw: RawPost): Opportunity {
   };
 }
 
-/**
- * Keep only opportunities that are still relevant:
- * - recurring events always pass (annual olympiads etc.)
- * - if it has a deadline or event date, keep only if that date is today or later
- * - if it has no date at all, keep it (don't guess away real opportunities)
- */
-function filterActive(opps: Opportunity[]): Opportunity[] {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  return opps.filter((o) => {
-    if (o.isRecurring) return true;
-
-    const relevantDate = o.deadline || o.eventDate;
-    if (!relevantDate) return true; // no date → keep
-
-    const date = new Date(relevantDate);
-    if (Number.isNaN(date.getTime())) return true; // unparseable → keep
-
-    return date >= today;
-  });
+/** Keep only opportunities that are still relevant (deadline today or later). */
+export function filterActive(opps: Opportunity[]): Opportunity[] {
+  return opps.filter(isUpcoming);
 }
 
 /** Sort: soonest deadline first, dateless items last. */

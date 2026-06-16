@@ -25,13 +25,17 @@ Return STRICT JSON with these fields:
 - "title": short clean title (max 80 chars)
 - "category": one of "Competition", "Scholarship", "Internship", "Summer School", "Research", "Volunteering", "Course", "Event", "Opportunity"
 - "direction": one of "STEM", "Science", "Business", "Finance", "Programming", "Social Impact", "Admissions", "General"
-- "deadline": application deadline as ISO date "YYYY-MM-DD", or null if none mentioned
-- "event_date": when the event itself happens as ISO date "YYYY-MM-DD", or null
+- "deadline": application deadline as ISO date "YYYY-MM-DD", ONLY if an explicit day is given (e.g. "до 18 июня", "deadline July 5"). Otherwise null.
+- "event_date": when the event itself happens as ISO date "YYYY-MM-DD", ONLY if an explicit day is given. Otherwise null.
 - "is_recurring": true if it's a yearly/recurring event (e.g. annual olympiad), else false
 - "tags": array of lowercase keyword tags
 
-The post may be in Russian. If a date has no year, assume the nearest future year relative to 2026.
-Respond with ONLY the JSON object, no markdown."""
+CRITICAL date rules:
+- Only output a date when the post gives a SPECIFIC DAY. Vague timing like "в июне", "this summer", "осенью", "скоро", "в этом месяце" must be null — do NOT invent a day. Guessing a day can wrongly hide an active opportunity.
+- If a date has a day but no year, assume the nearest future year relative to 2026.
+- If registration is described as currently open with no closing day, set deadline null.
+
+The post may be in Russian. Respond with ONLY the JSON object, no markdown."""
 
 
 def extract_with_llm(text: str) -> dict:
