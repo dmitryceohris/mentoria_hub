@@ -2,3 +2,12 @@ node_modules/
 dist/
 *.tsbuildinfo
 node_modules/.tmp/
+.DS_Store
+*.save
+.env
+.env.local
+.env.*.local
+!.env.example
+.playwright-mcp/*.log
+.playwright-mcp/page-*.yml
+mentoria-audit-*.png
