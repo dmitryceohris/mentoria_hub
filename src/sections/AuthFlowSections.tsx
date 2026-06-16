@@ -303,12 +303,13 @@ function buildOnboardingProfile(profile: StudentProfile): OnboardingProfile {
 
 type DashboardSectionProps = {
   profile: StudentProfile;
+  extraOpportunities?: Opportunity[];
   onCourses: () => void;
   onOpportunities: () => void;
   onLogout: () => void;
 };
 
-export function DashboardSection({ profile, onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
+export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
   const interestLabels = getOptionLabels("interests", profile.interests);
   const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
@@ -328,13 +329,15 @@ export function DashboardSection({ profile, onCourses, onOpportunities, onLogout
 
     setAiLoading(true);
 
+    const allOpportunities = extraOpportunities.length > 0 ? extraOpportunities : opportunities;
+
     Promise.all([
-      getAIRecommendedOpportunities(onboardingProfile, opportunities),
+      getAIRecommendedOpportunities(onboardingProfile, allOpportunities),
       getAIRecommendedCourses(onboardingProfile, courses),
     ])
       .then(([oppResult, courseResult]) => {
         const aiOpps = oppResult.ids
-          .map((id) => opportunities.find((o) => o.id === id))
+          .map((id) => allOpportunities.find((o) => o.id === id))
           .filter((o): o is Opportunity => Boolean(o));
         const aiCourses = courseResult.ids
           .map((id) => courses.find((c) => c.id === id))
@@ -480,13 +483,15 @@ export function CoursesWorkspace({ profile, onBack, onLogout }: CoursesWorkspace
 
 type OpportunitiesWorkspaceProps = {
   profile: StudentProfile;
+  extraOpportunities?: Opportunity[];
   onBack: () => void;
   onLogout: () => void;
 };
 
-export function OpportunitiesWorkspace({ profile, onBack, onLogout }: OpportunitiesWorkspaceProps) {
+export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBack, onLogout }: OpportunitiesWorkspaceProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, opportunities.length);
+  const allOpportunities = extraOpportunities.length > 0 ? extraOpportunities : opportunities;
+  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities.length);
 
   return (
     <section className="flow-screen workspace-screen" aria-labelledby="workspace-opportunities-title">

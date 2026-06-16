@@ -21,7 +21,8 @@ import { HeroSection } from "./sections/HeroSection";
 import { OpportunitySearchSection } from "./sections/OpportunitySearchSection";
 import { SavedOpportunitiesSection } from "./sections/SavedOpportunitiesSection";
 import { emptyOnboardingProfile, onboardingQuestions } from "./data/content";
-import type { OnboardingProfile } from "./data/content";
+import type { OnboardingProfile, Opportunity } from "./data/content";
+import { loadTelegramOpportunities } from "./lib/telegramOpportunities";
 import { isSupabaseConfigured, supabase } from "./lib/supabase";
 import {
   fetchOwnProfile,
@@ -132,6 +133,13 @@ export function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [bootstrapping, setBootstrapping] = useState(true);
+  const [telegramOpportunities, setTelegramOpportunities] = useState<Opportunity[]>([]);
+
+  useEffect(() => {
+    loadTelegramOpportunities().then((opps) => {
+      if (opps.length > 0) setTelegramOpportunities(opps);
+    });
+  }, []);
   const [onboardingProfile, setOnboardingProfile] = useState<OnboardingProfile>(() => readOnboardingDraft());
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [authMode, setAuthMode] = useState<AuthMode>("signup");
@@ -379,6 +387,7 @@ export function App() {
       <main>
         <DashboardSection
           profile={profile}
+          extraOpportunities={telegramOpportunities}
           onCourses={() => setScreen("courses")}
           onOpportunities={() => setScreen("opportunities")}
           onLogout={logout}
@@ -398,7 +407,7 @@ export function App() {
   if (screen === "opportunities" && profile) {
     return (
       <main>
-        <OpportunitiesWorkspace profile={profile} onBack={() => setScreen("dashboard")} onLogout={logout} />
+        <OpportunitiesWorkspace profile={profile} extraOpportunities={telegramOpportunities} onBack={() => setScreen("dashboard")} onLogout={logout} />
       </main>
     );
   }
