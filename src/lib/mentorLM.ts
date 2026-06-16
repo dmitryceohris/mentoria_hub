@@ -52,8 +52,9 @@ function buildSystemPrompt(
       const refDate = o.deadline || o.eventDate;
       const isPast = refDate ? new Date(refDate) < todayDate && !o.isRecurring : false;
       const status = isPast ? "ПРОШЛО" : "АКТУАЛЬНО";
+      const posted = o.postedAt ? `, опубликовано: ${o.postedAt}` : "";
       // Full post text so the model can answer about prizes, certificates, dates, links.
-      return `### [${status}] ${o.title} (${o.category}, дедлайн: ${date})${recurring}\n${o.description}\nИсточник: ${o.applyUrl}`;
+      return `### [${status}] ${o.title} (${o.category}, дедлайн: ${date}${posted})${recurring}\n${o.description}\nИсточник: ${o.applyUrl}`;
     })
     .join("\n\n");
 
@@ -75,7 +76,8 @@ Rules:
 - Be concise, friendly, and specific.
 - You may ANSWER questions about ANY opportunity, including [ПРОШЛО] ones (prizes, what it was, dates) — you have full info above.
 - But only RECOMMEND opportunities tagged [АКТУАЛЬНО]. If the best match is [ПРОШЛО], say it already passed and suggest a similar [АКТУАЛЬНО] one.
-- When a deadline is "не указан", treat the opportunity as still open; mention that the exact deadline is unconfirmed.
+- When a deadline is "не указан", use the publish date ("опубликовано") and the post wording to reason about whether it is still open. If a post about registration says it is "closing soon" / "последние часы" / "продлили на день" and was published several days before ${today}, the registration has most likely CLOSED — tell the student that and suggest they verify on the official link. Do not present a clearly-expired registration as open.
+- If genuinely unsure whether something is still open, say so honestly rather than guessing it is open.
 - If the student names an opportunity that is not an EXACT match, do a fuzzy search by similar titles (e.g. "Central Asia Student Lab" ≈ "Central Asia Business & Economics Case Championship"). Never say you found nothing without first offering the closest matches.
 - Always end by giving the student at least one concrete next step or option.`;
 }
