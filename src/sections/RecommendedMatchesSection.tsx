@@ -1,19 +1,20 @@
 import { ConsoleShell } from "../components/ConsoleShell";
 
-export function SavedOpportunitiesSection() {
+export function RecommendedMatchesSection() {
   return (
-    <section className="product-section" id="features" aria-labelledby="saved-title">
+    <section className="product-section" id="features" aria-labelledby="matches-title">
       <div className="match-copy product-copy">
-        <h2 id="saved-title">Keep every next step visible</h2>
+        <h2 id="matches-title">Keep every next step visible</h2>
         <p>
-          Save programs from search, watch deadlines, and keep course preparation attached to the same student workspace.
+          Review matched programs, watch valid deadlines, and keep course preparation attached to the same student
+          workspace.
         </p>
       </div>
 
-      <div className="product-console" aria-label="Saved opportunities dashboard preview">
+      <div className="product-console" aria-label="Recommended matches dashboard preview">
         <ConsoleShell
           title="Student dashboard"
-          intro="A quiet workspace for saved programs, prep tasks, and mentor handoff."
+          intro="A quiet workspace for recommended programs, prep tasks, and mentor handoff."
           coreClassName="product-core"
         >
           <div className="dashboard-grid">
@@ -27,10 +28,10 @@ export function SavedOpportunitiesSection() {
             </article>
             <article className="dashboard-row dashboard-row-soft">
               <strong>Course prep</strong>
-              <span>Physics fundamentals, academic English, and writing support stay linked to saved opportunities.</span>
+              <span>Physics fundamentals, academic English, and writing support stay linked to recommended matches.</span>
             </article>
           </div>
-          <div className="dashboard-note">Shortlists grow around deadlines, prep notes, and mentor review.</div>
+          <div className="dashboard-note">Recommended matches stay connected to deadlines, prep notes, and mentor review.</div>
         </ConsoleShell>
       </div>
     </section>

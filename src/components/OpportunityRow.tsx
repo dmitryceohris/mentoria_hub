@@ -1,5 +1,5 @@
 import type { Opportunity } from "../data/content";
-import { SaveButton } from "./SaveButton";
+import { MatchButton } from "./MatchButton";
 
 type OpportunityRowProps = {
   opportunity: Opportunity;
@@ -12,7 +12,7 @@ export function OpportunityRow({ opportunity }: OpportunityRowProps) {
         <h3>{opportunity.title}</h3>
         <p>{opportunity.description}</p>
       </div>
-      <SaveButton label={`Save ${opportunity.title}`} />
+      <MatchButton label={`Match ${opportunity.title}`} />
     </article>
   );
 }

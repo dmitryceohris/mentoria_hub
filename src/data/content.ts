@@ -351,9 +351,9 @@ export const courses: Course[] = [
   },
   {
     id: "physics-basics",
-    track: "Mentoria Science",
+    track: "Mentoria Physics",
     title: "Physics Basics",
-    description: "Mechanics, modeling, and research habits for olympiads and science programs.",
+    description: "Mechanics, Newton's laws, and modeling habits for olympiads and science programs.",
     difficulty: "Beginner",
     tags: ["stem", "science", "competition", "research"],
     progress: 38,
@@ -366,6 +366,15 @@ export const courses: Course[] = [
         videoLabel: "Video placeholder: force diagram examples",
         assignment: "Solve three force diagram tasks and mark assumptions.",
         quiz: "Why do physicists simplify a system before solving?"
+      },
+      {
+        id: "newtons-second-law",
+        title: "Newton's 2nd Law",
+        duration: "24 min",
+        materials: ["Force diagram sheet", "Worked examples"],
+        videoLabel: "How does it work?",
+        assignment: "Solve three force diagram tasks and write what changed when mass increased.",
+        quiz: "What happens to acceleration when net force increases?"
       },
       {
         id: "energy-methods",
@@ -436,23 +445,148 @@ export function getOptionLabels(questionId: OnboardingQuestionId, optionIds: str
   return optionIds.map((optionId) => getOptionLabel(questionId, optionId));
 }
 
-export function getRecommendedOpportunities(profile: OnboardingProfile, limit = 3) {
-  const selectedTags = new Set([
+const tagExpansions: Record<string, string[]> = {
+  "science-research": ["science", "stem", "research", "competition"],
+  "business-economics": ["business", "finance", "economics", "case"],
+  technology: ["programming", "technology", "stem", "hackathon"],
+  "global-admissions": ["admissions", "scholarship", "english", "global"],
+  "language-tests": ["english", "ielts", "sat", "admissions"],
+  online: ["online"],
+  offline: ["offline"],
+  hybrid: ["hybrid"],
+  kazakhstan: ["kazakhstan"],
+  global: ["global"],
+  "central-asia": ["central-asia", "central asia"]
+};
+
+const opportunityKeywordTags: Array<[RegExp, string[]]> = [
+  [/(stem|physics|science|research|experiment|олимпиад|науч|исследован)/i, ["stem", "science", "research"]],
+  [/(programming|code|coding|hackathon|хакатон|developer|web|data)/i, ["programming", "technology", "hackathon"]],
+  [/(business|startup|case|economics|finance|стартап|бизнес|эконом)/i, ["business", "finance"]],
+  [/(scholarship|admission|university|essay|sat|ielts|nyuad|грант|стипенд|университет)/i, ["admissions", "scholarship", "english", "global"]],
+  [/(volunteer|social|impact|community|волонт|социаль)/i, ["social-impact", "volunteering"]],
+  [/(competition|cup|championship|tournament|contest|конкурс|чемпионат|турнир)/i, ["competition"]],
+  [/(webinar|вебинар|meeting|мит|course|курс|lesson)/i, ["event", "online"]],
+  [/(kazakhstan|almaty|astana|казахстан|алматы|астана)/i, ["kazakhstan"]],
+  [/(central asia|central-asia|asia|азия)/i, ["central-asia"]],
+  [/(global|international|world|международ)/i, ["global"]]
+];
+
+function normalizeTag(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, "-");
+}
+
+function getProfileTags(profile: OnboardingProfile) {
+  const tags = new Set<string>();
+  const profileValues = [
+    profile.grade,
     profile.academicDirection,
     ...profile.interests,
     ...profile.directions,
     ...profile.formats,
     ...profile.locations
-  ]);
+  ];
 
-  const ranked = opportunities
-    .map((opportunity) => ({
-      opportunity,
-      score:
-        opportunity.tags.filter((tag) => selectedTags.has(tag)).length +
-        (opportunity.grades.includes(profile.grade) ? 1 : 0)
-    }))
-    .sort((a, b) => b.score - a.score);
+  profileValues.forEach((value) => {
+    if (!value) return;
+    const normalized = normalizeTag(value);
+    tags.add(normalized);
+    tagExpansions[normalized]?.forEach((tag) => tags.add(normalizeTag(tag)));
+  });
+
+  return tags;
+}
+
+export function getOpportunityTags(opportunity: Opportunity) {
+  const tags = new Set<string>();
+  const fields = [
+    opportunity.category,
+    opportunity.direction,
+    opportunity.format,
+    opportunity.location,
+    opportunity.title,
+    opportunity.description,
+    opportunity.requirements,
+    ...opportunity.tags
+  ];
+
+  fields.forEach((field) => {
+    if (!field) return;
+    tags.add(normalizeTag(field));
+    tagExpansions[normalizeTag(field)]?.forEach((tag) => tags.add(normalizeTag(tag)));
+  });
+
+  const searchableText = fields.join(" ");
+  opportunityKeywordTags.forEach(([pattern, inferredTags]) => {
+    if (pattern.test(searchableText)) {
+      inferredTags.forEach((tag) => tags.add(normalizeTag(tag)));
+    }
+  });
+
+  return [...tags];
+}
+
+function parseOpportunityDeadline(deadline: string) {
+  if (!deadline) return null;
+
+  const date = new Date(`${deadline}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function isPastDeadline(opportunity: Opportunity, now = new Date()) {
+  const deadline = parseOpportunityDeadline(opportunity.deadline);
+  if (!deadline) return false;
+
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  return deadline < today;
+}
+
+export function hasUpcomingDeadline(opportunity: Opportunity, now = new Date()) {
+  const deadline = parseOpportunityDeadline(opportunity.deadline);
+  if (!deadline) return false;
+
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  return deadline >= today;
+}
+
+export function formatOpportunityDeadline(opportunity: Opportunity) {
+  const deadline = parseOpportunityDeadline(opportunity.deadline);
+
+  if (!deadline) {
+    return "Rolling";
+  }
+
+  if (isPastDeadline(opportunity)) {
+    return "Past deadline";
+  }
+
+  return deadline.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+export function getRecommendedOpportunities(profile: OnboardingProfile, opportunityPool: Opportunity[] = opportunities, limit = 3) {
+  const selectedTags = getProfileTags(profile);
+
+  const ranked = opportunityPool
+    .map((opportunity, index) => {
+      const opportunityTags = getOpportunityTags(opportunity);
+      const tagScore = opportunityTags.filter((tag) => selectedTags.has(tag)).length;
+      const gradeScore = opportunity.grades.includes(profile.grade) ? 2 : 0;
+      const futureDeadlineScore = hasUpcomingDeadline(opportunity) ? 0.75 : 0;
+      const pastDeadlineScore = isPastDeadline(opportunity) ? -1.5 : 0;
+
+      return {
+        opportunity,
+        score: tagScore + gradeScore + futureDeadlineScore + pastDeadlineScore,
+        index
+      };
+    })
+    .sort((a, b) => b.score - a.score || a.index - b.index);
 
   return ranked.slice(0, limit).map((item) => item.opportunity);
 }
@@ -485,7 +619,7 @@ export const faqItems: FaqItem[] = [
     answer: "Yes. Courses can support language tests, science tracks, and application preparation."
   },
   {
-    question: "What happens after saving an opportunity?",
-    answer: "The student can keep it in the dashboard with preparation notes and next steps."
+    question: "What happens after a match appears?",
+    answer: "The student can review it in the dashboard with preparation notes and next steps."
   }
 ];

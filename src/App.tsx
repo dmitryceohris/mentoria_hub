@@ -19,7 +19,7 @@ import { CoursesSection } from "./sections/CoursesSection";
 import { FaqSection } from "./sections/FaqSection";
 import { HeroSection } from "./sections/HeroSection";
 import { OpportunitySearchSection } from "./sections/OpportunitySearchSection";
-import { SavedOpportunitiesSection } from "./sections/SavedOpportunitiesSection";
+import { RecommendedMatchesSection } from "./sections/RecommendedMatchesSection";
 import { emptyOnboardingProfile, onboardingQuestions } from "./data/content";
 import type { OnboardingProfile, Opportunity } from "./data/content";
 import { loadTelegramOpportunities } from "./lib/telegramOpportunities";
@@ -156,6 +156,14 @@ export function App() {
   }, [onboardingProfile]);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [screen]);
+
+  useEffect(() => {
     if (!supabase) {
       setBootstrapping(false);
       return undefined;
@@ -222,26 +230,17 @@ export function App() {
     setAuthError("");
     setAuthNotice("");
     setFieldErrors({});
+    setAuthMode("signup");
     setOnboardingStep(0);
     setScreen("onboarding");
   }
 
   function continueOnboarding() {
     if (onboardingStep === onboardingQuestions.length - 1) {
-      setProfile({
-        id: "guest",
-        name: "Student",
-        email: "",
-        grade: onboardingProfile.grade,
-        interests: onboardingProfile.interests,
-        academicDirection: onboardingProfile.academicDirection,
-        opportunityPreferences: {
-          directions: onboardingProfile.directions,
-          formats: onboardingProfile.formats,
-          locations: onboardingProfile.locations,
-        },
-      });
-      setScreen("dashboard");
+      setAuthError("");
+      setAuthNotice("");
+      setFieldErrors({});
+      setScreen("registration");
       return;
     }
 
@@ -416,7 +415,7 @@ export function App() {
     <main>
       <HeroSection onStartJourney={startOnboarding} />
       <OpportunitySearchSection />
-      <SavedOpportunitiesSection />
+      <RecommendedMatchesSection />
       <CoursesSection />
       <CompanionSection />
       <FaqSection />
