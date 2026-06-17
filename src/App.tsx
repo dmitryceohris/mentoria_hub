@@ -13,6 +13,7 @@ import type {
   RegistrationForm,
   StudentProfile
 } from "./sections/AuthFlowSections";
+import { MentorLMSection } from "./sections/MentorLMSection";
 import {
   CourseDetailWorkspace,
   CoursesWorkspace,
@@ -42,7 +43,7 @@ import {
 } from "./lib/auth";
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
-const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet)(?:\/|$)/;
+const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet|mentor-lm)(?:\/|$)/;
 
 type AuthStatus = "bootstrapping" | "signed-out" | "profile-loading" | "profile-ready" | "profile-missing" | "error";
 
@@ -269,6 +270,7 @@ export function App() {
       if (opps.length > 0) setTelegramOpportunities(opps);
     });
   }, []);
+
   const [onboardingProfile, setOnboardingProfile] = useState<OnboardingProfile>(() => readOnboardingDraft());
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [authMode, setAuthMode] = useState<AuthMode>("signup");
@@ -725,6 +727,12 @@ export function App() {
           <Route
             path="/mentor-pet"
             element={protectedRoute(<MentorPetWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
+          />
+          <Route
+            path="/mentor-lm"
+            element={protectedRoute(
+              <MentorLMSection profile={profile as StudentProfile} opportunities={telegramOpportunities} onLogout={logout} />
+            )}
           />
           <Route path="*" element={<Navigate replace to={profile ? "/dashboard" : "/"} />} />
         </Routes>

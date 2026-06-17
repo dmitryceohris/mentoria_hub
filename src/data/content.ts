@@ -11,6 +11,9 @@ export type Opportunity = {
   requirements: string;
   tags: string[];
   applyUrl: string;
+  eventDate?: string | null;
+  isRecurring?: boolean;
+  postedAt?: string | null;
 };
 
 export type Course = {

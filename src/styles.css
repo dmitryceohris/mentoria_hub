@@ -2890,6 +2890,299 @@ main {
   }
 }
 
+/* ── MentorLM ─────────────────────────────────────────────── */
+
+.mentorlm-root {
+  display: flex;
+  height: 100vh;
+  background: var(--navy-deep);
+  color: var(--text);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.mentorlm-sidebar {
+  width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-strong);
+  border-right: 1px solid var(--line);
+  transition: width 0.25s var(--ease);
+  flex-shrink: 0;
+}
+
+.mentorlm-sidebar-open {
+  width: 260px;
+}
+
+.mentorlm-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.mentorlm-burger {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  transition: color 0.15s;
+}
+.mentorlm-burger:hover { color: var(--text); }
+
+.mentorlm-new-chat {
+  flex: 1;
+  background: var(--glass-fill);
+  border: 1px solid var(--line);
+  color: var(--cyan);
+  border-radius: var(--radius);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.mentorlm-new-chat:hover { background: rgba(17, 198, 207, 0.1); }
+
+.mentorlm-session-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mentorlm-session-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius);
+  transition: background 0.15s;
+}
+.mentorlm-session-row:hover { background: var(--glass-fill); }
+.mentorlm-session-active { background: rgba(17, 198, 207, 0.12) !important; }
+
+.mentorlm-session-item {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s;
+}
+.mentorlm-session-row:hover .mentorlm-session-item { color: var(--text); }
+.mentorlm-session-active .mentorlm-session-item { color: var(--cyan) !important; }
+
+.mentorlm-session-menu-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 16px;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  letter-spacing: 1px;
+}
+.mentorlm-session-row:hover .mentorlm-session-menu-btn { opacity: 1; }
+.mentorlm-session-menu-btn:hover { color: var(--text); }
+
+.mentorlm-session-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  z-index: 10;
+  min-width: 100px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.mentorlm-menu-delete {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #f87171;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: var(--radius);
+  transition: background 0.15s;
+}
+.mentorlm-menu-delete:hover { background: rgba(248, 113, 113, 0.1); }
+
+.mentorlm-sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mentorlm-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mentorlm-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.mentorlm-brand {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--cyan);
+}
+
+.mentorlm-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.mentorlm-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mentorlm-empty {
+  margin: auto;
+  text-align: center;
+  max-width: 480px;
+}
+
+.mentorlm-empty h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.mentorlm-empty p {
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.mentorlm-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mentorlm-suggestion {
+  background: var(--glass-fill);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+.mentorlm-suggestion:hover { background: rgba(17, 198, 207, 0.08); border-color: var(--cyan); }
+
+.mentorlm-msg {
+  display: flex;
+}
+
+.mentorlm-msg-user { justify-content: flex-end; }
+.mentorlm-msg-assistant { justify-content: flex-start; }
+
+.mentorlm-msg-bubble {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.mentorlm-msg-user .mentorlm-msg-bubble {
+  background: var(--cyan);
+  color: var(--navy-deep);
+  border-bottom-right-radius: 4px;
+}
+
+.mentorlm-msg-assistant .mentorlm-msg-bubble {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+
+.mentorlm-cursor::after {
+  content: "▋";
+  animation: blink 0.8s steps(1) infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.mentorlm-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.mentorlm-input {
+  flex: 1;
+  background: var(--glass-fill);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  resize: none;
+  line-height: 1.5;
+  transition: border-color 0.15s;
+}
+.mentorlm-input:focus { outline: none; border-color: var(--cyan); }
+.mentorlm-input::placeholder { color: var(--muted); }
+
+.mentorlm-send {
+  background: var(--cyan);
+  color: var(--navy-deep);
+  border: none;
+  border-radius: 12px;
+  width: 44px;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity 0.15s;
+  align-self: flex-end;
+  height: 44px;
+}
+.mentorlm-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.mentorlm-send:not(:disabled):hover { opacity: 0.85; }
+
 /* Deadline Calendar & Dashboard Improvements */
 .deadline-calendar-grid {
   display: grid;

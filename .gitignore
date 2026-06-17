@@ -13,3 +13,7 @@ node_modules/.tmp/
 mentoria-audit-*.png
 *.swo
 *.swp
+
+# Telegram session files (account credentials — never commit)
+*.session
+*.session-journal
