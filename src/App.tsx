@@ -1,11 +1,10 @@
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
-  CoursesWorkspace,
-  DashboardSection,
   OnboardingSection,
-  OpportunitiesWorkspace,
   RegistrationSection
 } from "./sections/AuthFlowSections";
 import type {
@@ -14,6 +13,14 @@ import type {
   RegistrationForm,
   StudentProfile
 } from "./sections/AuthFlowSections";
+import {
+  CourseDetailWorkspace,
+  CoursesWorkspace,
+  DashboardSection,
+  LessonWorkspace,
+  MentorPetWorkspace,
+  OpportunitiesWorkspace
+} from "./sections/WorkspaceSections";
 import { CompanionSection } from "./sections/CompanionSection";
 import { CoursesSection } from "./sections/CoursesSection";
 import { FaqSection } from "./sections/FaqSection";
@@ -34,9 +41,6 @@ import {
   updateOwnProfile
 } from "./lib/auth";
 
-type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities";
-
-
 const onboardingDraftKey = "mentoria.onboardingDraft";
 
 const initialRegistrationForm: RegistrationForm = {
@@ -44,6 +48,19 @@ const initialRegistrationForm: RegistrationForm = {
   email: "",
   password: ""
 };
+
+function PageShell({ children }: { children: ReactNode }) {
+  return (
+    <motion.main
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.42, ease: [0.32, 0.72, 0, 1] }}
+    >
+      {children}
+    </motion.main>
+  );
+}
 
 function readOnboardingDraft() {
   if (typeof window === "undefined") {
@@ -129,7 +146,8 @@ function validateRegistrationForm(authMode: AuthMode, form: RegistrationForm) {
 }
 
 export function App() {
-  const [screen, setScreen] = useState<AppScreen>("home");
+  const location = useLocation();
+  const navigate = useNavigate();
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [bootstrapping, setBootstrapping] = useState(true);
@@ -161,7 +179,7 @@ export function App() {
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [screen]);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!supabase) {
@@ -190,13 +208,15 @@ export function App() {
 
           if (loadedProfile) {
             setProfile(loadedProfile);
-            setScreen("dashboard");
+            if (["/", "/onboarding", "/registration"].includes(window.location.pathname)) {
+              navigate("/dashboard", { replace: true });
+            }
           } else {
             setRegistrationForm((current) => ({
               ...current,
               email: session.user.email ?? current.email
             }));
-            setScreen("onboarding");
+            navigate("/onboarding", { replace: true });
           }
         }
       } catch (error) {
@@ -224,7 +244,7 @@ export function App() {
       active = false;
       unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   function startOnboarding() {
     setAuthError("");
@@ -232,7 +252,7 @@ export function App() {
     setFieldErrors({});
     setAuthMode("signup");
     setOnboardingStep(0);
-    setScreen("onboarding");
+    navigate("/onboarding");
   }
 
   function continueOnboarding() {
@@ -240,7 +260,7 @@ export function App() {
       setAuthError("");
       setAuthNotice("");
       setFieldErrors({});
-      setScreen("registration");
+      navigate("/registration");
       return;
     }
 
@@ -261,7 +281,7 @@ export function App() {
 
     if (!hasCompletedOnboarding(onboardingProfile) && authMode === "signup") {
       setAuthError("Complete the onboarding questions before creating an account.");
-      setScreen("onboarding");
+      navigate("/onboarding");
       return;
     }
 
@@ -294,7 +314,7 @@ export function App() {
         setSession(data.session);
         setProfile(nextProfile);
         window.sessionStorage.removeItem(onboardingDraftKey);
-        setScreen("dashboard");
+        navigate("/dashboard", { replace: true });
         return;
       }
 
@@ -304,11 +324,11 @@ export function App() {
 
       if (loadedProfile) {
         setProfile(loadedProfile);
-        setScreen("dashboard");
+        navigate("/dashboard", { replace: true });
       } else {
         setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
         setOnboardingStep(0);
-        setScreen("onboarding");
+        navigate("/onboarding", { replace: true });
       }
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : "Authentication failed. Try again.");
@@ -325,100 +345,107 @@ export function App() {
     setAuthError("");
     setAuthNotice("");
     setRegistrationForm(initialRegistrationForm);
-    setScreen("home");
+    navigate("/", { replace: true });
   }
 
   if (bootstrapping) {
     return (
-      <main>
+      <PageShell>
         <section className="flow-screen loading-screen" aria-live="polite">
           <div className="loading-panel">
             <span>Mentoria Hub</span>
             <strong>Loading student workspace</strong>
           </div>
         </section>
-      </main>
+      </PageShell>
     );
   }
 
-  if (screen === "onboarding") {
-    return (
-      <main>
-        <OnboardingSection
-          profile={onboardingProfile}
-          step={onboardingStep}
-          onChange={setOnboardingProfile}
-          onNext={continueOnboarding}
-          onBack={() => setOnboardingStep((currentStep) => Math.max(0, currentStep - 1))}
-          onReturnHome={() => setScreen("home")}
-        />
-      </main>
-    );
-  }
+  const registrationRoute = (
+    <PageShell>
+      <RegistrationSection
+        authMode={authMode}
+        form={registrationForm}
+        fieldErrors={fieldErrors}
+        authError={authError}
+        authNotice={authNotice}
+        loading={authLoading}
+        supabaseReady={supabaseReady}
+        onChange={updateRegistrationField}
+        onSubmit={submitRegistration}
+        onModeChange={(nextMode) => {
+          setAuthMode(nextMode);
+          setFieldErrors({});
+          setAuthError("");
+          setAuthNotice("");
+        }}
+        onBack={() => navigate("/onboarding")}
+      />
+    </PageShell>
+  );
 
-  if (screen === "registration" || (!profile && (screen === "dashboard" || screen === "courses" || screen === "opportunities"))) {
-    return (
-      <main>
-        <RegistrationSection
-          authMode={authMode}
-          form={registrationForm}
-          fieldErrors={fieldErrors}
-          authError={authError}
-          authNotice={authNotice}
-          loading={authLoading}
-          supabaseReady={supabaseReady}
-          onChange={updateRegistrationField}
-          onSubmit={submitRegistration}
-          onModeChange={(nextMode) => {
-            setAuthMode(nextMode);
-            setFieldErrors({});
-            setAuthError("");
-            setAuthNotice("");
-          }}
-          onBack={() => setScreen("onboarding")}
-        />
-      </main>
-    );
-  }
-
-  if (screen === "dashboard" && profile) {
-    return (
-      <main>
-        <DashboardSection
-          profile={profile}
-          extraOpportunities={telegramOpportunities}
-          onCourses={() => setScreen("courses")}
-          onOpportunities={() => setScreen("opportunities")}
-          onLogout={logout}
-        />
-      </main>
-    );
-  }
-
-  if (screen === "courses" && profile) {
-    return (
-      <main>
-        <CoursesWorkspace profile={profile} onBack={() => setScreen("dashboard")} onLogout={logout} />
-      </main>
-    );
-  }
-
-  if (screen === "opportunities" && profile) {
-    return (
-      <main>
-        <OpportunitiesWorkspace profile={profile} extraOpportunities={telegramOpportunities} onBack={() => setScreen("dashboard")} onLogout={logout} />
-      </main>
-    );
+  function protectedRoute(children: ReactNode) {
+    return profile ? <PageShell>{children}</PageShell> : registrationRoute;
   }
 
   return (
-    <main>
-      <HeroSection onStartJourney={startOnboarding} />
-      <OpportunitySearchSection />
-      <RecommendedMatchesSection />
-      <CoursesSection />
-      <CompanionSection />
-      <FaqSection />
-    </main>
+    <LayoutGroup>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <PageShell>
+                <HeroSection onStartJourney={startOnboarding} />
+                <OpportunitySearchSection />
+                <RecommendedMatchesSection />
+                <CoursesSection />
+                <CompanionSection />
+                <FaqSection />
+              </PageShell>
+            }
+          />
+          <Route
+            path="/onboarding"
+            element={
+              <PageShell>
+                <OnboardingSection
+                  profile={onboardingProfile}
+                  step={onboardingStep}
+                  onChange={setOnboardingProfile}
+                  onNext={continueOnboarding}
+                  onBack={() => setOnboardingStep((currentStep) => Math.max(0, currentStep - 1))}
+                  onReturnHome={() => navigate("/")}
+                />
+              </PageShell>
+            }
+          />
+          <Route path="/registration" element={registrationRoute} />
+          <Route
+            path="/dashboard"
+            element={protectedRoute(
+              <DashboardSection profile={profile as StudentProfile} extraOpportunities={telegramOpportunities} onLogout={logout} />
+            )}
+          />
+          <Route
+            path="/courses"
+            element={protectedRoute(<CoursesWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
+          />
+          <Route path="/courses/:courseId" element={protectedRoute(<CourseDetailWorkspace onLogout={logout} />)} />
+          <Route path="/courses/:courseId/lessons/:lessonId" element={protectedRoute(<LessonWorkspace onLogout={logout} />)} />
+          <Route
+            path="/opportunities"
+            element={protectedRoute(
+              <OpportunitiesWorkspace profile={profile as StudentProfile} extraOpportunities={telegramOpportunities} onLogout={logout} />
+            )}
+          />
+          <Route
+            path="/mentor-pet"
+            element={protectedRoute(<MentorPetWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
+          />
+          <Route path="*" element={<Navigate replace to={profile ? "/dashboard" : "/"} />} />
+        </Routes>
+      </AnimatePresence>
+    </LayoutGroup>
   );
 }

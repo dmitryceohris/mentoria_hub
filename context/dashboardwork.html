@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Work Context - Mentoria Hub</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #596573;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --accent: #1c6b5a;
+      --accent-soft: #e5f4ef;
+      --warn: #8a4b00;
+      --warn-soft: #fff2d9;
+      --surface: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 32px;
+      background: #12362f;
+      color: #ffffff;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 820px;
+      color: #d9eee8;
+    }
+
+    section {
+      padding: 0 32px 4px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-top: 34px;
+      padding-top: 4px;
+      color: #12362f;
+      font-size: 22px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--panel);
+      font-family: Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .note {
+      margin: 24px 32px 0;
+      padding: 14px 16px;
+      border: 1px solid #bfdfd5;
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+
+    .warning {
+      border-color: #f0c36a;
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    footer {
+      margin-top: 34px;
+      padding: 18px 32px 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Dashboard Work Context</h1>
+      <p>Implementation notes for the protected Mentoria Hub dashboard, courses, lessons, and MentorPet lesson notes.</p>
+    </header>
+
+    <section>
+      <h2>Centered Minimalist Page Rule</h2>
+      <p>All protected dashboard and workspace pages must use a centered minimalist layout: constrained center-aligned shells, calm spacing, no sidebars, no left or right page drift, and restrained glass surfaces that match the Mentoria dark ethnofuturist design system.</p>
+
+      <h2>Routing</h2>
+      <p>The protected workspace uses browser routes for dashboard, courses, course detail, lesson detail, opportunity search, and MentorPet. Protected routes should show the auth flow when no student profile is available.</p>
+      <ul>
+        <li><code>/dashboard</code> - student dashboard and overview.</li>
+        <li><code>/courses</code> - live course catalog sourced from data.</li>
+        <li><code>/courses/:courseId</code> - course detail and lesson list.</li>
+        <li><code>/courses/:courseId/lessons/:lessonId</code> - lesson page with video and support material.</li>
+        <li><code>/opportunities</code> - opportunity search workspace.</li>
+        <li><code>/mentor-pet</code> - future MentorPet notes workspace.</li>
+      </ul>
+
+      <h2>Course And Lesson Data</h2>
+      <p>Courses and lessons remain static data for now, but the shape is admin-ready. Course additions should automatically appear on the courses page. Lesson video URLs are optional and intended to be admin-managed later.</p>
+
+      <h2>MentorPet Notes</h2>
+      <p>MentorPet notes are a separate future function, not normal lessons. Notes attach to a specific <code>courseId</code> and <code>lessonId</code>, appear as smaller right-aligned items below a lesson in course lists, and appear as expandable items at the bottom of the lesson page.</p>
+    </section>
+
+    <div class="note warning">
+      The single note marked <code>prototypeOnly</code> is temporary demo data. Remove it when real admin-managed MentorPet note creation exists.
+    </div>
+
+    <footer>Generated for the dashboard courses and lesson flow implementation.</footer>
+  </main>
+</body>
+</html>

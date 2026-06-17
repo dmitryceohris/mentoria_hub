@@ -18,6 +18,7 @@ export type Course = {
   track: string;
   title: string;
   description: string;
+  coverUrl?: string;
   difficulty: "Beginner" | "Intermediate";
   tags: string[];
   progress: number;
@@ -27,11 +28,24 @@ export type Course = {
 export type Lesson = {
   id: string;
   title: string;
+  description?: string;
+  coverUrl?: string;
   duration: string;
   materials: string[];
+  videoUrl?: string;
   videoLabel: string;
   assignment: string;
   quiz: string;
+};
+
+export type MentorPetLessonNote = {
+  id: string;
+  courseId: string;
+  lessonId: string;
+  title: string;
+  body: string;
+  createdBy: "mentorpet";
+  prototypeOnly?: boolean;
 };
 
 export type FaqItem = {
@@ -323,6 +337,7 @@ export const courses: Course[] = [
       {
         id: "academic-vocabulary",
         title: "Academic vocabulary map",
+        description: "Build a reusable map of academic verbs, nouns, and sentence patterns for opportunity applications.",
         duration: "18 min",
         materials: ["Vocabulary bank", "Practice worksheet"],
         videoLabel: "Video placeholder: vocabulary strategy",
@@ -332,6 +347,7 @@ export const courses: Course[] = [
       {
         id: "essay-paragraphs",
         title: "Essay paragraph structure",
+        description: "Turn raw achievements into a focused paragraph with a clear claim, evidence, and reflection.",
         duration: "24 min",
         materials: ["Essay outline", "Mentor checklist"],
         videoLabel: "Video placeholder: paragraph walkthrough",
@@ -341,6 +357,7 @@ export const courses: Course[] = [
       {
         id: "interview-speaking",
         title: "Clear speaking for interviews",
+        description: "Practice concise interview answers that sound prepared without becoming memorized.",
         duration: "16 min",
         materials: ["Answer framework", "Self-review rubric"],
         videoLabel: "Video placeholder: interview response model",
@@ -361,6 +378,7 @@ export const courses: Course[] = [
       {
         id: "forces-models",
         title: "Forces and useful models",
+        description: "Translate a physical situation into a force model before choosing equations.",
         duration: "22 min",
         materials: ["Formula sheet", "Problem set"],
         videoLabel: "Video placeholder: force diagram examples",
@@ -370,8 +388,10 @@ export const courses: Course[] = [
       {
         id: "newtons-second-law",
         title: "Newton's 2nd Law",
+        description: "Connect net force, mass, and acceleration through a compact model you can reuse in problems.",
         duration: "24 min",
         materials: ["Force diagram sheet", "Worked examples"],
+        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
         videoLabel: "How does it work?",
         assignment: "Solve three force diagram tasks and write what changed when mass increased.",
         quiz: "What happens to acceleration when net force increases?"
@@ -379,6 +399,7 @@ export const courses: Course[] = [
       {
         id: "energy-methods",
         title: "Energy methods",
+        description: "Use conservation and transfer of energy to solve problems without tracking every force over time.",
         duration: "25 min",
         materials: ["Energy notes", "Worked examples"],
         videoLabel: "Video placeholder: conservation walkthrough",
@@ -388,6 +409,7 @@ export const courses: Course[] = [
       {
         id: "research-problem",
         title: "From problem to research question",
+        description: "Convert an interesting physics prompt into something measurable, testable, and presentable.",
         duration: "20 min",
         materials: ["Research question template", "Experiment notes"],
         videoLabel: "Video placeholder: turning prompts into research",
@@ -408,6 +430,7 @@ export const courses: Course[] = [
       {
         id: "profile-audit",
         title: "Profile audit",
+        description: "Map activities, evidence, and gaps so your application story becomes easier to improve.",
         duration: "19 min",
         materials: ["Activity map", "Profile scorecard"],
         videoLabel: "Video placeholder: profile review",
@@ -417,6 +440,7 @@ export const courses: Course[] = [
       {
         id: "shortlist-logic",
         title: "University shortlist logic",
+        description: "Build a balanced university shortlist based on fit, deadlines, evidence, and scholarship context.",
         duration: "21 min",
         materials: ["Shortlist table", "Deadline tracker"],
         videoLabel: "Video placeholder: choosing target schools",
@@ -426,6 +450,7 @@ export const courses: Course[] = [
       {
         id: "deadline-system",
         title: "Deadline system",
+        description: "Plan backward from deadlines and turn the application process into weekly actions.",
         duration: "15 min",
         materials: ["Timeline template", "Weekly planning sheet"],
         videoLabel: "Video placeholder: planning backwards",
@@ -433,6 +458,18 @@ export const courses: Course[] = [
         quiz: "What is the first deadline you should plan backward from?"
       }
     ]
+  }
+];
+
+export const mentorPetLessonNotes: MentorPetLessonNote[] = [
+  {
+    id: "mentorpet-newtons-force-check",
+    courseId: "physics-basics",
+    lessonId: "newtons-second-law",
+    title: "MentorPet checkpoint",
+    body: "Before the next task, write one sentence explaining which object you chose as the system and why. This makes the force diagram easier to debug.",
+    createdBy: "mentorpet",
+    prototypeOnly: true
   }
 ];
 
