@@ -377,11 +377,7 @@ function DeadlineCalendar({ opportunities }: { opportunities: Opportunity[] }) {
   );
 }
 
-<<<<<<< HEAD
-export function DashboardSection({ profile, onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
-=======
 export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
->>>>>>> bac16fde47e2c06bb5c22bbb0e4bda01544823d2
   const onboardingProfile = buildOnboardingProfile(profile);
   const interestLabels = getOptionLabels("interests", profile.interests);
   const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
@@ -415,17 +411,6 @@ export function DashboardSection({ profile, extraOpportunities = [], onCourses, 
 
         <div className="metric-grid" aria-label="Dashboard statistics">
           <article className="metric-card">
-<<<<<<< HEAD
-            <span>Learning streak</span>
-            <strong>7 days</strong>
-          </article>
-          <article className="metric-card">
-            <span>Completed courses</span>
-            <strong>3</strong>
-          </article>
-          <article className="metric-card">
-            <span>Saved opportunities</span>
-=======
             <span>Active courses</span>
             <strong>{courses.length}</strong>
           </article>
@@ -435,7 +420,6 @@ export function DashboardSection({ profile, extraOpportunities = [], onCourses, 
           </article>
           <article className="metric-card">
             <span>Recommended matches</span>
->>>>>>> bac16fde47e2c06bb5c22bbb0e4bda01544823d2
             <strong>{recommendedOpportunities.length}</strong>
           </article>
           <article className="metric-card">
