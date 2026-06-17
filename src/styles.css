@@ -4273,3 +4273,50 @@ main {
   .roadmap-node-left .roadmap-grade,
   .roadmap-node-right .roadmap-grade { left: 2px; right: auto; }
 }
+
+/* ── Roadmap: direction picker ────────────────────────────── */
+
+.roadmap-select { max-width: 560px; margin: 8px auto 0; }
+
+.roadmap-select-intro {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.roadmap-option-grid { margin-bottom: 20px; }
+
+.roadmap-select-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.roadmap-select-count {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.roadmap-path-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.roadmap-path-header p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+  flex: 1;
+}
+
+.roadmap-path-header button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
