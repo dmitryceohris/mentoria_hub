@@ -11,3 +11,7 @@ node_modules/.tmp/
 .playwright-mcp/*.log
 .playwright-mcp/page-*.yml
 mentoria-audit-*.png
+
+# Telegram session files (account credentials — never commit)
+*.session
+*.session-journal
