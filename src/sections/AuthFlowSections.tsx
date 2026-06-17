@@ -184,6 +184,7 @@ type RegistrationSectionProps = {
   authNotice: string;
   loading: boolean;
   profileCompletion?: boolean;
+  supabaseConfigError: string;
   supabaseReady: boolean;
   onChange: (field: keyof RegistrationForm, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -199,6 +200,7 @@ export function RegistrationSection({
   authNotice,
   loading,
   profileCompletion = false,
+  supabaseConfigError,
   supabaseReady,
   onChange,
   onSubmit,
@@ -222,7 +224,8 @@ export function RegistrationSection({
 
           {!supabaseReady ? (
             <div className="form-alert" role="alert">
-              Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` to `.env.local` before registering.
+              {supabaseConfigError ||
+                "Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in Vercel, then redeploy."}
             </div>
           ) : null}
 

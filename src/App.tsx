@@ -30,7 +30,7 @@ import { RecommendedMatchesSection } from "./sections/RecommendedMatchesSection"
 import { emptyOnboardingProfile, onboardingQuestions } from "./data/content";
 import type { OnboardingProfile, Opportunity } from "./data/content";
 import { loadTelegramOpportunities } from "./lib/telegramOpportunities";
-import { isSupabaseConfigured, supabase } from "./lib/supabase";
+import { isSupabaseConfigured, supabase, supabaseConfigError } from "./lib/supabase";
 import {
   fetchOwnProfile,
   getSession as getSupabaseSession,
@@ -45,6 +45,20 @@ const onboardingDraftKey = "mentoria.onboardingDraft";
 const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet)(?:\/|$)/;
 
 type AuthStatus = "bootstrapping" | "signed-out" | "profile-loading" | "profile-ready" | "profile-missing" | "error";
+
+type AuthMetadata = {
+  academic_direction?: unknown;
+  grade?: unknown;
+  interests?: unknown;
+  name?: unknown;
+  opportunity_preferences?: unknown;
+};
+
+type OpportunityPreferencesMetadata = {
+  directions?: unknown;
+  formats?: unknown;
+  locations?: unknown;
+};
 
 const initialRegistrationForm: RegistrationForm = {
   name: "",
@@ -106,6 +120,38 @@ function normalizeOnboardingProfile(value: unknown): OnboardingProfile {
   };
 }
 
+function normalizeStringArray(value: unknown) {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function mergeOnboardingProfiles(current: OnboardingProfile, fallback: OnboardingProfile): OnboardingProfile {
+  return {
+    grade: current.grade || fallback.grade,
+    interests: current.interests.length > 0 ? current.interests : fallback.interests,
+    academicDirection: current.academicDirection || fallback.academicDirection,
+    directions: current.directions.length > 0 ? current.directions : fallback.directions,
+    formats: current.formats.length > 0 ? current.formats : fallback.formats,
+    locations: current.locations.length > 0 ? current.locations : fallback.locations
+  };
+}
+
+function getProfileFromAuthMetadata(session: Session) {
+  const metadata = session.user.user_metadata as AuthMetadata;
+  const preferences =
+    metadata.opportunity_preferences && typeof metadata.opportunity_preferences === "object"
+      ? (metadata.opportunity_preferences as OpportunityPreferencesMetadata)
+      : {};
+
+  return normalizeOnboardingProfile({
+    grade: typeof metadata.grade === "string" ? metadata.grade : "",
+    interests: normalizeStringArray(metadata.interests),
+    academicDirection: typeof metadata.academic_direction === "string" ? metadata.academic_direction : "",
+    directions: normalizeStringArray(preferences.directions),
+    formats: normalizeStringArray(preferences.formats),
+    locations: normalizeStringArray(preferences.locations)
+  });
+}
+
 function hasCompletedOnboarding(profile: OnboardingProfile) {
   return onboardingQuestions.every((question) => {
     if (!question.required) {
@@ -127,6 +173,31 @@ function hasCompletedOnboarding(profile: OnboardingProfile) {
         return profile.locations.length > 0;
     }
   });
+}
+
+function getFirstIncompleteOnboardingStep(profile: OnboardingProfile) {
+  const incompleteStep = onboardingQuestions.findIndex((question) => {
+    if (!question.required) {
+      return false;
+    }
+
+    switch (question.id) {
+      case "grade":
+        return profile.grade.length === 0;
+      case "academicDirection":
+        return profile.academicDirection.length === 0;
+      case "interests":
+        return profile.interests.length === 0;
+      case "directions":
+        return profile.directions.length === 0;
+      case "formats":
+        return profile.formats.length === 0;
+      case "locations":
+        return profile.locations.length === 0;
+    }
+  });
+
+  return incompleteStep === -1 ? onboardingQuestions.length - 1 : incompleteStep;
 }
 
 function validateRegistrationForm(
@@ -178,6 +249,12 @@ function getErrorMessage(error: unknown, fallback: string) {
   return fallback;
 }
 
+function getAuthMetadataName(session: Session) {
+  const metadata = session.user.user_metadata as AuthMetadata;
+
+  return typeof metadata.name === "string" ? metadata.name : "";
+}
+
 export function App() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -202,6 +279,7 @@ export function App() {
   const [authLoading, setAuthLoading] = useState(false);
   const profileSaveInFlightRef = useRef(false);
   const profileLoadRequestIdRef = useRef(0);
+  const onboardingProfileRef = useRef(onboardingProfile);
 
   const supabaseReady = useMemo(() => Boolean(isSupabaseConfigured && supabase), []);
   const currentPathWithSearch = getPathWithSearch(location);
@@ -256,6 +334,12 @@ export function App() {
 
       setProfile(null);
       setAuthStatus("profile-missing");
+      const metadataProfile = getProfileFromAuthMetadata(nextSession);
+      const recoveredOnboardingProfile = mergeOnboardingProfiles(onboardingProfileRef.current, metadataProfile);
+      onboardingProfileRef.current = recoveredOnboardingProfile;
+      setOnboardingProfile(recoveredOnboardingProfile);
+      setOnboardingStep(getFirstIncompleteOnboardingStep(recoveredOnboardingProfile));
+
       if (options.returnTo) {
         setAuthReturnTo(options.returnTo);
       } else if (typeof window !== "undefined" && isProtectedPath(window.location.pathname)) {
@@ -263,7 +347,8 @@ export function App() {
       }
       setRegistrationForm((current) => ({
         ...current,
-        email: nextSession.user.email ?? current.email
+        email: nextSession.user.email ?? current.email,
+        name: current.name || getAuthMetadataName(nextSession)
       }));
 
       if (options.redirectOnMissing) {
@@ -288,6 +373,7 @@ export function App() {
   }
 
   useEffect(() => {
+    onboardingProfileRef.current = onboardingProfile;
     window.sessionStorage.setItem(onboardingDraftKey, JSON.stringify(onboardingProfile));
   }, [onboardingProfile]);
 
@@ -423,7 +509,7 @@ export function App() {
     }
 
     if (!supabase) {
-      setAuthError("Supabase is not configured. Add the Vite env variables and restart the dev server.");
+      setAuthError(supabaseConfigError || "Supabase is not configured. Add the Vite env variables and restart the dev server.");
       return;
     }
 
@@ -473,7 +559,6 @@ export function App() {
         navigate(nextPath, { replace: true });
       } else {
         setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
-        setOnboardingStep(0);
       }
     } catch (error) {
       if (profileSaveSession?.user) {
@@ -542,6 +627,7 @@ export function App() {
         authNotice={authNotice}
         loading={authLoading}
         profileCompletion={profileCompletion}
+        supabaseConfigError={supabaseConfigError}
         supabaseReady={supabaseReady}
         onChange={updateRegistrationField}
         onSubmit={submitRegistration}

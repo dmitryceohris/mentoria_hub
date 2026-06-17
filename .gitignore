@@ -11,3 +11,5 @@ node_modules/.tmp/
 .playwright-mcp/*.log
 .playwright-mcp/page-*.yml
 mentoria-audit-*.png
+*.swo
+*.swp
