@@ -17,3 +17,7 @@ mentoria-audit-*.png
 # Telegram session files (account credentials — never commit)
 *.session
 *.session-journal
+
+# Python cache
+__pycache__/
+*.pyc
