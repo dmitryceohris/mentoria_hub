@@ -4372,10 +4372,10 @@ main {
 }
 
 .hero-theme-toggle {
-  position: absolute;
-  top: 18px;
-  left: clamp(18px, 7vw, 112px);
-  z-index: 2;
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 20;
 }
 
 /* Inputs/selects/textareas must follow the theme, not stay dark on light */
