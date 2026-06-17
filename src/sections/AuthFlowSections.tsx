@@ -183,6 +183,7 @@ type RegistrationSectionProps = {
   authError: string;
   authNotice: string;
   loading: boolean;
+  profileCompletion?: boolean;
   supabaseReady: boolean;
   onChange: (field: keyof RegistrationForm, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -197,6 +198,7 @@ export function RegistrationSection({
   authError,
   authNotice,
   loading,
+  profileCompletion = false,
   supabaseReady,
   onChange,
   onSubmit,
@@ -204,6 +206,8 @@ export function RegistrationSection({
   onBack
 }: RegistrationSectionProps) {
   const isSignup = authMode === "signup";
+  const needsName = isSignup || profileCompletion;
+  const needsPassword = !profileCompletion;
 
   return (
     <section className="flow-screen auth-screen" aria-labelledby="auth-title">
@@ -213,7 +217,7 @@ export function RegistrationSection({
             <button className="secondary-action compact-action auth-back-button" type="button" onClick={onBack}>
               Back
             </button>
-            <h1 id="auth-title">{isSignup ? "Create account" : "Sign in"}</h1>
+            <h1 id="auth-title">{profileCompletion ? "Finish profile" : isSignup ? "Create account" : "Sign in"}</h1>
           </div>
 
           {!supabaseReady ? (
@@ -234,7 +238,7 @@ export function RegistrationSection({
             </div>
           ) : null}
 
-          {isSignup ? (
+          {needsName ? (
             <label className="form-field">
               <span>Name</span>
               <input
@@ -261,30 +265,34 @@ export function RegistrationSection({
             <small>{fieldErrors.email ?? "Use the same email when signing back in."}</small>
           </label>
 
-          <label className="form-field">
-            <span>Password</span>
-            <input
-              autoComplete={isSignup ? "new-password" : "current-password"}
-              type="password"
-              value={form.password}
-              aria-invalid={Boolean(fieldErrors.password)}
-              onChange={(event) => onChange("password", event.target.value)}
-              placeholder="Minimum 6 characters"
-            />
-            <small>{fieldErrors.password ?? "Stored and verified by Supabase Auth."}</small>
-          </label>
+          {needsPassword ? (
+            <label className="form-field">
+              <span>Password</span>
+              <input
+                autoComplete={isSignup ? "new-password" : "current-password"}
+                type="password"
+                value={form.password}
+                aria-invalid={Boolean(fieldErrors.password)}
+                onChange={(event) => onChange("password", event.target.value)}
+                placeholder="Minimum 6 characters"
+              />
+              <small>{fieldErrors.password ?? "Stored and verified by Supabase Auth."}</small>
+            </label>
+          ) : null}
 
           <button className="primary-action auth-submit" type="submit" disabled={loading || !supabaseReady}>
-            {loading ? "Working..." : isSignup ? "Create account" : "Sign in"}
+            {loading ? "Working..." : profileCompletion ? "Save profile" : isSignup ? "Create account" : "Sign in"}
           </button>
 
-          <button
-            className="mode-switch"
-            type="button"
-            onClick={() => onModeChange(isSignup ? "signin" : "signup")}
-          >
-            {isSignup ? "Already have an account? Sign in" : "Need an account? Create one"}
-          </button>
+          {!profileCompletion ? (
+            <button
+              className="mode-switch"
+              type="button"
+              onClick={() => onModeChange(isSignup ? "signin" : "signup")}
+            >
+              {isSignup ? "Already have an account? Sign in" : "Need an account? Create one"}
+            </button>
+          ) : null}
         </form>
       </div>
     </section>
