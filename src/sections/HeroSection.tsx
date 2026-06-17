@@ -1,4 +1,5 @@
 import { navLinks } from "../data/content";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 type HeroSectionProps = {
   onLogin: () => void;
@@ -18,9 +19,12 @@ export function HeroSection({ onLogin, onStartJourney }: HeroSectionProps) {
       </svg>
 
       <div className="hero-inner">
-        <button className="hero-login-button" type="button" onClick={onLogin}>
-          Log in
-        </button>
+        <div className="hero-top-actions">
+          <ThemeToggle className="hero-theme-toggle" />
+          <button className="hero-login-button" type="button" onClick={onLogin}>
+            Log in
+          </button>
+        </div>
 
         <nav className="hero-rail" aria-label="Mentoria Hub sections">
           <a className="wordmark" href="#hero-title" aria-label="Mentoria Hub home">

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ThemeToggle } from "../components/ThemeToggle";
 import {
   ArrowRight,
   BookOpen,
@@ -112,6 +113,7 @@ export function WorkspaceRail({ onLogout }: { onLogout: () => void }) {
             </NavLink>
           );
         })}
+        <ThemeToggle className="workspace-theme-toggle" />
         <button className="workspace-logout-link" type="button" onClick={onLogout}>
           Logout
         </button>
