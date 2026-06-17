@@ -2890,11 +2890,12 @@ main {
   }
 }
 
-/* ── MentorLM ─────────────────────────────────────────────── */
+/* MentorLM */
 
 .mentorlm-root {
   display: flex;
-  height: 100vh;
+  min-height: 100dvh;
+  height: 100dvh;
   background: var(--navy-deep);
   color: var(--text);
   font-family: var(--font-sans);
@@ -2908,7 +2909,6 @@ main {
   flex-direction: column;
   background: var(--surface-strong);
   border-right: 1px solid var(--line);
-  transition: width 0.25s var(--ease);
   flex-shrink: 0;
 }
 
@@ -2932,9 +2932,15 @@ main {
   font-size: 18px;
   padding: 4px 8px;
   border-radius: var(--radius);
-  transition: color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s var(--ease);
 }
-.mentorlm-burger:hover { color: var(--text); }
+.mentorlm-burger:hover {
+  color: var(--text);
+  transform: translateY(-1px);
+}
 
 .mentorlm-new-chat {
   flex: 1;
@@ -2946,9 +2952,12 @@ main {
   cursor: pointer;
   font-size: 13px;
   white-space: nowrap;
-  transition: background 0.15s;
+  transition: transform 0.15s var(--ease);
 }
-.mentorlm-new-chat:hover { background: rgba(17, 198, 207, 0.1); }
+.mentorlm-new-chat:hover {
+  background: rgba(17, 198, 207, 0.1);
+  transform: translateY(-1px);
+}
 
 .mentorlm-session-list {
   flex: 1;
@@ -2964,7 +2973,6 @@ main {
   display: flex;
   align-items: center;
   border-radius: var(--radius);
-  transition: background 0.15s;
 }
 .mentorlm-session-row:hover { background: var(--glass-fill); }
 .mentorlm-session-active { background: rgba(17, 198, 207, 0.12) !important; }
@@ -2981,7 +2989,6 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.15s;
 }
 .mentorlm-session-row:hover .mentorlm-session-item { color: var(--text); }
 .mentorlm-session-active .mentorlm-session-item { color: var(--cyan) !important; }
@@ -2995,11 +3002,17 @@ main {
   font-size: 16px;
   border-radius: var(--radius);
   opacity: 0;
-  transition: opacity 0.15s, color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s var(--ease), transform 0.15s var(--ease);
   letter-spacing: 1px;
 }
 .mentorlm-session-row:hover .mentorlm-session-menu-btn { opacity: 1; }
-.mentorlm-session-menu-btn:hover { color: var(--text); }
+.mentorlm-session-menu-btn:hover {
+  color: var(--text);
+  transform: translateY(-1px);
+}
 
 .mentorlm-session-menu {
   position: absolute;
@@ -3024,7 +3037,6 @@ main {
   cursor: pointer;
   font-size: 13px;
   border-radius: var(--radius);
-  transition: background 0.15s;
 }
 .mentorlm-menu-delete:hover { background: rgba(248, 113, 113, 0.1); }
 
@@ -3103,9 +3115,13 @@ main {
   cursor: pointer;
   font-size: 14px;
   text-align: left;
-  transition: background 0.15s, border-color 0.15s;
+  transition: transform 0.15s var(--ease);
 }
-.mentorlm-suggestion:hover { background: rgba(17, 198, 207, 0.08); border-color: var(--cyan); }
+.mentorlm-suggestion:hover {
+  background: rgba(17, 198, 207, 0.08);
+  border-color: var(--cyan);
+  transform: translateY(-1px);
+}
 
 .mentorlm-msg {
   display: flex;
@@ -3137,7 +3153,7 @@ main {
 }
 
 .mentorlm-cursor::after {
-  content: "▋";
+  content: "|";
   animation: blink 0.8s steps(1) infinite;
 }
 
@@ -3162,7 +3178,6 @@ main {
   font-family: var(--font-sans);
   resize: none;
   line-height: 1.5;
-  transition: border-color 0.15s;
 }
 .mentorlm-input:focus { outline: none; border-color: var(--cyan); }
 .mentorlm-input::placeholder { color: var(--muted); }
@@ -3173,15 +3188,20 @@ main {
   border: none;
   border-radius: 12px;
   width: 44px;
-  font-size: 20px;
   cursor: pointer;
   font-weight: 700;
-  transition: opacity 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s var(--ease), transform 0.15s var(--ease);
   align-self: flex-end;
   height: 44px;
 }
 .mentorlm-send:disabled { opacity: 0.4; cursor: not-allowed; }
-.mentorlm-send:not(:disabled):hover { opacity: 0.85; }
+.mentorlm-send:not(:disabled):hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
 
 /* Deadline Calendar & Dashboard Improvements */
 .deadline-calendar-grid {

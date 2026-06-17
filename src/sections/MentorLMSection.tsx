@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { DotsThreeVertical, List, PaperPlaneTilt, X } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import type { Opportunity } from "../data/content";
 import type { StudentProfile } from "./AuthFlowSections";
@@ -71,7 +72,7 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
     const title = activeSession.messages.length === 0 ? text.slice(0, 40) : activeSession.title;
     const historyForAPI = [...activeSession.messages, userMsg];
 
-    // Add both messages in one update — prevents double render
+    // Add both messages in one update to prevent a duplicate assistant render.
     setSessions((prev) =>
       prev.map((s) =>
         s.id !== activeId
@@ -129,11 +130,10 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
 
   return (
     <div className="mentorlm-root" onClick={() => setMenuOpenId(null)}>
-      {/* Sidebar */}
       <aside className={`mentorlm-sidebar${sidebarOpen ? " mentorlm-sidebar-open" : ""}`}>
         <div className="mentorlm-sidebar-header">
           <button className="mentorlm-burger" type="button" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
-            ✕
+            <X aria-hidden="true" size={18} weight="bold" />
           </button>
           <button className="mentorlm-new-chat" type="button" onClick={newChat}>
             + New chat
@@ -162,7 +162,7 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
                   setMenuOpenId(menuOpenId === s.id ? null : s.id);
                 }}
               >
-                ···
+                <DotsThreeVertical aria-hidden="true" size={18} weight="bold" />
               </button>
               {menuOpenId === s.id && (
                 <div className="mentorlm-session-menu" onClick={(e) => e.stopPropagation()}>
@@ -176,17 +176,16 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
         </nav>
 
         <div className="mentorlm-sidebar-footer">
-          <button type="button" className="flow-link-button" onClick={() => navigate("/dashboard")}>← Dashboard</button>
+          <button type="button" className="flow-link-button" onClick={() => navigate("/dashboard")}>Dashboard</button>
           <button type="button" className="flow-link-button" onClick={onLogout}>Logout</button>
         </div>
       </aside>
 
-      {/* Main */}
       <div className="mentorlm-main">
         <header className="mentorlm-topbar">
           {!sidebarOpen && (
             <button className="mentorlm-burger" type="button" onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
-              ☰
+              <List aria-hidden="true" size={20} weight="bold" />
             </button>
           )}
           <span className="mentorlm-brand">MentorLM</span>
@@ -196,7 +195,7 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
         <div className="mentorlm-messages">
           {activeSession?.messages.length === 0 && (
             <div className="mentorlm-empty">
-              <h2>Привет, {profile.name} 👋</h2>
+              <h2>Привет, {profile.name}</h2>
               <p>Спроси меня про конкурсы, стипендии, или как подготовиться к поступлению.</p>
               <div className="mentorlm-suggestions">
                 {[
@@ -234,7 +233,7 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
             ref={textareaRef}
             className="mentorlm-input"
             rows={1}
-            placeholder="Напиши вопрос… (Enter — отправить, Shift+Enter — новая строка)"
+            placeholder="Напиши вопрос..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -246,7 +245,7 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
             onClick={submit}
             disabled={streaming || !input.trim()}
           >
-            {streaming ? "..." : "↑"}
+            {streaming ? "..." : <PaperPlaneTilt aria-hidden="true" size={20} weight="bold" />}
           </button>
         </div>
       </div>
