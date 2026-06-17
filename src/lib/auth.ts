@@ -1,4 +1,4 @@
-import type { Session } from "@supabase/supabase-js";
+import type { Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 import type { Database, Json } from "./database.types";
 import type { OnboardingProfile } from "../data/content";
@@ -102,7 +102,7 @@ export function onAuthStateChange(listener: (session: Session | null) => void) {
 
   const {
     data: { subscription }
-  } = supabase.auth.onAuthStateChange((_event, session) => {
+  } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
     listener(session);
   });
 
