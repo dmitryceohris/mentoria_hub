@@ -4387,3 +4387,24 @@ input::placeholder,
 textarea::placeholder {
   color: var(--muted);
 }
+
+/* ── Route transition progress bar (repovive-style) ───────── */
+
+.route-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.route-progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan), var(--cyan-light));
+  box-shadow: 0 0 10px rgb(var(--accent-glow, 17 198 207) / 0.8);
+  border-radius: 0 2px 2px 0;
+  transition: width 0.2s var(--ease), opacity 0.25s ease;
+}

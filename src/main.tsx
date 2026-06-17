@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { MotionConfig } from "framer-motion";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
+import { RouteProgress } from "./components/RouteProgress";
 import { initTheme } from "./lib/theme";
 import "./styles.css";
 
@@ -18,6 +19,7 @@ createRoot(rootElement).render(
   <StrictMode>
     <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 120, damping: 24 }}>
       <BrowserRouter>
+        <RouteProgress />
         <App />
       </BrowserRouter>
     </MotionConfig>
