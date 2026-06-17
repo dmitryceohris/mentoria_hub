@@ -19,12 +19,10 @@ export function HeroSection({ onLogin, onStartJourney }: HeroSectionProps) {
       </svg>
 
       <div className="hero-inner">
-        <div className="hero-top-actions">
-          <ThemeToggle className="hero-theme-toggle" />
-          <button className="hero-login-button" type="button" onClick={onLogin}>
-            Log in
-          </button>
-        </div>
+        <ThemeToggle className="hero-theme-toggle" />
+        <button className="hero-login-button" type="button" onClick={onLogin}>
+          Log in
+        </button>
 
         <nav className="hero-rail" aria-label="Mentoria Hub sections">
           <a className="wordmark" href="#hero-title" aria-label="Mentoria Hub home">

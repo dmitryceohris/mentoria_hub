@@ -4371,10 +4371,11 @@ main {
   border-color: var(--cyan);
 }
 
-.hero-top-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.hero-theme-toggle {
+  position: absolute;
+  top: 18px;
+  left: clamp(18px, 7vw, 112px);
+  z-index: 2;
 }
 
 /* Inputs/selects/textareas must follow the theme, not stay dark on light */
