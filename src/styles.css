@@ -184,6 +184,44 @@ main {
   pointer-events: none;
 }
 
+.hero-login-button {
+  position: absolute;
+  top: 18px;
+  right: clamp(16px, 3vw, 52px);
+  z-index: 2;
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 17px;
+  border: 1px solid rgba(132, 230, 234, 0.2);
+  border-radius: 999px;
+  background:
+    var(--glass-reflection),
+    linear-gradient(180deg, rgba(88, 217, 239, 0.12), rgba(3, 11, 18, 0.44)),
+    rgba(7, 19, 30, 0.68);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 820;
+  box-shadow:
+    inset 0 1px 0 rgba(239, 250, 250, 0.12),
+    0 18px 46px -34px rgba(17, 198, 207, 0.72);
+  opacity: 0;
+  transform: translateY(12px);
+  animation: revealUp 680ms 120ms var(--ease) forwards;
+  transition: transform 360ms var(--ease), border-color 360ms var(--ease), color 360ms var(--ease);
+}
+
+.hero-login-button:hover {
+  border-color: rgba(132, 230, 234, 0.38);
+  color: var(--mint);
+  transform: translateY(-1px);
+}
+
+.hero-login-button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
 .wordmark,
 .hero-rail a {
   position: relative;
@@ -2019,6 +2057,7 @@ main {
 .primary-action:focus-visible,
 .secondary-action:focus-visible,
 .mode-switch:focus-visible,
+.hero-login-button:focus-visible,
 .flow-link-button:focus-visible,
 .form-field input:focus-visible {
   outline: none;
@@ -2503,6 +2542,17 @@ main {
   .grain,
   .ethno-route {
     display: none;
+  }
+
+  .hero-login-button {
+    position: relative;
+    top: auto;
+    right: auto;
+    justify-self: end;
+    min-height: 38px;
+    margin-bottom: 8px;
+    padding: 0 14px;
+    font-size: 12px;
   }
 
   .hero-rail {

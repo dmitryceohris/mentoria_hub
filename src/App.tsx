@@ -256,6 +256,28 @@ function getAuthMetadataName(session: Session) {
   return typeof metadata.name === "string" ? metadata.name : "";
 }
 
+function getFallbackProfileName(session: Session, form: RegistrationForm) {
+  const emailName = session.user.email?.split("@")[0] ?? "";
+
+  return getAuthMetadataName(session) || form.name.trim() || emailName || "Student";
+}
+
+function userHasNoNewIdentity(user: unknown) {
+  if (!user || typeof user !== "object" || !("identities" in user)) {
+    return false;
+  }
+
+  const identities = (user as { identities?: unknown }).identities;
+
+  return Array.isArray(identities) && identities.length === 0;
+}
+
+function isExistingAccountSignupError(error: unknown) {
+  const message = getErrorMessage(error, "").toLowerCase();
+
+  return message.includes("already registered") || message.includes("already exists") || message.includes("user already");
+}
+
 export function App() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -374,6 +396,33 @@ export function App() {
     return nextProfile;
   }
 
+  async function restoreProfileFromMetadata(nextSession: Session, nextPath: string) {
+    const metadataProfile = getProfileFromAuthMetadata(nextSession);
+
+    if (!hasCompletedOnboarding(metadataProfile)) {
+      return null;
+    }
+
+    const metadataForm: RegistrationForm = {
+      name: getFallbackProfileName(nextSession, registrationForm),
+      email: nextSession.user.email ?? registrationForm.email,
+      password: ""
+    };
+    const nextProfile = await upsertOwnProfile(nextSession.user.id, metadataForm, metadataProfile);
+
+    setSession(nextSession);
+    setProfile(nextProfile);
+    setAuthStatus("profile-ready");
+    setOnboardingProfile(metadataProfile);
+    onboardingProfileRef.current = metadataProfile;
+    setRegistrationForm(initialRegistrationForm);
+    window.sessionStorage.removeItem(onboardingDraftKey);
+    setAuthReturnTo("");
+    navigate(nextPath, { replace: true });
+
+    return nextProfile;
+  }
+
   useEffect(() => {
     onboardingProfileRef.current = onboardingProfile;
     window.sessionStorage.setItem(onboardingDraftKey, JSON.stringify(onboardingProfile));
@@ -465,6 +514,15 @@ export function App() {
     navigate("/onboarding");
   }
 
+  function startSignIn() {
+    setAuthError("");
+    setAuthNotice("");
+    setFieldErrors({});
+    setAuthMode("signin");
+    setAuthReturnTo("");
+    navigate("/registration");
+  }
+
   function continueOnboarding() {
     if (onboardingStep === onboardingQuestions.length - 1) {
       setAuthError("");
@@ -536,6 +594,13 @@ export function App() {
         beginProfileSave();
         const data = await signUpWithProfile(registrationForm, onboardingProfile);
 
+        if (data.user && userHasNoNewIdentity(data.user)) {
+          setAuthMode("signin");
+          setRegistrationForm((current) => ({ ...initialRegistrationForm, email: current.email }));
+          setAuthNotice("This email already has an account. Log in to continue.");
+          return;
+        }
+
         if (!data.user || !data.session) {
           setAuthNotice(
             "Account created. Confirm your email, then sign in. Your onboarding answers are still saved in this browser."
@@ -549,20 +614,35 @@ export function App() {
       }
 
       const data = await signInWithPassword(registrationForm.email, registrationForm.password);
+      const nextPath = authReturnTo || "/dashboard";
       const loadedProfile = await loadProfileForSession(data.session, {
         redirectOnReady: false,
-        redirectOnMissing: true
+        redirectOnMissing: false
       });
 
       if (loadedProfile) {
-        const nextPath = authReturnTo || "/dashboard";
         setRegistrationForm(initialRegistrationForm);
         setAuthReturnTo("");
         navigate(nextPath, { replace: true });
+      } else if (data.session?.user) {
+        beginProfileSave();
+        const restoredProfile = await restoreProfileFromMetadata(data.session, nextPath);
+
+        if (!restoredProfile) {
+          setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
+          navigate("/onboarding", { replace: true });
+        }
       } else {
         setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
       }
     } catch (error) {
+      if (authMode === "signup" && isExistingAccountSignupError(error)) {
+        setAuthMode("signin");
+        setRegistrationForm((current) => ({ ...initialRegistrationForm, email: current.email }));
+        setAuthNotice("This email already has an account. Log in to continue.");
+        return;
+      }
+
       if (profileSaveSession?.user) {
         const failedProfileSession = profileSaveSession;
         setSession(failedProfileSession);
@@ -681,7 +761,7 @@ export function App() {
             path="/"
             element={
               <PageShell>
-                <HeroSection onStartJourney={startOnboarding} />
+                <HeroSection onLogin={startSignIn} onStartJourney={startOnboarding} />
                 <OpportunitySearchSection />
                 <RecommendedMatchesSection />
                 <CoursesSection />

@@ -1,10 +1,11 @@
 import { navLinks } from "../data/content";
 
 type HeroSectionProps = {
+  onLogin: () => void;
   onStartJourney: () => void;
 };
 
-export function HeroSection({ onStartJourney }: HeroSectionProps) {
+export function HeroSection({ onLogin, onStartJourney }: HeroSectionProps) {
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="grain" aria-hidden="true" />
@@ -17,6 +18,10 @@ export function HeroSection({ onStartJourney }: HeroSectionProps) {
       </svg>
 
       <div className="hero-inner">
+        <button className="hero-login-button" type="button" onClick={onLogin}>
+          Log in
+        </button>
+
         <nav className="hero-rail" aria-label="Mentoria Hub sections">
           <a className="wordmark" href="#hero-title" aria-label="Mentoria Hub home">
             Mentoria Hub
