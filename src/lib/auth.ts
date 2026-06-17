@@ -48,6 +48,12 @@ function normalizeOpportunityPreferences(value: Json | null) {
   };
 }
 
+function waitForProfileTrigger() {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, 250);
+  });
+}
+
 export function mapProfileRow(row: ProfileRow): StudentProfile {
   return {
     id: row.id,
@@ -194,6 +200,46 @@ export async function updateOwnProfile(userId: string, form: RegistrationForm, o
     .single();
 
   if (error) {
+    throw error;
+  }
+
+  return mapProfileRow(data);
+}
+
+export async function upsertOwnProfile(userId: string, form: RegistrationForm, onboardingProfile: OnboardingProfile) {
+  if (!supabase) {
+    throw new Error("Supabase is not configured.");
+  }
+
+  const profilePayload = buildProfilePayload(form, onboardingProfile);
+  const { data, error } = await supabase
+    .from("profiles")
+    .upsert(
+      {
+        id: userId,
+        name: profilePayload.name,
+        email: profilePayload.email,
+        grade: profilePayload.grade,
+        interests: profilePayload.interests,
+        academic_direction: profilePayload.academic_direction,
+        opportunity_preferences: profilePayload.opportunity_preferences
+      },
+      { onConflict: "id" }
+    )
+    .select("*")
+    .single();
+
+  if (error) {
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      await waitForProfileTrigger();
+
+      try {
+        return await updateOwnProfile(userId, form, onboardingProfile);
+      } catch {
+        // The auth trigger can create the profile row just after sign-up.
+      }
+    }
+
     throw error;
   }
 

@@ -1,11 +1,10 @@
-import type { FormEvent } from "react";
-import { useEffect, useMemo, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
-  CoursesWorkspace,
-  DashboardSection,
   OnboardingSection,
-  OpportunitiesWorkspace,
   RegistrationSection
 } from "./sections/AuthFlowSections";
 import type {
@@ -15,12 +14,20 @@ import type {
   StudentProfile
 } from "./sections/AuthFlowSections";
 import { MentorLMSection } from "./sections/MentorLMSection";
+import {
+  CourseDetailWorkspace,
+  CoursesWorkspace,
+  DashboardSection,
+  LessonWorkspace,
+  MentorPetWorkspace,
+  OpportunitiesWorkspace
+} from "./sections/WorkspaceSections";
 import { CompanionSection } from "./sections/CompanionSection";
 import { CoursesSection } from "./sections/CoursesSection";
 import { FaqSection } from "./sections/FaqSection";
 import { HeroSection } from "./sections/HeroSection";
 import { OpportunitySearchSection } from "./sections/OpportunitySearchSection";
-import { SavedOpportunitiesSection } from "./sections/SavedOpportunitiesSection";
+import { RecommendedMatchesSection } from "./sections/RecommendedMatchesSection";
 import { emptyOnboardingProfile, onboardingQuestions } from "./data/content";
 import type { OnboardingProfile, Opportunity } from "./data/content";
 import { loadTelegramOpportunities, filterActive } from "./lib/telegramOpportunities";
@@ -32,19 +39,32 @@ import {
   signInWithPassword,
   signOut,
   signUpWithProfile,
-  updateOwnProfile
+  upsertOwnProfile
 } from "./lib/auth";
 
-type AppScreen = "home" | "onboarding" | "registration" | "dashboard" | "courses" | "opportunities" | "mentorlm";
-
-
 const onboardingDraftKey = "mentoria.onboardingDraft";
+const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet|mentor-lm)(?:\/|$)/;
+
+type AuthStatus = "bootstrapping" | "signed-out" | "profile-loading" | "profile-ready" | "profile-missing" | "error";
 
 const initialRegistrationForm: RegistrationForm = {
   name: "",
   email: "",
   password: ""
 };
+
+function PageShell({ children }: { children: ReactNode }) {
+  return (
+    <motion.main
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.42, ease: [0.32, 0.72, 0, 1] }}
+    >
+      {children}
+    </motion.main>
+  );
+}
 
 function readOnboardingDraft() {
   if (typeof window === "undefined") {
@@ -110,11 +130,17 @@ function hasCompletedOnboarding(profile: OnboardingProfile) {
   });
 }
 
-function validateRegistrationForm(authMode: AuthMode, form: RegistrationForm) {
+function validateRegistrationForm(
+  authMode: AuthMode,
+  form: RegistrationForm,
+  options: { profileCompletion?: boolean } = {}
+) {
   const errors: RegistrationFieldErrors = {};
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const needsName = authMode === "signup" || options.profileCompletion;
+  const needsPassword = !options.profileCompletion;
 
-  if (authMode === "signup" && form.name.trim().length === 0) {
+  if (needsName && form.name.trim().length === 0) {
     errors.name = "Enter your name.";
   }
 
@@ -122,18 +148,44 @@ function validateRegistrationForm(authMode: AuthMode, form: RegistrationForm) {
     errors.email = "Enter a valid email address.";
   }
 
-  if (form.password.length < 6) {
+  if (needsPassword && form.password.length < 6) {
     errors.password = "Password must be at least 6 characters.";
   }
 
   return errors;
 }
 
+function getPathWithSearch(location: { pathname: string; search: string }) {
+  return `${location.pathname}${location.search}`;
+}
+
+function isProtectedPath(pathname: string) {
+  return protectedPathPattern.test(pathname);
+}
+
+function isEntryRoute(pathname: string) {
+  return pathname === "/" || pathname === "/onboarding" || pathname === "/registration";
+}
+
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (error && typeof error === "object" && "message" in error && typeof error.message === "string") {
+    return error.message;
+  }
+
+  return fallback;
+}
+
 export function App() {
-  const [screen, setScreen] = useState<AppScreen>("home");
+  const location = useLocation();
+  const navigate = useNavigate();
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
-  const [bootstrapping, setBootstrapping] = useState(true);
+  const [authStatus, setAuthStatus] = useState<AuthStatus>(supabase ? "bootstrapping" : "signed-out");
+  const [authReturnTo, setAuthReturnTo] = useState("");
   const [telegramOpportunities, setTelegramOpportunities] = useState<Opportunity[]>([]);
 
   useEffect(() => {
@@ -153,16 +205,115 @@ export function App() {
   const [authError, setAuthError] = useState("");
   const [authNotice, setAuthNotice] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
+  const profileSaveInFlightRef = useRef(false);
+  const profileLoadRequestIdRef = useRef(0);
 
   const supabaseReady = useMemo(() => Boolean(isSupabaseConfigured && supabase), []);
+  const currentPathWithSearch = getPathWithSearch(location);
+
+  const loadProfileForSession = useCallback(
+    async (
+      nextSession: Session | null,
+      options: {
+        isActive?: () => boolean;
+        redirectOnReady?: boolean;
+        redirectOnMissing?: boolean;
+        returnTo?: string;
+      } = {}
+    ) => {
+      const isActive = options.isActive ?? (() => true);
+
+      if (!nextSession?.user) {
+        if (!isActive()) return null;
+        setSession(null);
+        setProfile(null);
+        setAuthStatus("signed-out");
+        return null;
+      }
+
+      if (profileSaveInFlightRef.current) {
+        setSession(nextSession);
+        return null;
+      }
+
+      if (!isActive()) return null;
+
+      const loadRequestId = ++profileLoadRequestIdRef.current;
+      setSession(nextSession);
+      setAuthStatus("profile-loading");
+
+      const loadedProfile = await fetchOwnProfile(nextSession.user.id);
+
+      if (!isActive() || loadRequestId !== profileLoadRequestIdRef.current || profileSaveInFlightRef.current) {
+        return null;
+      }
+
+      if (loadedProfile) {
+        setProfile(loadedProfile);
+        setAuthStatus("profile-ready");
+
+        if (options.redirectOnReady) {
+          navigate(options.returnTo || "/dashboard", { replace: true });
+        }
+
+        return loadedProfile;
+      }
+
+      setProfile(null);
+      setAuthStatus("profile-missing");
+      if (options.returnTo) {
+        setAuthReturnTo(options.returnTo);
+      } else if (typeof window !== "undefined" && isProtectedPath(window.location.pathname)) {
+        setAuthReturnTo(getPathWithSearch(window.location));
+      }
+      setRegistrationForm((current) => ({
+        ...current,
+        email: nextSession.user.email ?? current.email
+      }));
+
+      if (options.redirectOnMissing) {
+        navigate("/onboarding", { replace: true });
+      }
+
+      return null;
+    },
+    [navigate]
+  );
+
+  async function saveProfileForSession(nextSession: Session, nextPath: string) {
+    const nextProfile = await upsertOwnProfile(nextSession.user.id, registrationForm, onboardingProfile);
+    setSession(nextSession);
+    setProfile(nextProfile);
+    setAuthStatus("profile-ready");
+    setRegistrationForm(initialRegistrationForm);
+    window.sessionStorage.removeItem(onboardingDraftKey);
+    setAuthReturnTo("");
+    navigate(nextPath, { replace: true });
+    return nextProfile;
+  }
 
   useEffect(() => {
     window.sessionStorage.setItem(onboardingDraftKey, JSON.stringify(onboardingProfile));
   }, [onboardingProfile]);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (isProtectedPath(location.pathname) && authStatus === "signed-out") {
+      setAuthReturnTo(currentPathWithSearch);
+      setAuthMode("signin");
+    }
+  }, [authStatus, currentPathWithSearch, location.pathname]);
+
+  useEffect(() => {
     if (!supabase) {
-      setBootstrapping(false);
+      setAuthStatus("signed-out");
       return undefined;
     }
 
@@ -170,39 +321,18 @@ export function App() {
 
     async function bootstrapSession() {
       try {
-        const session = await getSupabaseSession();
-
-        if (!active) {
-          return;
-        }
-
-        setSession(session);
-
-        if (session?.user) {
-          const loadedProfile = await fetchOwnProfile(session.user.id);
-
-          if (!active) {
-            return;
-          }
-
-          if (loadedProfile) {
-            setProfile(loadedProfile);
-            setScreen("dashboard");
-          } else {
-            setRegistrationForm((current) => ({
-              ...current,
-              email: session.user.email ?? current.email
-            }));
-            setScreen("onboarding");
-          }
-        }
+        const restoredSession = await getSupabaseSession();
+        const bootstrapPath = getPathWithSearch(window.location);
+        await loadProfileForSession(restoredSession, {
+          isActive: () => active,
+          redirectOnReady: Boolean(restoredSession?.user && isEntryRoute(window.location.pathname)),
+          redirectOnMissing: Boolean(restoredSession?.user),
+          returnTo: isProtectedPath(window.location.pathname) ? bootstrapPath : "/dashboard"
+        });
       } catch (error) {
         if (active) {
-          setAuthError(error instanceof Error ? error.message : "Could not restore the Supabase session.");
-        }
-      } finally {
-        if (active) {
-          setBootstrapping(false);
+          setAuthError(getErrorMessage(error, "Could not restore the Supabase session."));
+          setAuthStatus("error");
         }
       }
     }
@@ -210,43 +340,53 @@ export function App() {
     bootstrapSession();
 
     const unsubscribe = onAuthStateChange((nextSession) => {
-      setSession(nextSession);
+      if (profileSaveInFlightRef.current) {
+        setSession(nextSession);
+        return;
+      }
 
       if (!nextSession) {
+        setSession(null);
         setProfile(null);
+        setAuthStatus("signed-out");
+        return;
       }
+
+      loadProfileForSession(nextSession, {
+        isActive: () => active,
+        redirectOnReady: false,
+        redirectOnMissing: false
+      }).catch((error) => {
+        if (active) {
+          setAuthError(getErrorMessage(error, "Could not restore the Supabase session."));
+          setAuthStatus("error");
+        }
+      });
     });
 
     return () => {
       active = false;
       unsubscribe();
     };
-  }, []);
+  }, [loadProfileForSession]);
 
   function startOnboarding() {
     setAuthError("");
     setAuthNotice("");
     setFieldErrors({});
+    setAuthMode("signup");
+    setAuthReturnTo("");
     setOnboardingStep(0);
-    setScreen("onboarding");
+    navigate("/onboarding");
   }
 
   function continueOnboarding() {
     if (onboardingStep === onboardingQuestions.length - 1) {
-      setProfile({
-        id: "guest",
-        name: "Student",
-        email: "",
-        grade: onboardingProfile.grade,
-        interests: onboardingProfile.interests,
-        academicDirection: onboardingProfile.academicDirection,
-        opportunityPreferences: {
-          directions: onboardingProfile.directions,
-          formats: onboardingProfile.formats,
-          locations: onboardingProfile.locations,
-        },
-      });
-      setScreen("dashboard");
+      setAuthError("");
+      setAuthNotice("");
+      setFieldErrors({});
+      setAuthMode("signup");
+      navigate("/registration");
       return;
     }
 
@@ -264,14 +404,21 @@ export function App() {
     event.preventDefault();
     setAuthError("");
     setAuthNotice("");
+    const completingProfile = Boolean(session?.user && authStatus === "profile-missing");
 
-    if (!hasCompletedOnboarding(onboardingProfile) && authMode === "signup") {
-      setAuthError("Complete the onboarding questions before creating an account.");
-      setScreen("onboarding");
+    if (!hasCompletedOnboarding(onboardingProfile) && (authMode === "signup" || completingProfile)) {
+      setAuthError(
+        completingProfile
+          ? "Complete the onboarding questions before saving your profile."
+          : "Complete the onboarding questions before creating an account."
+      );
+      navigate("/onboarding");
       return;
     }
 
-    const nextFieldErrors = validateRegistrationForm(authMode, registrationForm);
+    const nextFieldErrors = validateRegistrationForm(authMode, registrationForm, {
+      profileCompletion: completingProfile
+    });
     setFieldErrors(nextFieldErrors);
 
     if (Object.keys(nextFieldErrors).length > 0) {
@@ -284,41 +431,70 @@ export function App() {
     }
 
     setAuthLoading(true);
+    let profileSaveStarted = false;
+    let profileSaveSession: Session | null = completingProfile ? session : null;
+
+    function beginProfileSave() {
+      profileSaveStarted = true;
+      profileSaveInFlightRef.current = true;
+      profileLoadRequestIdRef.current += 1;
+    }
 
     try {
+      if (completingProfile && session?.user) {
+        beginProfileSave();
+        await saveProfileForSession(session, authReturnTo || "/dashboard");
+        return;
+      }
+
       if (authMode === "signup") {
+        beginProfileSave();
         const data = await signUpWithProfile(registrationForm, onboardingProfile);
 
         if (!data.user || !data.session) {
           setAuthNotice(
-            "Account created, but email confirmation is enabled in Supabase. Disable mandatory confirmation for the demo or confirm the email before signing in."
+            "Account created. Confirm your email, then sign in. Your onboarding answers are still saved in this browser."
           );
           return;
         }
 
-        const nextProfile = await updateOwnProfile(data.user.id, registrationForm, onboardingProfile);
-        setSession(data.session);
-        setProfile(nextProfile);
-        window.sessionStorage.removeItem(onboardingDraftKey);
-        setScreen("dashboard");
+        profileSaveSession = data.session;
+        await saveProfileForSession(data.session, "/dashboard");
         return;
       }
 
       const data = await signInWithPassword(registrationForm.email, registrationForm.password);
-      const loadedProfile = await fetchOwnProfile(data.user.id);
-      setSession(data.session);
+      const loadedProfile = await loadProfileForSession(data.session, {
+        redirectOnReady: false,
+        redirectOnMissing: true
+      });
 
       if (loadedProfile) {
-        setProfile(loadedProfile);
-        setScreen("dashboard");
+        const nextPath = authReturnTo || "/dashboard";
+        setRegistrationForm(initialRegistrationForm);
+        setAuthReturnTo("");
+        navigate(nextPath, { replace: true });
       } else {
         setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
         setOnboardingStep(0);
-        setScreen("onboarding");
       }
     } catch (error) {
-      setAuthError(error instanceof Error ? error.message : "Authentication failed. Try again.");
+      if (profileSaveSession?.user) {
+        const failedProfileSession = profileSaveSession;
+        setSession(failedProfileSession);
+        setProfile(null);
+        setAuthStatus("profile-missing");
+        setRegistrationForm((current) => ({
+          ...current,
+          email: failedProfileSession.user.email ?? current.email
+        }));
+      }
+      setAuthError(getErrorMessage(error, "Authentication failed. Try again."));
     } finally {
+      if (profileSaveStarted) {
+        profileLoadRequestIdRef.current += 1;
+        profileSaveInFlightRef.current = false;
+      }
       setAuthLoading(false);
     }
   }
@@ -331,114 +507,151 @@ export function App() {
     setAuthError("");
     setAuthNotice("");
     setRegistrationForm(initialRegistrationForm);
-    setScreen("home");
+    setAuthStatus("signed-out");
+    setAuthReturnTo("");
+    navigate("/", { replace: true });
   }
 
-  if (bootstrapping) {
+  const loadingRoute = (
+    <PageShell>
+      <section className="flow-screen loading-screen" aria-live="polite">
+        <div className="loading-panel">
+          <span>Mentoria Hub</span>
+          <strong>Loading student workspace</strong>
+        </div>
+      </section>
+    </PageShell>
+  );
+
+  if (authStatus === "bootstrapping") {
+    return loadingRoute;
+  }
+
+  const profileCompletion = Boolean(session?.user && authStatus === "profile-missing");
+  const protectedFallbackAuthMode: AuthMode =
+    profileCompletion
+      ? "signup"
+      : isProtectedPath(location.pathname) && authReturnTo !== currentPathWithSearch
+        ? "signin"
+        : authMode;
+
+  const registrationRoute = (
+    <PageShell>
+      <RegistrationSection
+        authMode={protectedFallbackAuthMode}
+        form={registrationForm}
+        fieldErrors={fieldErrors}
+        authError={authError}
+        authNotice={authNotice}
+        loading={authLoading}
+        profileCompletion={profileCompletion}
+        supabaseReady={supabaseReady}
+        onChange={updateRegistrationField}
+        onSubmit={submitRegistration}
+        onModeChange={(nextMode) => {
+          setAuthMode(nextMode);
+          setFieldErrors({});
+          setAuthError("");
+          setAuthNotice("");
+        }}
+        onBack={() => navigate(authReturnTo ? "/" : "/onboarding")}
+      />
+    </PageShell>
+  );
+
+  function protectedRoute(children: ReactNode) {
+    if (authStatus === "profile-loading") {
+      return loadingRoute;
+    }
+
+    if (authStatus === "profile-ready" && profile) {
+      return <PageShell>{children}</PageShell>;
+    }
+
+    if (session && authStatus === "profile-missing") {
+      return <Navigate replace to="/onboarding" />;
+    }
+
+    return registrationRoute;
+  }
+
+  if (authStatus === "profile-loading" && isEntryRoute(location.pathname)) {
     return (
-      <main>
+      <PageShell>
         <section className="flow-screen loading-screen" aria-live="polite">
           <div className="loading-panel">
             <span>Mentoria Hub</span>
             <strong>Loading student workspace</strong>
           </div>
         </section>
-      </main>
-    );
-  }
-
-  if (screen === "onboarding") {
-    return (
-      <main>
-        <OnboardingSection
-          profile={onboardingProfile}
-          step={onboardingStep}
-          onChange={setOnboardingProfile}
-          onNext={continueOnboarding}
-          onBack={() => setOnboardingStep((currentStep) => Math.max(0, currentStep - 1))}
-          onReturnHome={() => setScreen("home")}
-        />
-      </main>
-    );
-  }
-
-  if (screen === "registration" || (!profile && (screen === "dashboard" || screen === "courses" || screen === "opportunities"))) {
-    return (
-      <main>
-        <RegistrationSection
-          authMode={authMode}
-          form={registrationForm}
-          fieldErrors={fieldErrors}
-          authError={authError}
-          authNotice={authNotice}
-          loading={authLoading}
-          supabaseReady={supabaseReady}
-          onChange={updateRegistrationField}
-          onSubmit={submitRegistration}
-          onModeChange={(nextMode) => {
-            setAuthMode(nextMode);
-            setFieldErrors({});
-            setAuthError("");
-            setAuthNotice("");
-          }}
-          onBack={() => setScreen("onboarding")}
-        />
-      </main>
-    );
-  }
-
-  if (screen === "dashboard" && profile) {
-    return (
-      <main>
-        <DashboardSection
-          profile={profile}
-          extraOpportunities={activeOpportunities}
-          onCourses={() => setScreen("courses")}
-          onOpportunities={() => setScreen("opportunities")}
-          onMentorLM={() => setScreen("mentorlm")}
-          onLogout={logout}
-        />
-      </main>
-    );
-  }
-
-  if (screen === "courses" && profile) {
-    return (
-      <main>
-        <CoursesWorkspace profile={profile} onBack={() => setScreen("dashboard")} onLogout={logout} />
-      </main>
-    );
-  }
-
-  if (screen === "mentorlm" && profile) {
-    return (
-      <main>
-        <MentorLMSection
-          profile={profile}
-          opportunities={telegramOpportunities}
-          onBack={() => setScreen("dashboard")}
-          onLogout={logout}
-        />
-      </main>
-    );
-  }
-
-  if (screen === "opportunities" && profile) {
-    return (
-      <main>
-        <OpportunitiesWorkspace profile={profile} extraOpportunities={activeOpportunities} onBack={() => setScreen("dashboard")} onLogout={logout} />
-      </main>
+      </PageShell>
     );
   }
 
   return (
-    <main>
-      <HeroSection onStartJourney={startOnboarding} />
-      <OpportunitySearchSection />
-      <SavedOpportunitiesSection />
-      <CoursesSection />
-      <CompanionSection />
-      <FaqSection />
-    </main>
+    <LayoutGroup>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <PageShell>
+                <HeroSection onStartJourney={startOnboarding} />
+                <OpportunitySearchSection />
+                <RecommendedMatchesSection />
+                <CoursesSection />
+                <CompanionSection />
+                <FaqSection />
+              </PageShell>
+            }
+          />
+          <Route
+            path="/onboarding"
+            element={
+              <PageShell>
+                <OnboardingSection
+                  profile={onboardingProfile}
+                  step={onboardingStep}
+                  onChange={setOnboardingProfile}
+                  onNext={continueOnboarding}
+                  onBack={() => setOnboardingStep((currentStep) => Math.max(0, currentStep - 1))}
+                  onReturnHome={() => navigate("/")}
+                />
+              </PageShell>
+            }
+          />
+          <Route path="/registration" element={registrationRoute} />
+          <Route
+            path="/dashboard"
+            element={protectedRoute(
+              <DashboardSection profile={profile as StudentProfile} extraOpportunities={activeOpportunities} onLogout={logout} />
+            )}
+          />
+          <Route
+            path="/courses"
+            element={protectedRoute(<CoursesWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
+          />
+          <Route path="/courses/:courseId" element={protectedRoute(<CourseDetailWorkspace onLogout={logout} />)} />
+          <Route path="/courses/:courseId/lessons/:lessonId" element={protectedRoute(<LessonWorkspace onLogout={logout} />)} />
+          <Route
+            path="/opportunities"
+            element={protectedRoute(
+              <OpportunitiesWorkspace profile={profile as StudentProfile} extraOpportunities={activeOpportunities} onLogout={logout} />
+            )}
+          />
+          <Route
+            path="/mentor-pet"
+            element={protectedRoute(<MentorPetWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
+          />
+          <Route
+            path="/mentor-lm"
+            element={protectedRoute(
+              <MentorLMSection profile={profile as StudentProfile} opportunities={telegramOpportunities} onLogout={logout} />
+            )}
+          />
+          <Route path="*" element={<Navigate replace to={profile ? "/dashboard" : "/"} />} />
+        </Routes>
+      </AnimatePresence>
+    </LayoutGroup>
   );
 }

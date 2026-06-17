@@ -1,16 +1,16 @@
 import type { FormEvent } from "react";
-import React, { useEffect, useState } from "react";
 import {
   courses,
+  formatOpportunityDeadline,
   getOptionLabel,
   getOptionLabels,
   getRecommendedCourses,
   getRecommendedOpportunities,
+  hasUpcomingDeadline,
   onboardingQuestions,
   opportunities
 } from "../data/content";
 import type { Course, OnboardingProfile, OnboardingQuestion, Opportunity } from "../data/content";
-import { getAIRecommendedCourses, getAIRecommendedOpportunities } from "../lib/aiRecommendations";
 
 export type AuthMode = "signup" | "signin";
 
@@ -40,16 +40,14 @@ type FlowTopBarProps = {
   eyebrow: string;
   onBack?: () => void;
   onLogout?: () => void;
-  children?: React.ReactNode;
 };
 
-function FlowTopBar({ eyebrow, onBack, onLogout, children }: FlowTopBarProps) {
+function FlowTopBar({ eyebrow, onBack, onLogout }: FlowTopBarProps) {
   return (
     <nav className="flow-topbar" aria-label="Mentoria Hub workspace navigation">
       <span className="flow-wordmark">Mentoria Hub</span>
       <span className="flow-eyebrow">{eyebrow}</span>
       <div className="flow-topbar-actions">
-        {children}
         {onBack ? (
           <button className="flow-link-button" type="button" onClick={onBack}>
             Back
@@ -125,6 +123,7 @@ export function OnboardingSection({ profile, step, onChange, onNext, onBack, onR
   const selectedValues = getQuestionValues(profile, question);
   const canContinue = isQuestionAnswered(profile, question);
   const isLastStep = step === onboardingQuestions.length - 1;
+  const selectionLabel = selectedValues.length === 0 ? "selection: none" : `selection: ${selectedValues.length}`;
 
   return (
     <section className="flow-screen onboarding-screen" aria-labelledby="onboarding-title">
@@ -142,7 +141,7 @@ export function OnboardingSection({ profile, step, onChange, onNext, onBack, onR
 
           <div className="question-block">
             <h1 id="onboarding-title">{question.title}</h1>
-            <p>{question.description}</p>
+            <p className="selection-status">{selectionLabel}</p>
           </div>
 
           <div className="option-grid" role="group" aria-label={question.title}>
@@ -184,6 +183,7 @@ type RegistrationSectionProps = {
   authError: string;
   authNotice: string;
   loading: boolean;
+  profileCompletion?: boolean;
   supabaseReady: boolean;
   onChange: (field: keyof RegistrationForm, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -198,6 +198,7 @@ export function RegistrationSection({
   authError,
   authNotice,
   loading,
+  profileCompletion = false,
   supabaseReady,
   onChange,
   onSubmit,
@@ -205,6 +206,8 @@ export function RegistrationSection({
   onBack
 }: RegistrationSectionProps) {
   const isSignup = authMode === "signup";
+  const needsName = isSignup || profileCompletion;
+  const needsPassword = !profileCompletion;
 
   return (
     <section className="flow-screen auth-screen" aria-labelledby="auth-title">
@@ -214,7 +217,7 @@ export function RegistrationSection({
             <button className="secondary-action compact-action auth-back-button" type="button" onClick={onBack}>
               Back
             </button>
-            <h1 id="auth-title">{isSignup ? "Create account" : "Sign in"}</h1>
+            <h1 id="auth-title">{profileCompletion ? "Finish profile" : isSignup ? "Create account" : "Sign in"}</h1>
           </div>
 
           {!supabaseReady ? (
@@ -235,7 +238,7 @@ export function RegistrationSection({
             </div>
           ) : null}
 
-          {isSignup ? (
+          {needsName ? (
             <label className="form-field">
               <span>Name</span>
               <input
@@ -262,30 +265,34 @@ export function RegistrationSection({
             <small>{fieldErrors.email ?? "Use the same email when signing back in."}</small>
           </label>
 
-          <label className="form-field">
-            <span>Password</span>
-            <input
-              autoComplete={isSignup ? "new-password" : "current-password"}
-              type="password"
-              value={form.password}
-              aria-invalid={Boolean(fieldErrors.password)}
-              onChange={(event) => onChange("password", event.target.value)}
-              placeholder="Minimum 6 characters"
-            />
-            <small>{fieldErrors.password ?? "Stored and verified by Supabase Auth."}</small>
-          </label>
+          {needsPassword ? (
+            <label className="form-field">
+              <span>Password</span>
+              <input
+                autoComplete={isSignup ? "new-password" : "current-password"}
+                type="password"
+                value={form.password}
+                aria-invalid={Boolean(fieldErrors.password)}
+                onChange={(event) => onChange("password", event.target.value)}
+                placeholder="Minimum 6 characters"
+              />
+              <small>{fieldErrors.password ?? "Stored and verified by Supabase Auth."}</small>
+            </label>
+          ) : null}
 
           <button className="primary-action auth-submit" type="submit" disabled={loading || !supabaseReady}>
-            {loading ? "Working..." : isSignup ? "Create account" : "Sign in"}
+            {loading ? "Working..." : profileCompletion ? "Save profile" : isSignup ? "Create account" : "Sign in"}
           </button>
 
-          <button
-            className="mode-switch"
-            type="button"
-            onClick={() => onModeChange(isSignup ? "signin" : "signup")}
-          >
-            {isSignup ? "Already have an account? Sign in" : "Need an account? Create one"}
-          </button>
+          {!profileCompletion ? (
+            <button
+              className="mode-switch"
+              type="button"
+              onClick={() => onModeChange(isSignup ? "signin" : "signup")}
+            >
+              {isSignup ? "Already have an account? Sign in" : "Need an account? Create one"}
+            </button>
+          ) : null}
         </form>
       </div>
     </section>
@@ -303,67 +310,83 @@ function buildOnboardingProfile(profile: StudentProfile): OnboardingProfile {
   };
 }
 
+function getOpportunityPool(extraOpportunities: Opportunity[]) {
+  const opportunityMap = new Map<string, Opportunity>();
+
+  opportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
+  extraOpportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
+
+  return [...opportunityMap.values()];
+}
+
 type DashboardSectionProps = {
   profile: StudentProfile;
   extraOpportunities?: Opportunity[];
   onCourses: () => void;
   onOpportunities: () => void;
-  onMentorLM: () => void;
   onLogout: () => void;
 };
 
-export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onMentorLM, onLogout }: DashboardSectionProps) {
+function DeadlineCalendar({ opportunities }: { opportunities: Opportunity[] }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const oppMap = new Map<number, Opportunity>();
+  opportunities.forEach(opp => {
+    const d = new Date(opp.deadline);
+    d.setHours(0, 0, 0, 0);
+    oppMap.set(d.getTime(), opp);
+  });
+
+  const cells = [];
+  const totalDays = 52 * 7;
+  for (let i = 0; i < totalDays; i++) {
+    const date = new Date(today);
+    // Center the calendar roughly around today
+    date.setDate(date.getDate() - Math.floor(totalDays / 2) + i);
+    date.setHours(0, 0, 0, 0);
+    
+    const opp = oppMap.get(date.getTime());
+    cells.push({
+      date,
+      opportunity: opp
+    });
+  }
+
+  return (
+    <section className="dashboard-panel calendar-panel" aria-labelledby="calendar-title">
+      <div className="panel-heading">
+        <div>
+          <span>Timeline</span>
+          <h2 id="calendar-title">Deadline Calendar</h2>
+        </div>
+      </div>
+      <div className="deadline-calendar-grid">
+        {cells.map((cell, idx) => (
+          <div 
+            key={idx} 
+            className={`calendar-cell ${cell.opportunity ? 'has-deadline' : ''}`}
+            title={cell.opportunity ? `${cell.opportunity.title} (Due: ${cell.date.toLocaleDateString()})` : cell.date.toLocaleDateString()}
+          ></div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
   const interestLabels = getOptionLabels("interests", profile.interests);
   const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
-
-  const [recommendedOpportunities, setRecommendedOpportunities] = useState<Opportunity[]>(
-    () => getRecommendedOpportunities(onboardingProfile)
-  );
-  const [recommendedCourses, setRecommendedCourses] = useState<Course[]>(
-    () => getRecommendedCourses(onboardingProfile)
-  );
-  const [aiExplanation, setAiExplanation] = useState<string>("");
-  const [aiLoading, setAiLoading] = useState(false);
-
-  useEffect(() => {
-    const apiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined;
-    if (!apiKey) return;
-
-    setAiLoading(true);
-
-    const allOpportunities = extraOpportunities.length > 0 ? extraOpportunities : opportunities;
-
-    Promise.all([
-      getAIRecommendedOpportunities(onboardingProfile, allOpportunities),
-      getAIRecommendedCourses(onboardingProfile, courses),
-    ])
-      .then(([oppResult, courseResult]) => {
-        const aiOpps = oppResult.ids
-          .map((id) => allOpportunities.find((o) => o.id === id))
-          .filter((o): o is Opportunity => Boolean(o));
-        const aiCourses = courseResult.ids
-          .map((id) => courses.find((c) => c.id === id))
-          .filter((c): c is Course => Boolean(c));
-
-        if (aiOpps.length > 0) setRecommendedOpportunities(aiOpps);
-        if (aiCourses.length > 0) setRecommendedCourses(aiCourses);
-        setAiExplanation(oppResult.explanation);
-      })
-      .catch(() => {
-        // fallback to tag-based already set in initial state
-      })
-      .finally(() => setAiLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile.id]);
+  const allOpportunities = getOpportunityPool(extraOpportunities);
+  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities);
+  const recommendedCourses = getRecommendedCourses(onboardingProfile);
+  const inProgressCourses = recommendedCourses.filter((course) => course.progress > 0 && course.progress < 100).length;
+  const upcomingDeadlines = recommendedOpportunities.filter((opportunity) => hasUpcomingDeadline(opportunity)).length;
 
   return (
     <section className="flow-screen dashboard-screen" aria-labelledby="dashboard-title">
-      <FlowTopBar eyebrow="Student dashboard" onLogout={onLogout}>
-        <button className="secondary-action compact-action" type="button" onClick={onMentorLM}>
-          MentorLM ✦
-        </button>
-      </FlowTopBar>
+      <FlowTopBar eyebrow="Student dashboard" onLogout={onLogout} />
 
       <div className="dashboard-shell">
         <div className="dashboard-hero">
@@ -372,11 +395,8 @@ export function DashboardSection({ profile, extraOpportunities = [], onCourses, 
             <h1 id="dashboard-title">{profile.name}</h1>
             <p>
               Grade {profile.grade} profile focused on {directionLabel}.{" "}
-              {aiLoading
-                ? "AI is personalizing your recommendations…"
-                : aiExplanation
-                  ? aiExplanation
-                  : "Your first recommendations are tuned from the onboarding answers saved in Supabase."}
+              Recommended matches are ranked from your onboarding answers, curated Mentoria programs, and the cleaned
+              Telegram opportunity feed.
             </p>
           </div>
           <div className="profile-summary" aria-label="Onboarding profile summary">
@@ -387,39 +407,48 @@ export function DashboardSection({ profile, extraOpportunities = [], onCourses, 
         </div>
 
         <div className="metric-grid" aria-label="Dashboard statistics">
-          <article>
-            <span>Learning streak</span>
-            <strong>7 days</strong>
+          <article className="metric-card">
+            <span>Active courses</span>
+            <strong>{courses.length}</strong>
           </article>
-          <article>
-            <span>Completed courses</span>
-            <strong>3</strong>
+          <article className="metric-card">
+            <span>In progress</span>
+            <strong>{inProgressCourses}</strong>
           </article>
-          <article>
-            <span>Saved opportunities</span>
+          <article className="metric-card">
+            <span>Recommended matches</span>
             <strong>{recommendedOpportunities.length}</strong>
           </article>
-          <article>
+          <article className="metric-card">
             <span>Upcoming deadlines</span>
-            <strong>4</strong>
+            <strong>{upcomingDeadlines}</strong>
           </article>
         </div>
 
+        <DeadlineCalendar opportunities={recommendedOpportunities} />
+
         <div className="dashboard-columns">
-          <section className="dashboard-panel" aria-labelledby="saved-opportunities-title">
+          <section className="dashboard-panel" aria-labelledby="recommended-matches-title">
             <div className="panel-heading">
               <div>
                 <span>Shortlist</span>
-                <h2 id="saved-opportunities-title">Saved opportunities</h2>
+                <h2 id="recommended-matches-title">Recommended matches</h2>
               </div>
               <button className="secondary-action compact-action" type="button" onClick={onOpportunities}>
                 Opportunities
               </button>
             </div>
-            <div className="saved-list">
-              {recommendedOpportunities.map((opportunity) => (
-                <OpportunitySummary opportunity={opportunity} key={opportunity.id} />
-              ))}
+            <div className="match-list">
+              {recommendedOpportunities.length > 0 ? (
+                recommendedOpportunities.map((opportunity) => (
+                  <OpportunitySummary opportunity={opportunity} key={opportunity.id} />
+                ))
+              ) : (
+                <EmptyState
+                  title="No matches yet"
+                  message="Adjust your onboarding interests or check again after the catalog refreshes."
+                />
+              )}
             </div>
           </section>
 
@@ -434,9 +463,13 @@ export function DashboardSection({ profile, extraOpportunities = [], onCourses, 
               </button>
             </div>
             <div className="course-progress-list">
-              {recommendedCourses.map((course) => (
-                <CourseProgressRow course={course} key={course.id} />
-              ))}
+              {recommendedCourses.length > 0 ? (
+                recommendedCourses.map((course) => (
+                  <CourseProgressRow course={course} key={course.id} />
+                ))
+              ) : (
+                <EmptyState title="No course path yet" message="Choose more interests so Mentoria can connect courses to matches." />
+              )}
             </div>
           </section>
         </div>
@@ -497,8 +530,8 @@ type OpportunitiesWorkspaceProps = {
 
 export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBack, onLogout }: OpportunitiesWorkspaceProps) {
   const onboardingProfile = buildOnboardingProfile(profile);
-  const allOpportunities = extraOpportunities.length > 0 ? extraOpportunities : opportunities;
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities.length);
+  const allOpportunities = getOpportunityPool(extraOpportunities);
+  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities, allOpportunities.length);
 
   return (
     <section className="flow-screen workspace-screen" aria-labelledby="workspace-opportunities-title">
@@ -510,21 +543,25 @@ export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBac
           <p>These cards are a dashboard-level preview of what a full catalog would turn into later.</p>
         </div>
         <div className="workspace-opportunity-list">
-          {recommendedOpportunities.map((opportunity) => (
-            <article className="workspace-opportunity-row" key={opportunity.id}>
-              <div>
-                <span className="deadline-chip">{new Date(opportunity.deadline).toLocaleDateString("en-US")}</span>
-                <h2>{opportunity.title}</h2>
-                <p>{opportunity.description}</p>
-                <div className="opportunity-tags">
-                  <span>{opportunity.direction}</span>
-                  <span>{opportunity.format}</span>
-                  <span>Grades {opportunity.grades.join(", ")}</span>
+          {recommendedOpportunities.length > 0 ? (
+            recommendedOpportunities.map((opportunity) => (
+              <article className="workspace-opportunity-row" key={opportunity.id}>
+                <div>
+                  <span className="deadline-chip">{formatOpportunityDeadline(opportunity)}</span>
+                  <h2>{opportunity.title}</h2>
+                  <p>{opportunity.description}</p>
+                  <div className="opportunity-tags">
+                    <span>{opportunity.direction}</span>
+                    <span>{opportunity.format}</span>
+                    <span>Grades {opportunity.grades.join(", ")}</span>
+                  </div>
                 </div>
-              </div>
-              <span className="saved-badge">Saved</span>
-            </article>
-          ))}
+                <span className="match-badge">Match</span>
+              </article>
+            ))
+          ) : (
+            <EmptyState title="No matches yet" message="Try broadening the profile filters or refresh the opportunity feed." />
+          )}
         </div>
       </div>
     </section>
@@ -533,16 +570,25 @@ export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBac
 
 function OpportunitySummary({ opportunity }: { opportunity: Opportunity }) {
   return (
-    <article className="saved-summary-row">
+    <article className="match-summary-row">
       <div>
         <h3>{opportunity.title}</h3>
         <p>
-          {opportunity.category} - {opportunity.format} - deadline{" "}
-          {new Date(opportunity.deadline).toLocaleDateString("en-US")}
+          {opportunity.category} - {opportunity.format} - {formatOpportunityDeadline(opportunity)}
         </p>
       </div>
-      <span>Saved</span>
+      <span>Match</span>
     </article>
+  );
+}
+
+function EmptyState({ title, message }: { title: string; message: string }) {
+  return (
+    <div className="empty-state" role="status">
+      <span />
+      <strong>{title}</strong>
+      <p>{message}</p>
+    </div>
   );
 }
 

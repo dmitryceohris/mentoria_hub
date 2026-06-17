@@ -10,9 +10,12 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.108.2",
+    "framer-motion": "^12.40.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

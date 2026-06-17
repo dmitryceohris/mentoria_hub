@@ -23,6 +23,10 @@ These rules guide implementation of Mentoria Hub UI, including any future Figma-
 - Use `min-height: 100dvh` for full-screen sections.
 - Desktop hero uses an asymmetric grid: larger text area on the left, one product console on the right.
 - Mobile hero collapses to: top rail, left-shifted headline, CTAs, opportunity console, bottom preview hint.
+- Do not modify dashboard, courses, opportunities workspace, hero, companion, saved/recommended sections, or recommendation logic unless the user explicitly asks for those areas.
+- Do not shift the base alignment of existing screens, windows, or consoles left or right without explicit user confirmation.
+- Ask the user before changing where text is placed inside an existing flow.
+- Onboarding answers are saved as profile information and used only for recommendations.
 - Do not nest UI cards inside other cards. A product console may contain rows, chips, fields, and status modules, but avoid a pile of decorative cards.
 - All fixed-format UI elements need stable dimensions or responsive constraints so labels, hover states, and dynamic content do not shift layout.
 

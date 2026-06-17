@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Opportunity } from "../data/content";
 import type { StudentProfile } from "./AuthFlowSections";
 import {
@@ -12,11 +13,11 @@ import type { ChatMessage, ChatSession } from "../lib/mentorLM";
 type Props = {
   profile: StudentProfile;
   opportunities: Opportunity[];
-  onBack: () => void;
   onLogout: () => void;
 };
 
-export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Props) {
+export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sessions, setSessions] = useState<ChatSession[]>(() => {
     const loaded = loadSessions();
@@ -175,7 +176,7 @@ export function MentorLMSection({ profile, opportunities, onBack, onLogout }: Pr
         </nav>
 
         <div className="mentorlm-sidebar-footer">
-          <button type="button" className="flow-link-button" onClick={onBack}>← Dashboard</button>
+          <button type="button" className="flow-link-button" onClick={() => navigate("/dashboard")}>← Dashboard</button>
           <button type="button" className="flow-link-button" onClick={onLogout}>Logout</button>
         </div>
       </aside>
