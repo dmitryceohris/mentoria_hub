@@ -7,6 +7,7 @@ import {
   ChatCircleDots,
   Compass,
   MagnifyingGlass,
+  MapTrifold,
   NotePencil,
   PawPrint,
   Play,
@@ -78,8 +79,9 @@ function getNotesForLesson(courseId: string, lessonId: string) {
   return mentorPetLessonNotes.filter((note) => note.courseId === courseId && note.lessonId === lessonId);
 }
 
-function WorkspaceRail({ onLogout }: { onLogout: () => void }) {
+export function WorkspaceRail({ onLogout }: { onLogout: () => void }) {
   const navItems = [
+    { to: "/roadmap", label: "Roadmap", icon: MapTrifold },
     { to: "/courses", label: "My courses", icon: BookOpen },
     { to: "/opportunities", label: "Opportunity search", icon: Compass },
     { to: "/mentor-pet", label: "MentorPet", icon: PawPrint },

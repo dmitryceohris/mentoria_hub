@@ -14,6 +14,7 @@ import type {
   StudentProfile
 } from "./sections/AuthFlowSections";
 import { MentorLMSection } from "./sections/MentorLMSection";
+import { RoadmapWorkspace } from "./sections/RoadmapWorkspace";
 import {
   CourseDetailWorkspace,
   CoursesWorkspace,
@@ -30,7 +31,7 @@ import { OpportunitySearchSection } from "./sections/OpportunitySearchSection";
 import { RecommendedMatchesSection } from "./sections/RecommendedMatchesSection";
 import { emptyOnboardingProfile, onboardingQuestions } from "./data/content";
 import type { OnboardingProfile, Opportunity } from "./data/content";
-import { loadTelegramOpportunities } from "./lib/telegramOpportunities";
+import { loadTelegramOpportunities, filterActive } from "./lib/telegramOpportunities";
 import { isSupabaseConfigured, supabase, supabaseConfigError } from "./lib/supabase";
 import {
   fetchOwnProfile,
@@ -43,7 +44,7 @@ import {
 } from "./lib/auth";
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
-const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet|mentor-lm)(?:\/|$)/;
+const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet|mentor-lm|roadmap)(?:\/|$)/;
 
 type AuthStatus = "bootstrapping" | "signed-out" | "profile-loading" | "profile-ready" | "profile-missing" | "error";
 
@@ -315,6 +316,10 @@ export function App() {
       if (opps.length > 0) setTelegramOpportunities(opps);
     });
   }, []);
+
+  // Catalog, recommendations and roadmap show only upcoming opportunities;
+  // MentorLM gets the full list so it can answer about past events too.
+  const activeOpportunities = useMemo(() => filterActive(telegramOpportunities), [telegramOpportunities]);
 
   const [onboardingProfile, setOnboardingProfile] = useState<OnboardingProfile>(() => readOnboardingDraft());
   const [onboardingStep, setOnboardingStep] = useState(0);
@@ -852,7 +857,7 @@ export function App() {
           <Route
             path="/dashboard"
             element={protectedRoute(
-              <DashboardSection profile={profile as StudentProfile} extraOpportunities={telegramOpportunities} onLogout={logout} />
+              <DashboardSection profile={profile as StudentProfile} extraOpportunities={activeOpportunities} onLogout={logout} />
             )}
           />
           <Route
@@ -864,7 +869,7 @@ export function App() {
           <Route
             path="/opportunities"
             element={protectedRoute(
-              <OpportunitiesWorkspace profile={profile as StudentProfile} extraOpportunities={telegramOpportunities} onLogout={logout} />
+              <OpportunitiesWorkspace profile={profile as StudentProfile} extraOpportunities={activeOpportunities} onLogout={logout} />
             )}
           />
           <Route
@@ -875,6 +880,12 @@ export function App() {
             path="/mentor-lm"
             element={protectedRoute(
               <MentorLMSection profile={profile as StudentProfile} opportunities={telegramOpportunities} onLogout={logout} />
+            )}
+          />
+          <Route
+            path="/roadmap"
+            element={protectedRoute(
+              <RoadmapWorkspace profile={profile as StudentProfile} extraOpportunities={activeOpportunities} onLogout={logout} />
             )}
           />
           <Route path="*" element={<Navigate replace to={profile ? "/dashboard" : "/"} />} />
