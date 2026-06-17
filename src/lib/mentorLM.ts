@@ -1,4 +1,5 @@
 import type { Opportunity } from "../data/content";
+import { retrieveRelevant } from "./embeddingsRetrieval";
 
 export type ChatMessage = {
   role: "user" | "assistant";
@@ -91,6 +92,13 @@ export async function sendMessage(
 ): Promise<string> {
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY as string;
 
+  // Retrieve only the opportunities relevant to the latest question (semantic
+  // search over the embeddings index) instead of sending all ~50 every time.
+  const lastUser = [...messages].reverse().find((m) => m.role === "user");
+  const relevant = lastUser
+    ? await retrieveRelevant(lastUser.content, opportunities)
+    : opportunities;
+
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -101,7 +109,7 @@ export async function sendMessage(
       model: "gpt-4o-mini",
       stream: true,
       messages: [
-        { role: "system", content: buildSystemPrompt(profile, opportunities) },
+        { role: "system", content: buildSystemPrompt(profile, relevant) },
         ...messages,
       ],
     }),
