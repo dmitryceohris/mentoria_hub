@@ -238,6 +238,30 @@ function isEntryRoute(pathname: string) {
   return pathname === "/onboarding" || pathname === "/registration";
 }
 
+function getSafeReturnTo(value: string | null | undefined) {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
+    return "/dashboard";
+  }
+
+  const pathname = value.split(/[?#]/)[0];
+
+  return isProtectedPath(pathname) ? value : "/dashboard";
+}
+
+function getReturnToFromSearch(search: string) {
+  return getSafeReturnTo(new URLSearchParams(search).get("returnTo"));
+}
+
+function getExplicitReturnToFromSearch(search: string) {
+  const params = new URLSearchParams(search);
+
+  return params.has("returnTo") ? getSafeReturnTo(params.get("returnTo")) : "";
+}
+
+function getRouteWithReturnTo(route: "/onboarding" | "/registration", returnTo: string) {
+  return `${route}?returnTo=${encodeURIComponent(getSafeReturnTo(returnTo))}`;
+}
+
 function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error) {
     return error.message;
@@ -256,7 +280,7 @@ function getAuthMetadataName(session: Session) {
   return typeof metadata.name === "string" ? metadata.name : "";
 }
 
-function getFallbackProfileName(session: Session, form: RegistrationForm) {
+function getFallbackProfileName(session: Session, form: RegistrationForm = initialRegistrationForm) {
   const emailName = session.user.email?.split("@")[0] ?? "";
 
   return getAuthMetadataName(session) || form.name.trim() || emailName || "Student";
@@ -284,7 +308,6 @@ export function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatus>(supabase ? "bootstrapping" : "signed-out");
-  const [authReturnTo, setAuthReturnTo] = useState("");
   const [telegramOpportunities, setTelegramOpportunities] = useState<Opportunity[]>([]);
 
   useEffect(() => {
@@ -304,9 +327,12 @@ export function App() {
   const profileSaveInFlightRef = useRef(false);
   const profileLoadRequestIdRef = useRef(0);
   const onboardingProfileRef = useRef(onboardingProfile);
+  const registrationModeInitializedRef = useRef(false);
 
   const supabaseReady = useMemo(() => Boolean(isSupabaseConfigured && supabase), []);
   const currentPathWithSearch = getPathWithSearch(location);
+  const explicitReturnTo = useMemo(() => getExplicitReturnToFromSearch(location.search), [location.search]);
+  const returnToPath = useMemo(() => getReturnToFromSearch(location.search), [location.search]);
 
   const loadProfileForSession = useCallback(
     async (
@@ -350,10 +376,23 @@ export function App() {
         setAuthStatus("profile-ready");
 
         if (options.redirectOnReady) {
-          navigate(options.returnTo || "/dashboard", { replace: true });
+          navigate(getSafeReturnTo(options.returnTo), { replace: true });
         }
 
         return loadedProfile;
+      }
+
+      const restoredProfile = await restoreProfileFromMetadata(nextSession, {
+        isActive: () => isActive() && loadRequestId === profileLoadRequestIdRef.current && !profileSaveInFlightRef.current,
+        nextPath: options.redirectOnReady ? getSafeReturnTo(options.returnTo) : undefined
+      });
+
+      if (restoredProfile) {
+        return restoredProfile;
+      }
+
+      if (!isActive() || loadRequestId !== profileLoadRequestIdRef.current || profileSaveInFlightRef.current) {
+        return null;
       }
 
       setProfile(null);
@@ -364,11 +403,6 @@ export function App() {
       setOnboardingProfile(recoveredOnboardingProfile);
       setOnboardingStep(getFirstIncompleteOnboardingStep(recoveredOnboardingProfile));
 
-      if (options.returnTo) {
-        setAuthReturnTo(options.returnTo);
-      } else if (typeof window !== "undefined" && isProtectedPath(window.location.pathname)) {
-        setAuthReturnTo(getPathWithSearch(window.location));
-      }
       setRegistrationForm((current) => ({
         ...current,
         email: nextSession.user.email ?? current.email,
@@ -376,7 +410,7 @@ export function App() {
       }));
 
       if (options.redirectOnMissing) {
-        navigate("/onboarding", { replace: true });
+        navigate(getRouteWithReturnTo("/onboarding", getSafeReturnTo(options.returnTo)), { replace: true });
       }
 
       return null;
@@ -391,12 +425,14 @@ export function App() {
     setAuthStatus("profile-ready");
     setRegistrationForm(initialRegistrationForm);
     window.sessionStorage.removeItem(onboardingDraftKey);
-    setAuthReturnTo("");
     navigate(nextPath, { replace: true });
     return nextProfile;
   }
 
-  async function restoreProfileFromMetadata(nextSession: Session, nextPath: string) {
+  async function restoreProfileFromMetadata(
+    nextSession: Session,
+    options: { isActive?: () => boolean; nextPath?: string } = {}
+  ) {
     const metadataProfile = getProfileFromAuthMetadata(nextSession);
 
     if (!hasCompletedOnboarding(metadataProfile)) {
@@ -404,11 +440,15 @@ export function App() {
     }
 
     const metadataForm: RegistrationForm = {
-      name: getFallbackProfileName(nextSession, registrationForm),
-      email: nextSession.user.email ?? registrationForm.email,
+      name: getFallbackProfileName(nextSession),
+      email: nextSession.user.email ?? "",
       password: ""
     };
     const nextProfile = await upsertOwnProfile(nextSession.user.id, metadataForm, metadataProfile);
+
+    if (options.isActive && !options.isActive()) {
+      return null;
+    }
 
     setSession(nextSession);
     setProfile(nextProfile);
@@ -417,8 +457,10 @@ export function App() {
     onboardingProfileRef.current = metadataProfile;
     setRegistrationForm(initialRegistrationForm);
     window.sessionStorage.removeItem(onboardingDraftKey);
-    setAuthReturnTo("");
-    navigate(nextPath, { replace: true });
+
+    if (options.nextPath) {
+      navigate(options.nextPath, { replace: true });
+    }
 
     return nextProfile;
   }
@@ -437,11 +479,21 @@ export function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (isProtectedPath(location.pathname) && authStatus === "signed-out") {
-      setAuthReturnTo(currentPathWithSearch);
+    if (location.pathname !== "/registration") {
+      registrationModeInitializedRef.current = false;
+      return;
+    }
+
+    if (
+      !registrationModeInitializedRef.current &&
+      !(session?.user && authStatus === "profile-missing") &&
+      !hasCompletedOnboarding(onboardingProfile)
+    ) {
       setAuthMode("signin");
     }
-  }, [authStatus, currentPathWithSearch, location.pathname]);
+
+    registrationModeInitializedRef.current = true;
+  }, [authStatus, location.pathname, onboardingProfile, session]);
 
   useEffect(() => {
     if (!supabase) {
@@ -457,11 +509,14 @@ export function App() {
         const bootstrapPath = getPathWithSearch(window.location);
         const bootstrapPathname = window.location.pathname;
         const bootstrapIsProtected = isProtectedPath(bootstrapPathname);
+        const bootstrapReturnTo = bootstrapIsProtected
+          ? bootstrapPath
+          : getExplicitReturnToFromSearch(window.location.search) || "/dashboard";
         await loadProfileForSession(restoredSession, {
           isActive: () => active,
           redirectOnReady: Boolean(restoredSession?.user && isEntryRoute(bootstrapPathname)),
           redirectOnMissing: Boolean(restoredSession?.user && (bootstrapIsProtected || isEntryRoute(bootstrapPathname))),
-          returnTo: bootstrapIsProtected ? bootstrapPath : "/dashboard"
+          returnTo: bootstrapReturnTo
         });
       } catch (error) {
         if (active) {
@@ -489,7 +544,11 @@ export function App() {
       loadProfileForSession(nextSession, {
         isActive: () => active,
         redirectOnReady: false,
-        redirectOnMissing: false
+        redirectOnMissing: false,
+        returnTo:
+          typeof window !== "undefined" && isProtectedPath(window.location.pathname)
+            ? getPathWithSearch(window.location)
+            : getExplicitReturnToFromSearch(window.location.search) || "/dashboard"
       }).catch((error) => {
         if (active) {
           setAuthError(getErrorMessage(error, "Could not restore the Supabase session."));
@@ -509,7 +568,6 @@ export function App() {
     setAuthNotice("");
     setFieldErrors({});
     setAuthMode("signup");
-    setAuthReturnTo("");
     setOnboardingStep(0);
     navigate("/onboarding");
   }
@@ -519,7 +577,6 @@ export function App() {
     setAuthNotice("");
     setFieldErrors({});
     setAuthMode("signin");
-    setAuthReturnTo("");
     navigate("/registration");
   }
 
@@ -529,7 +586,7 @@ export function App() {
       setAuthNotice("");
       setFieldErrors({});
       setAuthMode("signup");
-      navigate("/registration");
+      navigate(explicitReturnTo ? getRouteWithReturnTo("/registration", explicitReturnTo) : "/registration");
       return;
     }
 
@@ -555,7 +612,7 @@ export function App() {
           ? "Complete the onboarding questions before saving your profile."
           : "Complete the onboarding questions before creating an account."
       );
-      navigate("/onboarding");
+      navigate(completingProfile || explicitReturnTo ? getRouteWithReturnTo("/onboarding", returnToPath) : "/onboarding");
       return;
     }
 
@@ -586,7 +643,7 @@ export function App() {
     try {
       if (completingProfile && session?.user) {
         beginProfileSave();
-        await saveProfileForSession(session, authReturnTo || "/dashboard");
+        await saveProfileForSession(session, returnToPath);
         return;
       }
 
@@ -614,24 +671,19 @@ export function App() {
       }
 
       const data = await signInWithPassword(registrationForm.email, registrationForm.password);
-      const nextPath = authReturnTo || "/dashboard";
+      const nextPath = returnToPath;
       const loadedProfile = await loadProfileForSession(data.session, {
         redirectOnReady: false,
-        redirectOnMissing: false
+        redirectOnMissing: false,
+        returnTo: nextPath
       });
 
       if (loadedProfile) {
         setRegistrationForm(initialRegistrationForm);
-        setAuthReturnTo("");
         navigate(nextPath, { replace: true });
       } else if (data.session?.user) {
-        beginProfileSave();
-        const restoredProfile = await restoreProfileFromMetadata(data.session, nextPath);
-
-        if (!restoredProfile) {
-          setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
-          navigate("/onboarding", { replace: true });
-        }
+        setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
+        navigate(getRouteWithReturnTo("/onboarding", nextPath), { replace: true });
       } else {
         setAuthNotice("Signed in. Finish onboarding once so Mentoria can create your student profile.");
       }
@@ -672,7 +724,6 @@ export function App() {
     setAuthNotice("");
     setRegistrationForm(initialRegistrationForm);
     setAuthStatus("signed-out");
-    setAuthReturnTo("");
     navigate("/", { replace: true });
   }
 
@@ -692,17 +743,12 @@ export function App() {
   }
 
   const profileCompletion = Boolean(session?.user && authStatus === "profile-missing");
-  const protectedFallbackAuthMode: AuthMode =
-    profileCompletion
-      ? "signup"
-      : isProtectedPath(location.pathname) && authReturnTo !== currentPathWithSearch
-        ? "signin"
-        : authMode;
+  const registrationAuthMode: AuthMode = profileCompletion ? "signup" : authMode;
 
   const registrationRoute = (
     <PageShell>
       <RegistrationSection
-        authMode={protectedFallbackAuthMode}
+        authMode={registrationAuthMode}
         form={registrationForm}
         fieldErrors={fieldErrors}
         authError={authError}
@@ -714,12 +760,29 @@ export function App() {
         onChange={updateRegistrationField}
         onSubmit={submitRegistration}
         onModeChange={(nextMode) => {
+          if (nextMode === "signup" && !profileCompletion && !hasCompletedOnboarding(onboardingProfile)) {
+            setAuthMode("signup");
+            setFieldErrors({});
+            setAuthError("");
+            setAuthNotice("");
+            navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding");
+            return;
+          }
+
           setAuthMode(nextMode);
           setFieldErrors({});
           setAuthError("");
           setAuthNotice("");
         }}
-        onBack={() => navigate(authReturnTo ? "/" : "/onboarding")}
+        onBack={() =>
+          navigate(
+            profileCompletion || (registrationAuthMode === "signup" && hasCompletedOnboarding(onboardingProfile))
+              ? explicitReturnTo
+                ? getRouteWithReturnTo("/onboarding", explicitReturnTo)
+                : "/onboarding"
+              : "/"
+          )
+        }
       />
     </PageShell>
   );
@@ -734,10 +797,10 @@ export function App() {
     }
 
     if (session && authStatus === "profile-missing") {
-      return <Navigate replace to="/onboarding" />;
+      return <Navigate replace to={getRouteWithReturnTo("/onboarding", currentPathWithSearch)} />;
     }
 
-    return registrationRoute;
+    return <Navigate replace to={getRouteWithReturnTo("/registration", currentPathWithSearch)} />;
   }
 
   if (authStatus === "profile-loading" && isEntryRoute(location.pathname)) {
