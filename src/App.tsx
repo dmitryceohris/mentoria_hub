@@ -163,7 +163,7 @@ function isProtectedPath(pathname: string) {
 }
 
 function isEntryRoute(pathname: string) {
-  return pathname === "/" || pathname === "/onboarding" || pathname === "/registration";
+  return pathname === "/onboarding" || pathname === "/registration";
 }
 
 function getErrorMessage(error: unknown, fallback: string) {
@@ -318,11 +318,13 @@ export function App() {
       try {
         const restoredSession = await getSupabaseSession();
         const bootstrapPath = getPathWithSearch(window.location);
+        const bootstrapPathname = window.location.pathname;
+        const bootstrapIsProtected = isProtectedPath(bootstrapPathname);
         await loadProfileForSession(restoredSession, {
           isActive: () => active,
-          redirectOnReady: Boolean(restoredSession?.user && isEntryRoute(window.location.pathname)),
-          redirectOnMissing: Boolean(restoredSession?.user),
-          returnTo: isProtectedPath(window.location.pathname) ? bootstrapPath : "/dashboard"
+          redirectOnReady: Boolean(restoredSession?.user && isEntryRoute(bootstrapPathname)),
+          redirectOnMissing: Boolean(restoredSession?.user && (bootstrapIsProtected || isEntryRoute(bootstrapPathname))),
+          returnTo: bootstrapIsProtected ? bootstrapPath : "/dashboard"
         });
       } catch (error) {
         if (active) {

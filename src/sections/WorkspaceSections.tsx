@@ -85,7 +85,7 @@ function WorkspaceRail({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <nav className="hero-rail workspace-rail" aria-label="Mentoria Hub workspace navigation">
+    <nav className="workspace-top-rail workspace-rail" aria-label="Mentoria Hub workspace navigation">
       <NavLink
         className={({ isActive }) => `wordmark workspace-me-link${isActive ? " workspace-nav-link-active" : ""}`}
         to="/dashboard"
@@ -93,7 +93,7 @@ function WorkspaceRail({ onLogout }: { onLogout: () => void }) {
       >
         Me
       </NavLink>
-      <div className="rail-links workspace-rail-links">
+      <div className="workspace-top-links workspace-link-row">
         {navItems.map((item) => {
           const Icon = item.icon;
 

@@ -1,19 +1,8 @@
-import { ConsoleShell } from "../components/ConsoleShell";
-import { OpportunityRow } from "../components/OpportunityRow";
-import { SearchIcon } from "../components/SearchIcon";
-import { navLinks, opportunities } from "../data/content";
+import { navLinks } from "../data/content";
 
 type HeroSectionProps = {
   onStartJourney: () => void;
 };
-
-const heroCriteria = [
-  ["Direction", "Science"],
-  ["Format", "Hybrid"],
-  ["Location", "Global"],
-  ["Grade", "Grade 10"],
-  ["Type", "Competition"]
-];
 
 export function HeroSection({ onStartJourney }: HeroSectionProps) {
   return (
@@ -45,16 +34,10 @@ export function HeroSection({ onStartJourney }: HeroSectionProps) {
           <div className="hero-copy">
             <h1 id="hero-title">Mentoria Hub</h1>
             <p className="promise">With you on your way to your dream</p>
-            <div className="keyword-band" aria-label="Mentoria Hub learning and opportunity areas">
-              <span>Opportunity Search</span>
-              <span>Competitions</span>
-              <span>Scholarships</span>
-              <span>Prep Courses</span>
-            </div>
             <p className="all-in-one">.. all in one place</p>
             <p className="hero-lede">
-              Find competitions, scholarships, internships, and summer schools that fit your profile, then keep learning
-              through Mentoria&apos;s own SAT, IELTS, and subject courses.
+              <span className="hero-inline-chip">Opportunity Search</span>
+              Find programs that fit your profile.
             </p>
             <div className="hero-actions">
               <button className="button button-primary" type="button" onClick={onStartJourney}>
@@ -64,40 +47,6 @@ export function HeroSection({ onStartJourney }: HeroSectionProps) {
                 </span>
               </button>
             </div>
-          </div>
-
-          <div className="match-console hero-match-console" aria-labelledby="hero-console-title">
-            <ConsoleShell
-              title="Opportunity matches"
-              titleId="hero-console-title"
-              intro="A student workspace shaped by grade, interests, format, and location."
-            >
-              <div className="showcase-search" aria-label="Search query">
-                <SearchIcon />
-                <span>grade 10 physics competitions</span>
-              </div>
-
-              <div className="criteria-grid" aria-label="Selected opportunity filters">
-                {heroCriteria.map(([label, value]) => (
-                  <div className="criteria-select" key={label}>
-                    <span className="criteria-label">{label}</span>
-                    <span className="criteria-value">{value}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="result-panel" aria-label="Hero opportunity matches">
-                <p className="result-heading">3 recommended matches</p>
-                {opportunities.slice(0, 3).map((opportunity) => (
-                  <OpportunityRow opportunity={opportunity} key={opportunity.id} />
-                ))}
-              </div>
-
-              <div className="hero-support-strip" aria-label="Supporting preparation signals">
-                <span>Course prep linked</span>
-                <span>Mentor handoff ready</span>
-              </div>
-            </ConsoleShell>
           </div>
         </div>
       </div>
