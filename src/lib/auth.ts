@@ -112,7 +112,7 @@ export function onAuthStateChange(listener: (session: Session | null) => void) {
   return () => subscription.unsubscribe();
 }
 
-export async function signUpWithCredentials(form: RegistrationForm) {
+export async function signUpWithCredentials(form: RegistrationForm, emailRedirectTo?: string) {
   if (!supabase) {
     throw new Error("Supabase is not configured.");
   }
@@ -121,6 +121,7 @@ export async function signUpWithCredentials(form: RegistrationForm) {
     email: form.email.trim(),
     password: form.password,
     options: {
+      emailRedirectTo,
       data: {
         name: form.name.trim()
       }

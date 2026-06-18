@@ -286,6 +286,14 @@ function waitForLoadingScreen() {
   });
 }
 
+function getOnboardingEmailRedirectTo() {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  return `${window.location.origin}/onboarding`;
+}
+
 export function App() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -312,7 +320,6 @@ export function App() {
   const [authError, setAuthError] = useState("");
   const [authNotice, setAuthNotice] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
-  const [onboardingWithoutSessionAllowed, setOnboardingWithoutSessionAllowed] = useState(false);
   const profileSaveInFlightRef = useRef(false);
   const profileLoadRequestIdRef = useRef(0);
   const onboardingProfileRef = useRef(onboardingProfile);
@@ -481,7 +488,6 @@ export function App() {
         setSession(null);
         setProfile(null);
         setAuthStatus("signed-out");
-        setOnboardingWithoutSessionAllowed(false);
         return;
       }
 
@@ -512,7 +518,6 @@ export function App() {
     setFieldErrors({});
     setAuthMode("signup");
     setOnboardingStep(0);
-    setOnboardingWithoutSessionAllowed(false);
 
     if (session?.user && authStatus === "profile-missing") {
       navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding");
@@ -535,7 +540,6 @@ export function App() {
     setAuthNotice("");
     setFieldErrors({});
     setAuthMode("signin");
-    setOnboardingWithoutSessionAllowed(false);
 
     if (session?.user && authStatus === "profile-missing") {
       navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding");
@@ -631,10 +635,9 @@ export function App() {
     try {
       if (authMode === "signup") {
         beginProfileSave();
-        const data = await signUpWithCredentials(registrationForm);
+        const data = await signUpWithCredentials(registrationForm, getOnboardingEmailRedirectTo());
 
         if (data.user && userHasNoNewIdentity(data.user)) {
-          setOnboardingWithoutSessionAllowed(false);
           setAuthMode("signin");
           setRegistrationForm((current) => ({ ...initialRegistrationForm, email: current.email }));
           setAuthNotice("This email already has an account. Log in to continue.");
@@ -646,17 +649,26 @@ export function App() {
           return;
         }
 
+        if (!data.session) {
+          setSession(null);
+          setProfile(null);
+          setAuthStatus("signed-out");
+          setAuthMode("signin");
+          setRegistrationForm((current) => ({ ...initialRegistrationForm, email: current.email }));
+          setAuthNotice("Account created. Confirm your email, then sign in to continue onboarding.");
+          return;
+        }
+
         setSession(data.session ?? null);
         setProfile(null);
         setAuthStatus("onboarding-loading");
-        setOnboardingWithoutSessionAllowed(!data.session);
         setOnboardingProfile(emptyOnboardingProfile);
         onboardingProfileRef.current = emptyOnboardingProfile;
         setOnboardingStep(0);
         window.sessionStorage.removeItem(onboardingDraftKey);
         setAuthLoading(false);
         await waitForLoadingScreen();
-        setAuthStatus(data.session ? "profile-missing" : "signed-out");
+        setAuthStatus("profile-missing");
         navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding", { replace: true });
         return;
       }
@@ -669,11 +681,9 @@ export function App() {
       });
 
       if (loadedProfile) {
-        setOnboardingWithoutSessionAllowed(false);
         setRegistrationForm(initialRegistrationForm);
         navigate(nextPath, { replace: true });
       } else if (data.session?.user) {
-        setOnboardingWithoutSessionAllowed(false);
         navigate(getRouteWithReturnTo("/onboarding", nextPath), { replace: true });
       } else {
         setAuthError("Signed in, but Mentoria could not load a session. Try again.");
@@ -706,7 +716,6 @@ export function App() {
     setAuthNotice("");
     setRegistrationForm(initialRegistrationForm);
     setAuthStatus("signed-out");
-    setOnboardingWithoutSessionAllowed(false);
     navigate("/", { replace: true });
   }
 
@@ -765,7 +774,7 @@ export function App() {
     </PageShell>
   );
 
-  const onboardingRoute = session?.user || onboardingWithoutSessionAllowed ? (
+  const onboardingRoute = session?.user ? (
     <PageShell>
       <OnboardingSection
         profile={onboardingProfile}
