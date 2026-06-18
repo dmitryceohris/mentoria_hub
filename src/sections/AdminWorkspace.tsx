@@ -11,6 +11,7 @@ import {
   Database as DatabaseIcon,
   FloppyDisk,
   NotePencil,
+  PlusCircle,
   ShieldCheck,
   SignOut,
   Trophy,
@@ -28,6 +29,7 @@ import {
 } from "../lib/adminAuth";
 import type { AdminMembership, AdminRole, AdminStatus } from "../lib/adminAuth";
 import {
+  createCatalogCourse,
   fetchAdminCatalog,
   seedCatalogFromStaticContent,
   updateCatalogCourse,
@@ -549,11 +551,35 @@ function CoursesAdmin({
   const lessons = selectedCourse ? catalog.lessons.filter((lesson) => lesson.course_id === selectedCourse.id) : [];
   const selectedLesson = lessons.find((lesson) => lesson.id === selectedLessonId) ?? lessons[0];
 
+  async function createCourse() {
+    const nextSortOrder = catalog.courses.reduce((max, course) => Math.max(max, course.sort_order), -1) + 1;
+
+    setStatus("loading", "");
+
+    try {
+      const created = await createCatalogCourse({ sortOrder: nextSortOrder });
+      await onCatalogReload();
+      setQuery("");
+      setSelectedCourseId(created.course.id);
+      setSelectedLessonId(created.lesson.id);
+      setLessonEditorTab("basics");
+      setStatus("success", "Course created.");
+    } catch (error) {
+      setStatus("error", getErrorMessage(error, "Course could not be created."));
+    }
+  }
+
   return (
     <div className="admin-split">
       <aside className="admin-list-pane">
         <div className="admin-pane-head">
           <h2>Courses</h2>
+          <button className="admin-secondary-action" disabled={!editable} type="button" onClick={createCourse}>
+            <PlusCircle aria-hidden="true" size={16} weight="light" />
+            <span>New course</span>
+          </button>
+        </div>
+        <div className="admin-pane-head">
           <input value={query} placeholder="Search courses" onChange={(event) => setQuery(event.target.value)} />
         </div>
         <div className="admin-row-list">
