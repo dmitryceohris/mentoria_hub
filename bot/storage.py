@@ -58,3 +58,15 @@ def mark_reminder_sent(chat_id: int, opportunity_id: str, kind: str) -> None:
         on_conflict="chat_id,opportunity_id,kind",
         ignore_duplicates=True,
     ).execute()
+
+
+def add_event_reminder(chat_id: int, opportunity_id: str) -> None:
+    _client.table("bot_event_reminders").upsert(
+        {"chat_id": chat_id, "opportunity_id": opportunity_id},
+        on_conflict="chat_id,opportunity_id",
+        ignore_duplicates=True,
+    ).execute()
+
+
+def list_event_reminders() -> list[dict]:
+    return _client.table("bot_event_reminders").select("*").execute().data

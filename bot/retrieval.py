@@ -34,6 +34,11 @@ def _load() -> tuple[dict, list]:
     return _opps, _index
 
 
+def get_opportunity(opportunity_id: str) -> dict | None:
+    opps, _ = _load()
+    return opps.get(opportunity_id)
+
+
 def _cosine(a: list[float], b: list[float]) -> float:
     dot = sum(x * y for x, y in zip(a, b))
     na = math.sqrt(sum(x * x for x in a))

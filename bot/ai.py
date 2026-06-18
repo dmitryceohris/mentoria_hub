@@ -3,7 +3,7 @@ free-form Q&A grounded in Mentoria opportunities, plus AI-written deadline
 announcements.
 """
 
-from datetime import date
+from datetime import date, datetime
 
 from openai import OpenAI
 
@@ -13,8 +13,20 @@ import retrieval
 _client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 
-def _opportunities_context(question: str) -> str:
-    opps = retrieval.retrieve(question)
+def _upcoming(opp: dict) -> bool:
+    """True if the opportunity's deadline/event date is today or later."""
+    if opp.get("isRecurring"):
+        return True
+    raw = opp.get("deadline") or opp.get("eventDate")
+    if not raw:
+        return False  # no concrete date -> don't offer a reminder
+    try:
+        return datetime.fromisoformat(raw[:10]).date() >= date.today()
+    except ValueError:
+        return False
+
+
+def _opportunities_context(opps: list[dict]) -> str:
     blocks = []
     for o in opps:
         deadline = o.get("deadline") or o.get("eventDate") or "не указан"
@@ -26,12 +38,24 @@ def _opportunities_context(question: str) -> str:
     return "\n\n".join(blocks)
 
 
+def answer_with_suggestion(question: str) -> tuple[str, dict | None]:
+    """Answer a question and, if a concrete upcoming opportunity is relevant,
+    return it so the bot can offer a reminder. Returns (text, opportunity|None)."""
+    opps = retrieval.retrieve(question)
+    suggestion = next((o for o in opps if _upcoming(o)), None)
+    return _generate(question, opps), suggestion
+
+
 def answer(question: str) -> str:
     """Answer a free-form student question as MentorLM."""
+    return _generate(question, retrieval.retrieve(question))
+
+
+def _generate(question: str, opps: list[dict]) -> str:
     if not _client:
         return "ИИ временно недоступен. Передайте админу код: NO_OPENAI_KEY"
 
-    context = _opportunities_context(question)
+    context = _opportunities_context(opps)
     system = f"""Ты — MentorLM, дружелюбный ассистент Mentoria Hub (сообщество: новости, олимпиады, конкурсы, гранты, стажировки) для школьников 8–12 классов.
 
 Сегодня {date.today().isoformat()}.

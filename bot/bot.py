@@ -11,12 +11,13 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandObject
-from aiogram.types import Message
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import BOT_TOKEN, REMINDER_INTERVAL_HOURS, is_admin
 import ai
 import reminders
+import retrieval
 import storage
 
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -139,11 +140,43 @@ async def cmd_raffle(message: Message, command: CommandObject) -> None:
 async def ai_chat(message: Message) -> None:
     await bot.send_chat_action(message.chat.id, "typing")
     try:
-        reply = await asyncio.to_thread(ai.answer, message.text)
+        reply, suggestion = await asyncio.to_thread(ai.answer_with_suggestion, message.text)
     except Exception as e:
         await message.answer(ERROR_TEMPLATE.format(code=error_code(e)))
         return
-    await message.answer(reply, disable_web_page_preview=True)
+
+    keyboard = None
+    if suggestion:
+        title = suggestion.get("title", "событие")
+        short = title if len(title) <= 28 else title[:27] + "…"
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[[
+                InlineKeyboardButton(
+                    text=f"🔔 Напомнить про {short}",
+                    callback_data=f"remind:{suggestion['id']}",
+                )
+            ]]
+        )
+
+    await message.answer(reply, disable_web_page_preview=True, reply_markup=keyboard)
+
+
+@dp.callback_query(F.data.startswith("remind:"))
+async def on_remind(cb: CallbackQuery) -> None:
+    opp_id = cb.data.split(":", 1)[1]
+    opp = retrieval.get_opportunity(opp_id)
+    chat_id = cb.message.chat.id
+    try:
+        storage.add_subscriber(chat_id, cb.from_user.username if cb.from_user else None)
+        storage.add_event_reminder(chat_id, opp_id)
+    except Exception as e:
+        await cb.answer("Не получилось 😔", show_alert=False)
+        await bot.send_message(chat_id, ERROR_TEMPLATE.format(code=error_code(e)))
+        return
+
+    title = opp.get("title") if opp else "событие"
+    await cb.answer("Готово! 🔔")
+    await cb.message.answer(f"🔔 Напомню тебе про <b>{title}</b> перед дедлайном!")
 
 
 # ── Scheduler + entrypoint ────────────────────────────────────
