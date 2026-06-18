@@ -3,6 +3,7 @@ free-form Q&A grounded in Mentoria opportunities, plus AI-written deadline
 announcements.
 """
 
+import re
 from datetime import date, datetime
 
 from openai import OpenAI
@@ -24,6 +25,15 @@ def _upcoming(opp: dict) -> bool:
         return datetime.fromisoformat(raw[:10]).date() >= date.today()
     except ValueError:
         return False
+
+
+def _clean_markdown(text: str) -> str:
+    """The model sometimes emits Markdown; we send plain text (HTML parse mode).
+    Strip ** bold and convert [label](url) links to 'label: url'."""
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+    text = re.sub(r"\[([^\]]+)\]\((https?://[^\)]+)\)", r"\1: \2", text)
+    text = re.sub(r"(?m)^\s*#{1,6}\s*", "", text)  # drop markdown headings
+    return text.strip()
 
 
 def _opportunities_context(opps: list[dict]) -> str:
@@ -71,7 +81,8 @@ def _generate(question: str, opps: list[dict]) -> str:
 - Отвечай на языке пользователя (русский/английский/казахский), дружелюбно и по делу.
 - Если вопрос про конкурсы/возможности — опирайся на список выше, давай ссылку «Источник».
 - Не рекомендуй мероприятия с прошедшим дедлайном; если дедлайн прошёл — так и скажи.
-- Если не знаешь — честно скажи и предложи заглянуть на канал/сайт."""
+- Если не знаешь — честно скажи и предложи заглянуть на канал/сайт.
+- ВАЖНО: пиши простым текстом. НЕ используй Markdown (никаких **, ##, [текст](ссылка)) и HTML-теги. Ссылки давай как обычный URL прямо в тексте."""
 
     resp = _client.chat.completions.create(
         model=OPENAI_MODEL,
@@ -81,7 +92,7 @@ def _generate(question: str, opps: list[dict]) -> str:
             {"role": "user", "content": question},
         ],
     )
-    return resp.choices[0].message.content.strip()
+    return _clean_markdown(resp.choices[0].message.content)
 
 
 def announce(title: str, days_left: int | None, closed: bool = False) -> str:
