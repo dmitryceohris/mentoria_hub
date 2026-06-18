@@ -1,0 +1,5 @@
+aiogram>=3.4
+apscheduler>=3.10
+python-dotenv>=1.0
+supabase>=2.4
+requests>=2.31
