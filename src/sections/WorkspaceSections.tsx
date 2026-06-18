@@ -585,9 +585,23 @@ export function LessonWorkspace({ onLogout }: { onLogout: () => void }) {
 }
 
 export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onLogout }: OpportunitiesWorkspaceProps) {
+  const [searchQuery, setSearchQuery] = useState("");
   const onboardingProfile = buildOnboardingProfile(profile);
   const allOpportunities = getOpportunityPool(extraOpportunities);
   const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities, allOpportunities.length);
+
+  const displayOpportunities = searchQuery.trim()
+    ? allOpportunities.filter((opportunity) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          opportunity.title.toLowerCase().includes(query) ||
+          opportunity.description.toLowerCase().includes(query) ||
+          opportunity.category.toLowerCase().includes(query) ||
+          opportunity.direction.toLowerCase().includes(query) ||
+          opportunity.format.toLowerCase().includes(query)
+        );
+      })
+    : recommendedOpportunities;
 
   return (
     <section className="flow-screen workspace-screen centered-workspace-screen" aria-labelledby="workspace-opportunities-title">
@@ -596,11 +610,25 @@ export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onLog
         <WorkspaceHeader
           description="A centered shortlist of matches from your profile. This keeps opportunity search close to courses without turning the page into a dense dashboard."
           kicker="Opportunity search"
-          title="Matches from your profile"
-        />
+          title={searchQuery.trim() ? "Search results" : "Matches from your profile"}
+        >
+          <div className="form-field" style={{ marginTop: "1.5rem", maxWidth: "420px", marginInline: "auto" }}>
+            <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+              <MagnifyingGlass style={{ position: "absolute", left: "16px", color: "var(--muted)" }} size={18} weight="light" aria-hidden="true" />
+              <input
+                type="search"
+                placeholder="Search opportunities..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ paddingLeft: "42px" }}
+                aria-label="Search opportunities"
+              />
+            </div>
+          </div>
+        </WorkspaceHeader>
         <div className="workspace-opportunity-list centered-opportunity-list">
-          {recommendedOpportunities.length > 0 ? (
-            recommendedOpportunities.map((opportunity) => (
+          {displayOpportunities.length > 0 ? (
+            displayOpportunities.map((opportunity) => (
               <article className="workspace-opportunity-row centered-glass-panel" key={opportunity.id}>
                 <div>
                   <span className="deadline-chip">{formatOpportunityDeadline(opportunity)}</span>
@@ -612,11 +640,11 @@ export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onLog
                     <span>Grades {opportunity.grades.join(", ")}</span>
                   </div>
                 </div>
-                <span className="match-badge">Match</span>
+                {searchQuery.trim() ? null : <span className="match-badge">Match</span>}
               </article>
             ))
           ) : (
-            <WorkspaceEmptyState title="No matches yet" message="Try broadening the profile filters or refresh the opportunity feed." />
+            <WorkspaceEmptyState title="No opportunities found" message={searchQuery.trim() ? "Try adjusting your search query." : "Try broadening the profile filters or refresh the opportunity feed."} />
           )}
         </div>
       </div>
