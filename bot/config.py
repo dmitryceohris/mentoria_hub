@@ -24,6 +24,9 @@ EMBED_MODEL = "text-embedding-3-small"
 CHANNEL_URL = "https://t.me/mentoria_organization"
 SITE_URL = "https://mentoria-hub-ruddy.vercel.app/"
 
+# Where achievement cards are published. Bot must be an admin of this channel.
+CHANNEL_POST_TARGET = os.environ.get("CHANNEL_POST_TARGET", "@mentoria_organization")
+
 # If set, opportunities are fetched over HTTP; otherwise read from the local file.
 OPPORTUNITIES_URL = os.environ.get("OPPORTUNITIES_URL", "").strip()
 LOCAL_OPPORTUNITIES = Path(__file__).parent.parent / "public" / "recsys" / "opportunities.json"

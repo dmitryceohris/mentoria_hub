@@ -11,11 +11,18 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandObject
-from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import (
+    BufferedInputFile,
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import BOT_TOKEN, REMINDER_INTERVAL_HOURS, is_admin
+from config import BOT_TOKEN, CHANNEL_POST_TARGET, REMINDER_INTERVAL_HOURS, is_admin
 import ai
+import cards
 import reminders
 import retrieval
 import storage
@@ -86,6 +93,54 @@ async def cmd_me(message: Message) -> None:
 async def cmd_stop(message: Message) -> None:
     storage.remove_subscriber(message.chat.id)
     await message.answer("Отписал. Возвращайся в любой момент — /start 👋")
+
+
+# ── Achievement share-cards ───────────────────────────────────
+
+# Remembers the last generated card per chat so the "publish" button can repost it.
+_last_card: dict[int, tuple[str, str]] = {}
+
+
+@dp.message(Command("card"))
+async def cmd_card(message: Message, command: CommandObject) -> None:
+    achievement = (command.args or "").strip() or "Завершил курс на Mentoria"
+    name = (message.from_user.full_name if message.from_user else None) or "Студент Mentoria"
+    png = cards.generate_card(name, achievement)
+    _last_card[message.chat.id] = (name, achievement)
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text="📢 Опубликовать в канал", callback_data="postcard")]]
+    )
+    await bot.send_photo(
+        message.chat.id,
+        BufferedInputFile(png, filename="achievement.png"),
+        caption="🎉 Твоя карточка достижения! Можешь переслать её куда угодно.",
+        reply_markup=keyboard,
+    )
+
+
+@dp.callback_query(F.data == "postcard")
+async def on_postcard(cb: CallbackQuery) -> None:
+    data = _last_card.get(cb.message.chat.id)
+    if not data:
+        await cb.answer("Карточка не найдена — создай заново через /card", show_alert=True)
+        return
+    name, achievement = data
+    png = cards.generate_card(name, achievement)
+    try:
+        await bot.send_photo(
+            CHANNEL_POST_TARGET,
+            BufferedInputFile(png, filename="achievement.png"),
+            caption=f"🎉 {name} — {achievement}",
+        )
+    except Exception as e:
+        await cb.answer("Не удалось опубликовать", show_alert=False)
+        await bot.send_message(
+            cb.message.chat.id,
+            ERROR_TEMPLATE.format(code=error_code(e)) + "\n(бот должен быть админом канала)",
+        )
+        return
+    await cb.answer("Опубликовано! 📢")
+    await cb.message.answer("✅ Карточка опубликована в канал!")
 
 
 # ── Admin commands ────────────────────────────────────────────
