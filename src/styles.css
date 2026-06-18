@@ -3516,24 +3516,58 @@ main {
   transform: translateY(-1px);
 }
 
-/* Deadline Calendar & Dashboard Improvements */
-.deadline-calendar-grid {
+/* Compact streak calendar */
+.streak-calendar-panel {
+  width: min(100%, 860px);
+  padding: 16px;
+}
+
+.streak-calendar-heading {
+  align-items: center;
+}
+
+.streak-calendar-score {
+  display: grid;
+  min-width: 86px;
+  justify-items: end;
+  gap: 2px;
+}
+
+.streak-calendar-score strong {
+  color: var(--mint);
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.streak-calendar-score span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.deadline-calendar-grid,
+.streak-calendar-grid {
   display: grid;
   grid-auto-flow: column;
   grid-template-rows: repeat(7, 1fr);
   gap: 3px;
   overflow-x: auto;
-  padding: 10px 0;
-  min-height: 120px;
+  width: 100%;
+  min-height: 74px;
+  padding: 8px 0 4px;
+  scrollbar-width: thin;
 }
 
 .calendar-cell {
-  width: 12px;
-  height: 12px;
+  width: 9px;
+  height: 9px;
   background-color: var(--surface-strong);
   border: 1px solid var(--glass-line);
   border-radius: 2px;
-  transition: transform 0.2s, background-color 0.2s;
+  transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
   cursor: default;
 }
 
@@ -3542,15 +3576,60 @@ main {
   border-color: var(--mint);
 }
 
+.calendar-cell.has-activity {
+  background-color: rgba(132, 230, 234, 0.62);
+  border-color: rgba(132, 230, 234, 0.86);
+}
+
 .calendar-cell.has-deadline {
   background-color: var(--cyan);
   border-color: var(--mint);
-  box-shadow: 0 0 5px rgba(17, 198, 207, 0.4);
+  box-shadow: 0 0 5px rgba(17, 198, 207, 0.36);
+}
+
+.calendar-cell.has-activity.has-deadline {
+  background: linear-gradient(135deg, var(--mint) 0 48%, var(--cyan) 50% 100%);
 }
 
 .calendar-cell.has-deadline:hover {
   background-color: var(--mint);
   box-shadow: 0 0 8px rgba(132, 230, 234, 0.6);
+}
+
+.streak-calendar-meta {
+  display: grid;
+  grid-template-columns: minmax(96px, auto) 1fr;
+  align-items: start;
+  gap: 12px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 690;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.streak-deadline-list {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.streak-deadline-list span {
+  max-width: min(240px, 100%);
+  overflow: hidden;
+  padding: 5px 8px;
+  border: 1px solid rgba(132, 230, 234, 0.16);
+  border-radius: 999px;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-empty-state {
+  margin-top: 8px;
 }
 
 .metric-card {
@@ -5287,6 +5366,32 @@ main {
   .metric-strip {
     gap: 9px;
     margin-top: 22px;
+  }
+
+  .streak-calendar-panel {
+    padding: 14px;
+  }
+
+  .streak-calendar-heading {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+  }
+
+  .streak-calendar-score {
+    min-width: 70px;
+  }
+
+  .streak-calendar-score strong {
+    font-size: 22px;
+  }
+
+  .streak-calendar-meta {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .streak-deadline-list {
+    justify-content: flex-start;
   }
 
   .opportunity-search-window,

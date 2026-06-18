@@ -47,6 +47,7 @@ import {
   dismissRecommendedOpportunitiesWindow,
   enrollStudentCourse,
   fetchMentorLMLessonNotes,
+  fetchStudentAssignmentSubmissions,
   fetchStudentCourseEnrollments,
   fetchStudentOpportunities,
   fetchStudentWorkspaceState,
@@ -56,6 +57,7 @@ import {
 } from "../lib/studentState";
 import type {
   MentorLMLessonNote,
+  LessonAssignmentSubmission,
   StudentCourseEnrollment,
   StudentOpportunity,
   StudentOpportunitySource,
@@ -91,6 +93,12 @@ type OpportunityFilterState = {
   location: string;
   grade: string;
   category: string;
+};
+
+type CalendarActivityDay = {
+  date: string;
+  activityCount: number;
+  deadlines: Array<{ id: string; title: string; date: string }>;
 };
 
 const emptyOpportunityFilters: OpportunityFilterState = {
@@ -321,6 +329,46 @@ function useStudentWorkspaceState(profileId: string) {
   return { dismissRecommendedWindow, error, loading, workspaceState };
 }
 
+function useStudentAssignmentActivityState(profileId: string) {
+  const [submissions, setSubmissions] = useState<LessonAssignmentSubmission[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<StudentStateError>("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadSubmissions() {
+      setLoading(true);
+      setError("");
+
+      try {
+        const data = await fetchStudentAssignmentSubmissions(profileId);
+
+        if (isMounted) {
+          setSubmissions(data);
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setSubmissions([]);
+          setError(getStateErrorMessage(loadError, "Assignment activity could not be loaded."));
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadSubmissions();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [profileId]);
+
+  return { error, loading, submissions };
+}
+
 function getCourseById(courseId?: string) {
   return courses.find((course) => course.id === courseId);
 }
@@ -496,51 +544,185 @@ function WorkspaceEmptyState({ title, message }: { title: string; message: strin
   );
 }
 
-function DeadlineCalendar({ opportunities }: { opportunities: Opportunity[] }) {
-  const cells = useMemo(() => {
+function getDateKey(value: string | Date) {
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+
+  const date = value instanceof Date ? new Date(value) : new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getDeadlineDateKey(opportunity: Opportunity) {
+  return getDateKey(opportunity.deadline || opportunity.eventDate || "");
+}
+
+function addActivityDate(map: Map<string, number>, value: string | null | undefined) {
+  if (!value) {
+    return;
+  }
+
+  const dateKey = getDateKey(value);
+
+  if (dateKey) {
+    map.set(dateKey, (map.get(dateKey) ?? 0) + 1);
+  }
+}
+
+function getCurrentStreak(activityDates: Set<string>) {
+  const cursor = new Date();
+  cursor.setHours(0, 0, 0, 0);
+
+  if (!activityDates.has(getDateKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  let streak = 0;
+
+  while (activityDates.has(getDateKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
+}
+
+function StreakCalendar({
+  assignmentSubmissions,
+  enrollments,
+  opportunities,
+  studentOpportunities
+}: {
+  assignmentSubmissions: LessonAssignmentSubmission[];
+  enrollments: StudentCourseEnrollment[];
+  opportunities: Opportunity[];
+  studentOpportunities: StudentOpportunity[];
+}) {
+  const { activeDays, cells, nextDeadlines, streak } = useMemo(() => {
+    const activityMap = new Map<string, number>();
+    enrollments.forEach((enrollment) => addActivityDate(activityMap, enrollment.enrolled_at));
+    studentOpportunities.forEach((opportunity) => addActivityDate(activityMap, opportunity.saved_at));
+    assignmentSubmissions.forEach((submission) => addActivityDate(activityMap, submission.submitted_at));
+
+    const deadlineMap = new Map<string, CalendarActivityDay["deadlines"]>();
+    opportunities.forEach((opportunity) => {
+      const dateKey = getDeadlineDateKey(opportunity);
+
+      if (!dateKey) {
+        return;
+      }
+
+      const currentDeadlines = deadlineMap.get(dateKey) ?? [];
+      currentDeadlines.push({
+        id: opportunity.id,
+        title: getOpportunityTranslation(opportunity).title,
+        date: dateKey
+      });
+      deadlineMap.set(dateKey, currentDeadlines);
+    });
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const firstVisibleDate = new Date(today);
+    firstVisibleDate.setDate(firstVisibleDate.getDate() - 35);
 
-    const opportunityMap = new Map<number, Opportunity>();
-    opportunities.forEach((opportunity) => {
-      const deadline = new Date(opportunity.deadline);
-      deadline.setHours(0, 0, 0, 0);
-      opportunityMap.set(deadline.getTime(), opportunity);
-    });
-
-    return Array.from({ length: 52 * 7 }, (_, index) => {
-      const date = new Date(today);
-      date.setDate(date.getDate() - Math.floor((52 * 7) / 2) + index);
-      date.setHours(0, 0, 0, 0);
+    const nextCells: CalendarActivityDay[] = Array.from({ length: 8 * 7 }, (_, index) => {
+      const date = new Date(firstVisibleDate);
+      date.setDate(firstVisibleDate.getDate() + index);
+      const dateKey = getDateKey(date);
 
       return {
-        date,
-        opportunity: opportunityMap.get(date.getTime())
+        date: dateKey,
+        activityCount: activityMap.get(dateKey) ?? 0,
+        deadlines: deadlineMap.get(dateKey) ?? []
       };
     });
-  }, [opportunities]);
+
+    const upcomingDeadlines = [...deadlineMap.values()]
+      .flat()
+      .filter((deadline) => deadline.date >= getDateKey(today))
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 3);
+    const activeDateSet = new Set(activityMap.keys());
+
+    return {
+      activeDays: activeDateSet.size,
+      cells: nextCells,
+      nextDeadlines: upcomingDeadlines,
+      streak: getCurrentStreak(activeDateSet)
+    };
+  }, [assignmentSubmissions, enrollments, opportunities, studentOpportunities]);
+  const hasCalendarSignals = activeDays > 0 || nextDeadlines.length > 0 || cells.some((cell) => cell.deadlines.length > 0);
 
   return (
-    <section className="dashboard-panel calendar-panel centered-glass-panel" aria-labelledby="calendar-title">
-      <div className="panel-heading">
+    <section className="dashboard-panel calendar-panel streak-calendar-panel centered-glass-panel" aria-labelledby="calendar-title">
+      <div className="panel-heading streak-calendar-heading">
         <div>
           <span>Timeline</span>
-          <h2 id="calendar-title">Deadline Calendar</h2>
+          <h2 id="calendar-title">Streak Calendar</h2>
+        </div>
+        <div className="streak-calendar-score" aria-label={`${streak} day activity streak`}>
+          <strong>{streak}</strong>
+          <span>day streak</span>
         </div>
       </div>
-      <div className="deadline-calendar-grid">
-        {cells.map((cell) => (
-          <div
-            className={`calendar-cell ${cell.opportunity ? "has-deadline" : ""}`}
-            key={cell.date.toISOString()}
-            title={
-              cell.opportunity
-                ? `${getOpportunityTranslation(cell.opportunity).title} (Due: ${cell.date.toLocaleDateString()})`
-                : cell.date.toLocaleDateString()
-            }
-          />
-        ))}
-      </div>
+
+      {hasCalendarSignals ? (
+        <>
+          <div className="deadline-calendar-grid streak-calendar-grid" aria-label="Recent learning activity and deadlines">
+            {cells.map((cell) => {
+              const date = new Date(`${cell.date}T00:00:00`);
+              const titleParts = [
+                date.toLocaleDateString(),
+                cell.activityCount > 0 ? `${cell.activityCount} learning ${cell.activityCount === 1 ? "activity" : "activities"}` : "",
+                ...cell.deadlines.map((deadline) => `Deadline: ${deadline.title}`)
+              ].filter(Boolean);
+
+              return (
+                <div
+                  aria-label={titleParts.join(". ")}
+                  className={[
+                    "calendar-cell",
+                    cell.activityCount > 0 ? "has-activity" : "",
+                    cell.deadlines.length > 0 ? "has-deadline" : ""
+                  ].filter(Boolean).join(" ")}
+                  key={cell.date}
+                  title={titleParts.join(" | ")}
+                />
+              );
+            })}
+          </div>
+
+          <div className="streak-calendar-meta">
+            <span>{activeDays} active {activeDays === 1 ? "day" : "days"}</span>
+            {nextDeadlines.length > 0 ? (
+              <div className="streak-deadline-list" aria-label="Upcoming deadlines">
+                {nextDeadlines.map((deadline) => (
+                  <span key={`${deadline.id}-${deadline.date}`}>
+                    {new Date(`${deadline.date}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" })}: {deadline.title}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <span>No upcoming deadline markers</span>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="workspace-empty-state calendar-empty-state" role="status">
+          <span aria-hidden="true" />
+          <strong>No calendar signals yet</strong>
+          <p>Learning activity and upcoming deadline markers will appear here after you save opportunities or start courses.</p>
+        </div>
+      )}
     </section>
   );
 }
@@ -566,6 +748,7 @@ export function DashboardSection({ profile, extraOpportunities = [], onLogout }:
   const enrolledCourses = courses.filter((course) => activeCourseIds.includes(course.id));
   const showRecommendedWindow =
     !workspaceStateLoading && !workspaceState.recommended_opportunities_dismissed && recommendedWindowOpportunities.length === 3;
+  const { submissions: assignmentSubmissions } = useStudentAssignmentActivityState(profile.id);
 
   async function closeRecommendedWindow() {
     setDashboardActionError("");
@@ -630,7 +813,12 @@ export function DashboardSection({ profile, extraOpportunities = [], onLogout }:
           </article>
         </div>
 
-        <DeadlineCalendar opportunities={recommendedOpportunities} />
+        <StreakCalendar
+          assignmentSubmissions={assignmentSubmissions}
+          enrollments={enrollments}
+          opportunities={allOpportunities}
+          studentOpportunities={studentOpportunities}
+        />
 
         <div className="dashboard-columns centered-dashboard-columns">
           {showRecommendedWindow ? (
