@@ -4,8 +4,21 @@ create table if not exists public.bot_subscribers (
   chat_id       bigint primary key,
   username      text,
   reminder_days int not null default 3,
+  message_count int not null default 0,
   subscribed_at timestamptz not null default now()
 );
+
+-- For existing projects: add the counter column if the table already exists.
+alter table public.bot_subscribers add column if not exists message_count int not null default 0;
+
+-- Auto-awarded achievements (one row per chat per achievement code).
+create table if not exists public.bot_achievements (
+  chat_id     bigint not null,
+  code        text not null,
+  awarded_at  timestamptz not null default now(),
+  primary key (chat_id, code)
+);
+alter table public.bot_achievements enable row level security;
 
 create table if not exists public.bot_reminders_sent (
   chat_id        bigint not null,

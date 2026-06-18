@@ -60,6 +60,38 @@ def mark_reminder_sent(chat_id: int, opportunity_id: str, kind: str) -> None:
     ).execute()
 
 
+def increment_messages(chat_id: int, username: str | None = None) -> int:
+    """Increment the user's message counter and return the new total."""
+    sub = get_subscriber(chat_id)
+    if not sub:
+        add_subscriber(chat_id, username)
+        count = 1
+    else:
+        count = (sub.get("message_count") or 0) + 1
+    _client.table("bot_subscribers").update({"message_count": count}).eq("chat_id", chat_id).execute()
+    return count
+
+
+def has_achievement(chat_id: int, code: str) -> bool:
+    res = (
+        _client.table("bot_achievements")
+        .select("code")
+        .eq("chat_id", chat_id)
+        .eq("code", code)
+        .limit(1)
+        .execute()
+    )
+    return bool(res.data)
+
+
+def award_achievement(chat_id: int, code: str) -> None:
+    _client.table("bot_achievements").upsert(
+        {"chat_id": chat_id, "code": code},
+        on_conflict="chat_id,code",
+        ignore_duplicates=True,
+    ).execute()
+
+
 def add_event_reminder(chat_id: int, opportunity_id: str) -> None:
     _client.table("bot_event_reminders").upsert(
         {"chat_id": chat_id, "opportunity_id": opportunity_id},

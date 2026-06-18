@@ -95,25 +95,53 @@ async def cmd_stop(message: Message) -> None:
     await message.answer("Отписал. Возвращайся в любой момент — /start 👋")
 
 
-# ── Achievement share-cards ───────────────────────────────────
+# ── Automatic achievement share-cards ─────────────────────────
 
-# Remembers the last generated card per chat so the "publish" button can repost it.
+# Milestone -> achievement text. Awarded automatically as the user chats.
+MESSAGE_MILESTONES = {
+    10: "Отправил 10 сообщений MentorLM",
+    50: "Отправил 50 сообщений MentorLM",
+    100: "Отправил 100 сообщений MentorLM",
+    250: "Отправил 250 сообщений MentorLM",
+    500: "Отправил 500 сообщений MentorLM",
+    1000: "Отправил 1000 сообщений MentorLM",
+}
+
+# Remembers the last awarded card per chat so the "publish" button can repost it.
 _last_card: dict[int, tuple[str, str]] = {}
 
 
-@dp.message(Command("card"))
-async def cmd_card(message: Message, command: CommandObject) -> None:
-    achievement = (command.args or "").strip() or "Завершил курс на Mentoria"
+async def maybe_award_message_milestone(message: Message) -> None:
+    """Count the message and, on a milestone, auto-send an achievement card."""
+    chat_id = message.chat.id
+    username = message.from_user.username if message.from_user else None
+    try:
+        count = await asyncio.to_thread(storage.increment_messages, chat_id, username)
+    except Exception:
+        return  # never break the chat over counting
+
+    achievement = MESSAGE_MILESTONES.get(count)
+    if not achievement:
+        return
+
+    code = f"msg_{count}"
+    try:
+        if storage.has_achievement(chat_id, code):
+            return
+        storage.award_achievement(chat_id, code)
+    except Exception:
+        return
+
     name = (message.from_user.full_name if message.from_user else None) or "Студент Mentoria"
-    png = cards.generate_card(name, achievement)
-    _last_card[message.chat.id] = (name, achievement)
+    png = await asyncio.to_thread(cards.generate_card, name, achievement)
+    _last_card[chat_id] = (name, achievement)
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(text="📢 Опубликовать в канал", callback_data="postcard")]]
     )
     await bot.send_photo(
-        message.chat.id,
+        chat_id,
         BufferedInputFile(png, filename="achievement.png"),
-        caption="🎉 Твоя карточка достижения! Можешь переслать её куда угодно.",
+        caption="🎉 Новое достижение разблокировано!",
         reply_markup=keyboard,
     )
 
@@ -122,7 +150,7 @@ async def cmd_card(message: Message, command: CommandObject) -> None:
 async def on_postcard(cb: CallbackQuery) -> None:
     data = _last_card.get(cb.message.chat.id)
     if not data:
-        await cb.answer("Карточка не найдена — создай заново через /card", show_alert=True)
+        await cb.answer("Карточка устарела — она появится снова с новым достижением", show_alert=True)
         return
     name, achievement = data
     png = cards.generate_card(name, achievement)
@@ -214,6 +242,9 @@ async def ai_chat(message: Message) -> None:
         )
 
     await message.answer(reply, disable_web_page_preview=True, reply_markup=keyboard)
+
+    # Count this message and auto-award a milestone achievement if reached.
+    await maybe_award_message_milestone(message)
 
 
 @dp.callback_query(F.data.startswith("remind:"))
