@@ -33,6 +33,7 @@ import {
   getLessonSearchText,
   getOptionLabel,
   getOptionLabels,
+  getOpportunityPool,
   getRecommendedOpportunities,
   opportunities
 } from "../data/content";
@@ -162,15 +163,6 @@ function buildOnboardingProfile(profile: StudentProfile): OnboardingProfile {
     formats: profile.opportunityPreferences.formats,
     locations: profile.opportunityPreferences.locations
   };
-}
-
-function getOpportunityPool(extraOpportunities: Opportunity[]) {
-  const opportunityMap = new Map<string, Opportunity>();
-
-  opportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
-  extraOpportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
-
-  return [...opportunityMap.values()];
 }
 
 function getStateErrorMessage(error: unknown, fallback: string): StudentStateError {
@@ -930,10 +922,27 @@ function LessonVideoPanel({ lesson }: { lesson: Lesson }) {
           </div>
         ) : null}
         {!videoUrl ? (
-          <div className="lesson-video-placeholder">
-            <VideoCamera aria-hidden="true" size={34} weight="light" />
-            <strong>Video not added yet</strong>
-            <p>This lesson already has a video slot. A mentor or admin can add a YouTube or Telegram lesson link later.</p>
+          <div className="lesson-video-example-wrapper">
+            {/* EXAMPLE VIDEO PLACEHOLDER - REMOVABLE */}
+            <iframe
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="lesson-video-player"
+              src={
+                [
+                  "https://www.youtube.com/embed/QnQe0xW_JY4",
+                  "https://www.youtube.com/embed/3nL2rZ6fL1o",
+                  "https://www.youtube.com/embed/PjRkEhbXW_M",
+                  "https://www.youtube.com/embed/Xq1A3eH9Zvw"
+                ][lesson.id.length % 4]
+              }
+              title="Example Placeholder Video"
+            />
+            <div className="lesson-video-placeholder" style={{ borderTop: "none", borderRadius: "0 0 12px 12px", marginTop: "-4px" }}>
+              <VideoCamera aria-hidden="true" size={24} weight="light" />
+              <strong>Example Video</strong>
+              <p>This is a placeholder. A mentor or admin can add a real YouTube or Telegram link later.</p>
+            </div>
           </div>
         ) : null}
       </div>
@@ -1727,19 +1736,6 @@ export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onLog
       setOpportunityActionError(getStateErrorMessage(error, "Opportunity could not be saved."));
     }
   }
-
-  const displayOpportunities = searchQuery.trim()
-    ? allOpportunities.filter((opportunity) => {
-        const query = searchQuery.toLowerCase();
-        return (
-          opportunity.title.toLowerCase().includes(query) ||
-          opportunity.description.toLowerCase().includes(query) ||
-          opportunity.category.toLowerCase().includes(query) ||
-          opportunity.direction.toLowerCase().includes(query) ||
-          opportunity.format.toLowerCase().includes(query)
-        );
-      })
-    : recommendedOpportunities;
 
   return (
     <section className="flow-screen workspace-screen centered-workspace-screen" aria-labelledby="workspace-opportunities-title">

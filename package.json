@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "check:recommendations": "node scripts/check-recommendations.ts",
     "seed:admin-catalog": "node scripts/seed-admin-catalog.mjs",
     "typecheck": "tsc -b"
   },

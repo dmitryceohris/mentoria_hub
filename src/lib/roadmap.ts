@@ -1,4 +1,4 @@
-import type { Course, Opportunity } from "../data/content";
+import { getRecommendedOpportunities, type Course, type OnboardingProfile, type Opportunity } from "../data/content";
 import { DEFAULT_LOCALE, containsCyrillic, languageNames } from "./language";
 
 /**
@@ -29,12 +29,25 @@ export type RoadmapProfile = {
   interests: string[];
   academicDirection: string;
   directions: string[];
+  formats: string[];
+  locations: string[];
 };
 
-const STORAGE_PREFIX = "mentoria.roadmap.en.v2.";
+const ROADMAP_OPPORTUNITY_LIMIT = 12;
+const STORAGE_PREFIX = "mentoria.roadmap.en.v3.";
 
 function profileKey(p: RoadmapProfile): string {
-  return STORAGE_PREFIX + [p.grade, p.academicDirection, [...p.interests].sort().join(","), [...p.directions].sort().join(",")].join("|");
+  return (
+    STORAGE_PREFIX +
+    [
+      p.grade,
+      p.academicDirection,
+      [...p.interests].sort().join(","),
+      [...p.directions].sort().join(","),
+      [...p.formats].sort().join(","),
+      [...p.locations].sort().join(",")
+    ].join("|")
+  );
 }
 
 function hasCyrillic(value: string) {
@@ -83,7 +96,6 @@ function buildPrompt(profile: RoadmapProfile, opportunities: Opportunity[], cour
     .join("\n");
 
   const oppList = opportunities
-    .slice(0, 30)
     .map(
       (o) =>
         `opportunity | id:${o.id} | ${o.title} | ${o.category}/${o.direction} | grades:${o.grades.join(",")} | deadline:${o.deadline || "n/a"} | tags:${o.tags.join(",")}`
@@ -96,6 +108,8 @@ function buildPrompt(profile: RoadmapProfile, opportunities: Opportunity[], cour
 - Interests: ${profile.interests.join(", ")}
 - Academic direction: ${profile.academicDirection}
 - Chosen directions: ${profile.directions.join(", ")}
+- Formats: ${profile.formats.join(", ")}
+- Locations: ${profile.locations.join(", ")}
 
 Available Mentoria courses:
 ${courseList}
@@ -118,6 +132,21 @@ Respond with ONLY this JSON:
 {"summary":"one motivating sentence in ${languageNames[DEFAULT_LOCALE]}","steps":[{"grade":"9","title":"...","description":"...","type":"course|opportunity|action","refId":"id-or-null"}]}`;
 }
 
+function toOnboardingProfile(profile: RoadmapProfile): OnboardingProfile {
+  return {
+    grade: profile.grade,
+    interests: profile.interests,
+    academicDirection: profile.academicDirection,
+    directions: profile.directions,
+    formats: profile.formats,
+    locations: profile.locations
+  };
+}
+
+function getRoadmapOpportunities(profile: RoadmapProfile, opportunities: Opportunity[]) {
+  return getRecommendedOpportunities(toOnboardingProfile(profile), opportunities, ROADMAP_OPPORTUNITY_LIMIT);
+}
+
 export async function generateRoadmap(
   profile: RoadmapProfile,
   opportunities: Opportunity[],
@@ -126,9 +155,11 @@ export async function generateRoadmap(
   const cached = loadCachedRoadmap(profile);
   if (cached) return cached;
 
+  const roadmapOpportunities = getRoadmapOpportunities(profile, opportunities);
+
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined;
   if (!apiKey) {
-    return fallbackRoadmap(profile, opportunities, courses);
+    return fallbackRoadmap(profile, roadmapOpportunities, courses);
   }
 
   try {
@@ -145,7 +176,7 @@ export async function generateRoadmap(
             content:
               `You design grade 9–12 development roadmaps for Mentoria Hub students. All user-visible roadmap text must be in ${languageNames[DEFAULT_LOCALE]}. You respond only with valid JSON, no markdown.`,
           },
-          { role: "user", content: buildPrompt(profile, opportunities, courses) },
+          { role: "user", content: buildPrompt(profile, roadmapOpportunities, courses) },
         ],
       }),
     });
@@ -157,7 +188,7 @@ export async function generateRoadmap(
     cacheRoadmap(profile, parsed);
     return parsed;
   } catch {
-    return fallbackRoadmap(profile, opportunities, courses);
+    return fallbackRoadmap(profile, roadmapOpportunities, courses);
   }
 }
 
@@ -167,7 +198,7 @@ function fallbackRoadmap(profile: RoadmapProfile, opportunities: Opportunity[], 
   const score = (t: string[]) => t.filter((x) => tags.has(x)).length;
 
   const topCourses = [...courses].sort((a, b) => score(b.tags) - score(a.tags)).slice(0, 2);
-  const topOpps = [...opportunities].sort((a, b) => score(b.tags) - score(a.tags)).slice(0, 3);
+  const topOpps = opportunities.slice(0, 3);
 
   const grades: RoadmapStep["grade"][] = ["9", "10", "11", "12"];
   const steps: RoadmapStep[] = [];

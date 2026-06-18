@@ -8,6 +8,7 @@ from openai import OpenAI
 from telethon import TelegramClient
 from telethon.tl.types import Message
 
+load_dotenv(Path(__file__).parent.parent / ".env")
 load_dotenv(Path(__file__).parent / ".env")
 
 API_ID = int(os.environ["TELEGRAM_API_ID"])
@@ -18,6 +19,42 @@ TOP_K = 50
 OUT_FILE = Path(__file__).parent / "opportunities.json"
 
 openai_client = OpenAI(api_key=OPENAI_KEY) if OPENAI_KEY else None
+
+HARD_NOISE_PATTERNS = (
+    "telegram premium",
+    "giveaway",
+    "chat for communication",
+    "communication chat",
+    "faq",
+    "site update",
+    "website update",
+    "чат для коммуникации",
+    "обновление веб-сайта",
+    "заполнение ячеек",
+    "капитанов команды",
+    "остаются считанные минуты",
+    "дизлайки не ставим",
+)
+
+RESOURCE_PATTERNS = (
+    "portfolio lab",
+    "shineyourcv",
+    "goglobal",
+    "next step uni",
+    "nextyou",
+    "chotamoffer",
+    "caass",
+    "study resources",
+    "study blog",
+    "harvard university: overview",
+    "sat exam overview",
+    "free resources",
+    "ivy league application essays",
+    "канал для",
+    "учёба за границей",
+    "платформа для роста",
+    "конкурсы и возможности для студентов",
+)
 
 EXTRACT_PROMPT = """You extract structured info about an educational opportunity from a Telegram post.
 
@@ -43,6 +80,15 @@ CRITICAL date rules:
 
 The post may be in Russian or Kazakh. Translate/summarize student-facing display fields into English.
 Respond with ONLY the JSON object, no markdown."""
+
+
+def classify_source_kind(text: str, title: str = "") -> str:
+    searchable = f"{title}\n{text}".lower()
+    if any(pattern in searchable for pattern in HARD_NOISE_PATTERNS):
+        return "noise"
+    if any(pattern in searchable for pattern in RESOURCE_PATTERNS):
+        return "resource"
+    return "actionable"
 
 
 def extract_with_llm(text: str) -> dict:
@@ -75,6 +121,7 @@ def post_to_opportunity(msg: Message) -> dict:
     display_title = english.get("title") or extracted.get("title") or source_title
     display_description = english.get("description") or "Details are available in the source announcement."
     display_requirements = english.get("requirements") or "Review the source announcement for participation details."
+    source_kind = classify_source_kind(text, source_title)
 
     return {
         "id": f"tg-{msg.id}",
@@ -98,6 +145,8 @@ def post_to_opportunity(msg: Message) -> dict:
         "sourceTitle": source_title,
         "sourceDescription": text.strip(),
         "sourceRequirements": "",
+        "sourceKind": source_kind,
+        "recommendationEligible": source_kind == "actionable",
         "translations": {
             "en": {
                 "title": display_title,
@@ -122,7 +171,11 @@ async def fetch():
         opportunities = []
         for i, msg in enumerate(top, 1):
             print(f"  [{i}/{len(top)}] post {msg.id}")
-            opportunities.append(post_to_opportunity(msg))
+            opportunity = post_to_opportunity(msg)
+            if opportunity["sourceKind"] == "noise":
+                print("    skipped noise")
+                continue
+            opportunities.append(opportunity)
 
         OUT_FILE.write_text(
             json.dumps(opportunities, ensure_ascii=False, indent=2),

@@ -44,6 +44,7 @@ import {
 } from "./lib/auth";
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
+const onboardingAccessKey = "mentoria.onboardingAccessUser";
 const protectedPathPattern = /^\/(?:admin|dashboard|courses|opportunities|mentor-lm|roadmap)(?:\/|$)/;
 
 type AuthStatus =
@@ -286,6 +287,30 @@ function waitForLoadingScreen() {
   });
 }
 
+function allowOnboardingForSession(userId: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.setItem(onboardingAccessKey, userId);
+}
+
+function clearOnboardingAccess() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.removeItem(onboardingAccessKey);
+}
+
+function hasOnboardingAccessForSession(nextSession: Session | null) {
+  if (typeof window === "undefined" || !nextSession?.user) {
+    return false;
+  }
+
+  return window.sessionStorage.getItem(onboardingAccessKey) === nextSession.user.id;
+}
+
 function getOnboardingEmailRedirectTo() {
   if (typeof window === "undefined") {
     return undefined;
@@ -345,6 +370,7 @@ export function App() {
         setSession(null);
         setProfile(null);
         setAuthStatus("signed-out");
+        clearOnboardingAccess();
         return null;
       }
 
@@ -396,6 +422,7 @@ export function App() {
 
         setProfile(loadedProfile);
         setAuthStatus("profile-ready");
+        clearOnboardingAccess();
 
         if (options.redirectOnReady) {
           navigate(getSafeReturnTo(options.returnTo), { replace: true });
@@ -429,6 +456,7 @@ export function App() {
     setAuthStatus("profile-ready");
     setRegistrationForm(initialRegistrationForm);
     window.sessionStorage.removeItem(onboardingDraftKey);
+    clearOnboardingAccess();
     navigate(nextPath, { replace: true });
     return nextProfile;
   }
@@ -488,6 +516,7 @@ export function App() {
         setSession(null);
         setProfile(null);
         setAuthStatus("signed-out");
+        clearOnboardingAccess();
         return;
       }
 
@@ -519,11 +548,6 @@ export function App() {
     setAuthMode("signup");
     setOnboardingStep(0);
 
-    if (session?.user && authStatus === "profile-missing") {
-      navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding");
-      return;
-    }
-
     if (session?.user && authStatus === "profile-ready" && profile) {
       setAuthStatus("profile-loading");
       await waitForLoadingScreen();
@@ -540,11 +564,6 @@ export function App() {
     setAuthNotice("");
     setFieldErrors({});
     setAuthMode("signin");
-
-    if (session?.user && authStatus === "profile-missing") {
-      navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding");
-      return;
-    }
 
     if (session?.user && authStatus === "profile-ready" && profile) {
       setAuthStatus("profile-loading");
@@ -611,10 +630,17 @@ export function App() {
     setAuthError("");
     setAuthNotice("");
 
-    const nextFieldErrors = validateRegistrationForm(authMode, registrationForm);
+    const profileCompletion = Boolean(session?.user && authStatus === "profile-missing");
+    const nextFieldErrors = validateRegistrationForm(authMode, registrationForm, { profileCompletion });
     setFieldErrors(nextFieldErrors);
 
     if (Object.keys(nextFieldErrors).length > 0) {
+      return;
+    }
+
+    if (profileCompletion && session?.user) {
+      allowOnboardingForSession(session.user.id);
+      navigate(explicitReturnTo ? getRouteWithReturnTo("/onboarding", explicitReturnTo) : "/onboarding", { replace: true });
       return;
     }
 
@@ -653,6 +679,7 @@ export function App() {
           setSession(null);
           setProfile(null);
           setAuthStatus("signed-out");
+          clearOnboardingAccess();
           setAuthMode("signin");
           setRegistrationForm((current) => ({ ...initialRegistrationForm, email: current.email }));
           setAuthNotice("Account created. Confirm your email, then sign in to continue onboarding.");
@@ -662,6 +689,7 @@ export function App() {
         setSession(data.session ?? null);
         setProfile(null);
         setAuthStatus("onboarding-loading");
+        allowOnboardingForSession(data.session.user.id);
         setOnboardingProfile(emptyOnboardingProfile);
         onboardingProfileRef.current = emptyOnboardingProfile;
         setOnboardingStep(0);
@@ -684,6 +712,7 @@ export function App() {
         setRegistrationForm(initialRegistrationForm);
         navigate(nextPath, { replace: true });
       } else if (data.session?.user) {
+        allowOnboardingForSession(data.session.user.id);
         navigate(getRouteWithReturnTo("/onboarding", nextPath), { replace: true });
       } else {
         setAuthError("Signed in, but Mentoria could not load a session. Try again.");
@@ -716,6 +745,7 @@ export function App() {
     setAuthNotice("");
     setRegistrationForm(initialRegistrationForm);
     setAuthStatus("signed-out");
+    clearOnboardingAccess();
     navigate("/", { replace: true });
   }
 
@@ -746,7 +776,7 @@ export function App() {
     return loadingRoute;
   }
 
-  const profileCompletion = false;
+  const profileCompletion = Boolean(session?.user && authStatus === "profile-missing");
   const registrationAuthMode: AuthMode = authMode;
 
   const registrationRoute = (
@@ -774,7 +804,7 @@ export function App() {
     </PageShell>
   );
 
-  const onboardingRoute = session?.user ? (
+  const onboardingRoute = session?.user && hasOnboardingAccessForSession(session) ? (
     <PageShell>
       <OnboardingSection
         profile={onboardingProfile}
@@ -800,7 +830,7 @@ export function App() {
     }
 
     if (session && authStatus === "profile-missing") {
-      return <Navigate replace to={getRouteWithReturnTo("/onboarding", currentPathWithSearch)} />;
+      return <Navigate replace to={getRouteWithReturnTo("/registration", currentPathWithSearch)} />;
     }
 
     return <Navigate replace to={getRouteWithReturnTo("/registration", currentPathWithSearch)} />;

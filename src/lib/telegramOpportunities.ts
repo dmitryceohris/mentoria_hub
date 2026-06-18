@@ -1,4 +1,4 @@
-import type { Opportunity } from "../data/content";
+import type { Opportunity, OpportunitySourceKind } from "../data/content";
 import { DEFAULT_LOCALE, containsCyrillic } from "./language";
 
 /** Loads ALL opportunities (unfiltered), sorted by relevance.
@@ -50,6 +50,8 @@ type RawPost = {
   sourceTitle?: string | null;
   sourceDescription?: string | null;
   sourceRequirements?: string | null;
+  sourceKind?: OpportunitySourceKind | null;
+  recommendationEligible?: boolean | null;
   translations?: {
     en?: {
       title?: string | null;
@@ -80,6 +82,12 @@ const relevancePattern =
   /(admission|business|case|championship|competition|contest|course|event|fellowship|hackathon|internship|lesson|olympiad|program|research|scholarship|school|startup|tournament|university|volunteer|webinar|\u0431\u0438\u0437\u043d\u0435\u0441|\u0432\u0435\u0431\u0438\u043d\u0430\u0440|\u0432\u043e\u043b\u043e\u043d\u0442|\u0432\u0441\u0442\u0440\u0435\u0447|\u0433\u0440\u0430\u043d\u0442|\u0438\u0432\u0435\u043d\u0442|\u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d|\u043a\u043e\u043d\u043a\u0443\u0440\u0441|\u043a\u0443\u0440\u0441|\u043e\u043b\u0438\u043c\u043f\u0438\u0430\u0434|\u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c|\u0441\u0442\u0430\u0436|\u0441\u0442\u0430\u0440\u0442\u0430\u043f|\u0443\u043d\u0438\u0432\u0435\u0440\u0441\u0438\u0442\u0435\u0442|\u0445\u0430\u043a\u0430\u0442\u043e\u043d|\u0447\u0435\u043c\u043f\u0438\u043e\u043d\u0430\u0442)/i;
 
 const noisePattern = /(telegram premium|premium.*free|\u0440\u043e\u0437\u044b\u0433\u0440\u044b\u0448.*premium|giveaway)/i;
+
+const hardNoisePattern =
+  /(chat for communication|communication chat|faq|site update|website update|\u0447\u0430\u0442 \u0434\u043b\u044f \u043a\u043e\u043c\u043c\u0443\u043d\u0438\u043a\u0430\u0446\u0438\u0438|\u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0432\u0435\u0431-\u0441\u0430\u0439\u0442\u0430|\u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u044f\u0447\u0435\u0435\u043a|\u043a\u0430\u043f\u0438\u0442\u0430\u043d\u043e\u0432 \u043a\u043e\u043c\u0430\u043d\u0434|\u043e\u0441\u0442\u0430\u044e\u0442\u0441\u044f \u0441\u0447\u0438\u0442\u0430\u043d\u043d\u044b\u0435 \u043c\u0438\u043d\u0443\u0442|\u0434\u0438\u0437\u043b\u0430\u0439\u043a\u0438 \u043d\u0435 \u0441\u0442\u0430\u0432\u0438\u043c)/i;
+
+const resourcePattern =
+  /(portfolio lab|shineyourcv|goglobal|next step uni|nextyou|chotamoffer|caass|study resources|study blog|harvard university: overview|sat exam overview|free resources|ivy league application essays|\u043a\u0430\u043d\u0430\u043b \u0434\u043b\u044f|\u0443\u0447\u0451\u0431\u0430 \u0437\u0430 \u0433\u0440\u0430\u043d\u0438\u0446\u0435\u0439|\u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430 \u0434\u043b\u044f \u0440\u043e\u0441\u0442\u0430|\u043a\u043e\u043d\u043a\u0443\u0440\u0441\u044b \u0438 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u0434\u043b\u044f \u0441\u0442\u0443\u0434\u0435\u043d\u0442\u043e\u0432)/i;
 
 function sanitizeText(value: string) {
   return value
@@ -134,7 +142,28 @@ function inferTags(raw: RawPost) {
 
 function isRelevantRawOpportunity(raw: RawPost) {
   const searchableText = [raw.title, raw.description, raw.category].join(" ");
-  return relevancePattern.test(searchableText) && !noisePattern.test(searchableText);
+  return classifySourceKind(raw) !== "noise" && relevancePattern.test(searchableText) && !noisePattern.test(searchableText);
+}
+
+function classifySourceKind(raw: RawPost): OpportunitySourceKind {
+  const searchableText = [
+    raw.sourceTitle,
+    raw.sourceDescription,
+    raw.title,
+    raw.description,
+    raw.category,
+    raw.direction
+  ].join(" ");
+
+  if (raw.sourceKind === "noise" || hardNoisePattern.test(searchableText) || noisePattern.test(searchableText)) {
+    return "noise";
+  }
+
+  if (raw.sourceKind === "resource" || resourcePattern.test(searchableText)) {
+    return "resource";
+  }
+
+  return raw.sourceKind ?? "actionable";
 }
 
 function toOpportunity(raw: RawPost): Opportunity {
@@ -155,6 +184,8 @@ function toOpportunity(raw: RawPost): Opportunity {
     180
   );
   const summary = getEnglishDisplayText(englishTranslation?.summary || englishTranslation?.description || raw.description, description);
+  const sourceKind = classifySourceKind(raw);
+  const recommendationEligible = sourceKind === "actionable" && raw.recommendationEligible !== false;
 
   return {
     id: raw.id,
@@ -176,6 +207,8 @@ function toOpportunity(raw: RawPost): Opportunity {
     sourceTitle,
     sourceDescription,
     sourceRequirements,
+    sourceKind,
+    recommendationEligible,
     translations: {
       ...raw.translations,
       en: {

@@ -1,7 +1,7 @@
 [
   {
     "id": "tg-439",
-    "title": "Регистрация на хакатон от Mentoria",
+    "title": "Mentoria hackathon registration",
     "category": "Competition",
     "direction": "Programming",
     "format": "Online",
@@ -16,9 +16,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🔥 Mentoria открывает регистрацию на хакатон!🔥\n\n\nПрисоединяйтесь, находите единомышленников и воплощайте свои идеи в реальность. Регистрация уже доступна на нашем веб-сайте👇🏻\n\nhttps://mentoria-hackathon.vercel.app/\n\n\nВся информация находится на сайте📌",
-    "summary": "Регистрация на хакатон от Mentoria",
-    "requirements": "",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "хакатон",
       "программирование",
@@ -26,11 +26,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/439",
     "postedAt": "2026-06-09",
-    "views": 2120
+    "views": 2120,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria hackathon registration",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving."
+      }
+    }
   },
   {
     "id": "tg-354",
-    "title": "Онлайн-встреча с Надирой, студенткой NYUAD на 100% scholarship",
+    "title": "NYUAD scholarship admissions webinar",
     "category": "Event",
     "direction": "Admissions",
     "format": "Online",
@@ -45,9 +55,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Онлайн-встреча с Надирой, студенткой NYUAD на 100% scholarship 🇦🇪\n\nMentoria проводит открытый онлайн-мит со студенткой из Казахстана, которая учится в New York University Abu Dhabi на 1️⃣0️⃣0️⃣% ГРАНТ\n\nВо время встречи вы узнаете:\n\n🔹как проходил процесс поступления\n🔹 какие требования действительно важны\n🔹SAT, оценки, extracurricular activities\n🔹эссе и интервью\n🔹жизнь и учёба в NYUAD\n\nВ конце будет Q&A, где можно задать свои вопросы.\n\n📅  25 мая\n⏰ Время объявим позже\n\nЕсли вам интересна тема поступления за рубеж и грантов - присоединяйтесь💯🔥\n\nСсылка на канал уже снизу👇🏻\nhttps://t.me/mentoria_organization",
-    "summary": "Онлайн-встреча с Надирой, студенткой NYUAD на 100% scholarship",
-    "requirements": "",
+    "description": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities.",
+    "summary": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "онлайн",
       "грант",
@@ -57,37 +67,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/354",
     "postedAt": "2026-05-12",
-    "views": 1509
-  },
-  {
-    "id": "tg-69",
-    "title": "Розыгрыш Telegram Premium на 3 месяца",
-    "category": "Competition",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": "2026-01-25",
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "🎉 Розыгрыш Telegram Premium на 3 месяца ОТКРЫТ!\n\nХочешь получить 3 месяца Telegram Premium абсолютно бесплатно? Вот твой шанс!\n\nКак участвовать:\n1️⃣ Подпишись на Opportunities with Mentoria \n       https://t.me/mentoria_organization ✅\n2️⃣ Отправь этот пост 5 друзьям в Telegram\n3️⃣ Сделай скриншот отправки\n4️⃣ Отправь скрины на @Kyuuxi\n\n📅 Итоги: 25 Января (Воскресенье)\n🎯 Победитель будет выбран случайно и объявлен открыто в канале.\n\n💡 Совет: чем быстрее выполнишь условия, тем увереннее твое участие!\n📌 И не забудь — на канале всегда свежие возможности, стипендии, IT‑курсы и полезные советы, так что останешься в теме даже после розыгрыша!\n\nВсем удачи!",
-    "summary": "Розыгрыш Telegram Premium на 3 месяца",
-    "requirements": "",
-    "tags": [
-      "telegram",
-      "premium",
-      "giveaway",
-      "competition"
-    ],
-    "applyUrl": "https://t.me/mentoria_organization/69",
-    "postedAt": "2026-01-16",
-    "views": 1168
+    "views": 1509,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "NYUAD scholarship admissions webinar",
+        "description": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities."
+      }
+    }
   },
   {
     "id": "tg-432",
@@ -106,9 +96,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🔬 IRPrO — International Research Project Olympiad\n\nМеждународная олимпиада для школьников, где ты представляешь собственный исследовательский проект.\n\n📌 Формат: Research Project\n💰 Небольшой взнос\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 10 июня\n\nОтличный шанс получить международное признание за свою работу!\n\n🔗 www.iss.or.id/p/irpro.html\n\n---\n\n📐 WYMO — World Young Mathematicians Olympiad\n\nМеждународная математическая олимпиада для школьников со всего мира.\n\n📌 Формат: Olympiad\n💰 Небольшой взнос\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 10 июня\n\nПокажи свои математические способности на мировом уровне!\n\n🔗 www.ocsolympiad.org\n\n---\n\n➗ ISMO — International Student Mathematics Olympiad\n\nОдна из самых известных международных математических олимпиад для школьников.\n\n📌 Формат: Olympiad\n💰 Небольшой взнос\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 17 июня\n\nУчаствуй и докажи, что математика — это твоё!\n\n🔗 ismo.isllaos.com\n\n---\n\n🔬 Lumiere Research Program — Summer Cohort II\n\nИсследовательская программа, где ты работаешь 1-на-1 с PhD ментором над собственным проектом.\n\n📌 Формат: Research Project\n💰 Платно\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 19 июня\n\nИдеально для тех, кто хочет настоящий исследовательский опыт!\n\n🔗 www.lumiere-education.com\n\n---\n\n🧠 INO NEXUS Essay Contest\n\nЭссе-конкурс от Международной олимпиады по нейронаукам. Пиши — и тебя заметят.\n\n📌 Формат: Essay\n💰 Бесплатно\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 24 июня\n\nБесплатный шанс заявить о себе в мире нейронаук!\n\n🔗 www.ino-global.com\n\n---\n\n📚 Horizon Academic Research Program — Summer Cohort II\n\nАкадемическая исследовательская программа с экспертным наставничеством по разным дисциплинам.\n\n📌 Формат: Research Program\n💰 Платно\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 28 июня\n\nУглубись в науку под руководством настоящих экспертов!\n\n🔗 horizoninspires.com\n\n---\n\n🧪 ASDRP — Aspiring Scholars Directed Research Program\n\nПрограмма, где школьники проводят настоящие научные исследования под руководством учёных.\n\n📌 Формат: Research Program\n💰 Небольшой взнос\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 1 июля\n\nРеальная наука в твоих руках — это круто для любого портфолио!\n\n🔗 www.asdrp.org\n\n---\n\n✍️ Columbia Political Review — High School Essay Contest\n\nЭссе-конкурс от студентов Колумбийского университета на темы политики и международных отношений.\n\n📌 Формат: Essay Contest\n💰 Бесплатно\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 1 июля\n\nНапиши — и твоя работа может быть опубликована!\n\n🔗 www.cpreview.org/essay-contest\n\n---\n\n🧠 IPSyO — International Psychology Olympiad\n\nМеждународная олимпиада по психологии для школьников со всего мира.\n\n📌 Формат: Olympiad\n💰 Бесплатно\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 1 июля\n\nFascinated by the human mind? Это твоя олимпиада!\n\n🔗 www.ipsyo.org\n\n---\n\n🎓 NYAS Junior Academy — Fall Cohort\n\nПрограмма Нью-Йоркской академии наук, где школьники решают реальные STEM-задачи в команде.\n\n📌 Формат: Collaborative STEM Program\n💰 Бесплатно\n🌍 Для всех стран · Виртуально\n\n📅 Дедлайн: 2 июля\n\nРаботай с ровесниками со всего мира над реальными научными задачами!\n\n🔗 www.nyas.org/learning/high-school-research-programs/the-junior-academy",
+    "description": "A Mentoria learning stream for students strengthening mathematics foundations for future academic opportunities.",
     "summary": "IRPrO — International Research Project Olympiad",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "research",
       "olympiad",
@@ -117,11 +107,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/432",
     "postedAt": "2026-06-08",
-    "views": 717
+    "views": 717,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "IRPrO — International Research Project Olympiad",
+        "description": "A Mentoria learning stream for students strengthening mathematics foundations for future academic opportunities.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "IRPrO — International Research Project Olympiad"
+      }
+    }
   },
   {
     "id": "tg-407",
-    "title": "Масштабный хакатон от Ментории",
+    "title": "Mentoria hackathon registration",
     "category": "Competition",
     "direction": "Programming",
     "format": "Online",
@@ -136,9 +136,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🔥 Ментория проводит масштабный хакатон в июне с призовым фондом 1 000 000 тг!\nЭто возможность проверить свои навыки, поработать в команде и создать реальный проект за короткое время.\n\n\n⚡️ Участников ждут:\n— интенсивный формат работы\n— реальные задачи\n— сильная конкуренция\n— призовой фонд 1 000 000 тг\n\n📌 Обязательно подпишитесь на наш Instagram-канал, чтобы не пропустить регистрацию и все подробности. Вся информация публикуется только там:\n\n👉 https://www.instagram.com/mentoria.organization/",
-    "summary": "Масштабный хакатон от Ментории",
-    "requirements": "",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "хакатон",
       "призовой фонд",
@@ -147,11 +147,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/407",
     "postedAt": "2026-05-31",
-    "views": 611
+    "views": 611,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria hackathon registration",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving."
+      }
+    }
   },
   {
     "id": "tg-425",
-    "title": "M.I.N.D: Международное движение волонтёров",
+    "title": "International volunteering opportunity",
     "category": "Volunteering",
     "direction": "Social Impact",
     "format": "Online",
@@ -166,9 +176,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "900+ человек. 15+ стран. 1 цель💜\n\nМы—M.I.N.D, международное движение, которое переросло рамки обычного волонтёрства. Мы меняем культуру вокруг mental health,боремся с буллингом,насилием и гендерным неравенством.\nМы трансформируем eco-anxiety в реальные actions. Наш проект—это не только онлайн задания, это real offline impact\n\n•Что делают наши волонтёры прямо сейчас:\n🎨Создают плакаты против буллинга для своих школ и uni\n🎤Проводят уроки и презентации против травли\n🌱Собирают пластик, сдают бутылки на переработку и сажают trees\n\nНас почти тысяча. И мы доказываем каждый день: “Small actions create global change”\n\n•Что даёт участие в M.I.N.D?\n 👥Глобальный нетворкинг: твои будущие друзья живут по всему миру.\n💫Реальные кейсы: масштабные проекты и задания в сфере mental health и экологии для твоего CV\n📝Буст для CV: международные сертификаты,рек.письма и вол.часы для топовых программ и зарубежных вузов.\n\nМы не ждем, пока мир изменится.Мы меняем его сами. \n \n👉 Join us!\nНаши соцсети: inst | tt | tg\n\n❓По вопросам: @mlkjwq",
-    "summary": "M.I.N.D: Международное движение волонтёров",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "volunteering",
       "mental health",
@@ -178,7 +188,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/425",
     "postedAt": "2026-06-06",
-    "views": 530
+    "views": 530,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-120",
@@ -197,9 +217,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🔍«Research without fear: Writing & Publishing Explained» WEBINAR\n\nResearch — это не только для гениев и будущих профессоров.\nЭто навык, который можно понять, разобрать и освоить шаг за шагом.\n\nНа вебинаре мы спокойно и понятно разберём:\n❄️ как выбрать правильную тему и не перегореть\n❄️ из чего на самом деле состоит научная работа\n❄️ какие бывают типы исследований\n- и многое другое\n\n🗣️ Спикер: Диаров Мэлс\n⚪️ 11 класс, РФМШ\n⚪️ исследовательская работа в области здравоохранения\n⚪️ участие в социальных и благотворительных проектах\n⚪️ совместная research-работа с представителями университета\n\n⏰ 12.02.26, 16:00 GMT+5\n\nЕсли ты давно хотел(а) попробовать research, но не знал(а), с чего начать —\nэтот вебинар поможет сложить картину и убрать страх.\n\nИнформация и ссылка - в группе для встречи\n\n✨ By Youth Research Accelerator",
+    "description": "A Mentoria event listing for students interested in science opportunities and preparation.",
     "summary": "Research without fear: Writing & Publishing Explained Webinar",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "webinar",
       "research",
@@ -208,7 +228,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/120",
     "postedAt": "2026-02-08",
-    "views": 527
+    "views": 527,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Research without fear: Writing & Publishing Explained Webinar",
+        "description": "A Mentoria event listing for students interested in science opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "Research without fear: Writing & Publishing Explained Webinar"
+      }
+    }
   },
   {
     "id": "tg-214",
@@ -227,9 +257,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Central Asia Business & Economics Case Championship 2026\nA regional case competition for students across Central Asia.\n\n📌 Who can participate?\nStudents in Grades 8–12 from Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan, and Turkmenistan.\n\n⚠️ The competition will be conducted entirely in English.\n📢DEADLINE FOR REGISTRATION: 10th of april\n\n👥 Team format: 2–4 students\n\n📅 Key Dates\n• April 15 — Case release\n• April 17 — Submission deadline\n• April 18 — Online qualifying round\n• April 26 — Final in Tashkent\n• April 27 — Tashkent city tour & optional lunch\n\n💰 Entry fee: 80,000 UZS\n🏅 Prize fund: $200\n\n🔗 Registration link in bio\nChannel link\n#casecompetition #centralasia #tashkent #businesscase",
-    "summary": "Central Asia Business & Economics Case Championship 2026",
-    "requirements": "",
+    "description": "A Mentoria competition listing for students interested in business opportunities and preparation.",
+    "summary": "A Mentoria competition listing for students interested in business opportunities and preparation.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "casecompetition",
       "centralasia",
@@ -238,11 +268,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/214",
     "postedAt": "2026-03-10",
-    "views": 526
+    "views": 526,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Central Asia Business & Economics Case Championship 2026",
+        "description": "A Mentoria competition listing for students interested in business opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria competition listing for students interested in business opportunities and preparation."
+      }
+    }
   },
   {
     "id": "tg-443",
-    "title": "Mentoria Хакатон",
+    "title": "Mentoria hackathon registration",
     "category": "Competition",
     "direction": "Programming",
     "format": "Online",
@@ -257,9 +297,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "💡 Что такое хакатон?\n\nMentoria Хакатон — это командное соревнование, в рамках которого участники за ограниченное время (24–30 часов) разрабатывают решение предложенного кейса.\n\nПроект не требуется готовить заранее — вся работа выполняется непосредственно во время мероприятия.\n\n🧭 Формат проведения\nХакатон проходит в два этапа:\n\n1. Онлайн-отбор\nУчастникам предоставляется кейс\nСрок выполнения: 4–5 дней\nФормат: онлайн-разработка решения\nПо итогам отбора выбираются лучшие команды\n\n2. Офлайн-финал\nМесто проведения: Назарбаев Университет\nУчаствуют: 25 лучших команд\nФормат: интенсивный хакатон на 24–30 часов\nУчастники разрабатывают решение кейса в офлайн-формате\n\n\n🏆 Призовой фонд\nОбщий призовой фонд: 1 000 000 ₸\n🥇 1 место — 500 000 ₸\n🥈 2 место — 300 000 ₸\n🥉 3 место — 200 000 ₸\n\n🎓 Дополнительно\nВсе участники получат сертификаты об участии\nВ рамках офлайн-финала предусмотрен кофе-брейк\nУчастники получат опыт командной работы и решения реальных кейсов в условиях ограниченного времени\n\n📌 Важно\nХакатон проводится впервые\nУчастие возможно без готового проекта\nВсе подробности кейсов и критерии оценки будут предоставлены на этапе отбора\nКоманды, прошедшие онлайн-этап, приглашаются в офлайн-финал\n\nСсылка на регистрацию: \n\nhttps://mentoria-hackathon.vercel.app/",
-    "summary": "Mentoria Хакатон",
-    "requirements": "",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "хакатон",
       "командное соревнование",
@@ -269,11 +309,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/443",
     "postedAt": "2026-06-10",
-    "views": 494
+    "views": 494,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria hackathon registration",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving."
+      }
+    }
   },
   {
     "id": "tg-409",
-    "title": "Portfolio Lab - Место для проектов и международных программ",
+    "title": "Mentoria resource: General",
     "category": "Opportunity",
     "direction": "General",
     "format": "Online",
@@ -288,9 +338,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🔥 Хочешь портфолио, которое реально выделяет?\nPortfolio Lab🧪 — место, где проекты, конкурсы, MUN и международные программы превращаются в твои достижения!\n\n🚀 Что внутри:\n🏆 Конкурсы и челленджи\n🌍 Международные программы и летние школы\n🗣 MUN, дебаты и лидерские активности\n💻 Проекты, стартапы и воркшопы\n\n🎯 Для команд и проектов: ищете активных участников? Мы найдем лучших!\n\nPortfolio Lab🧪\n  — собирай опыт, который реально работает на твоё будущее.\n\n📌 Подписывайся сейчас: @Portfolio_Lab",
-    "summary": "Portfolio Lab - Место для проектов и международных программ",
-    "requirements": "",
+    "description": "A Mentoria feed resource with more details available in the original announcement.",
+    "summary": "A Mentoria feed resource with more details available in the original announcement.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "портфолио",
       "конкурсы",
@@ -300,11 +350,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/409",
     "postedAt": "2026-05-31",
-    "views": 485
+    "views": 485,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Mentoria resource: General",
+        "description": "A Mentoria feed resource with more details available in the original announcement.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A Mentoria feed resource with more details available in the original announcement."
+      }
+    }
   },
   {
     "id": "tg-440",
-    "title": "Регистрация на мероприятие",
+    "title": "Event in General",
     "category": "Event",
     "direction": "General",
     "format": "Online",
@@ -319,17 +379,27 @@
       "12"
     ],
     "location": "Global",
-    "description": "Если возникнут какие либо проблемы при регистрации, пишите сразу в отдел комментариев",
-    "summary": "Регистрация на мероприятие",
-    "requirements": "",
+    "description": "A Mentoria event listing for students interested in general opportunities and preparation.",
+    "summary": "A Mentoria event listing for students interested in general opportunities and preparation.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [],
     "applyUrl": "https://t.me/mentoria_organization/440",
     "postedAt": "2026-06-09",
-    "views": 483
+    "views": 483,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Event in General",
+        "description": "A Mentoria event listing for students interested in general opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria event listing for students interested in general opportunities and preparation."
+      }
+    }
   },
   {
     "id": "tg-9",
-    "title": "Бесплатные курсы от ООН в 2025 году",
+    "title": "Course in Social Impact",
     "category": "Course",
     "direction": "Social Impact",
     "format": "Online",
@@ -344,9 +414,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🇺🇳 Бесплатные курсы от ООН, которые стоит пройти в 2025 году 🚀 \n\n💡Благодаря данным курсам вы сможете прокачать навыки в международной сфере, устойчивом развитии, педагогике или агроинновациях и получить официальные сертификаты для резюме или LinkedIn. Более того, получите доступ к экспертам и международным сообществам.\nВсе это онлайн и бесплатно.\n\n🧑🏻‍💻 UNITAR (United Nations Institute for Training and Research) предлагает курсы по дипломатии, международным отношениям, управлению проектами и лидерству. \nРекомендуется для:\nбудущих дипломатов, госслужащих и сотрудников международных организаций\n🌐 unitar.org/free-and-open-courses\n\n👩🏻‍💻 UN SDG: Learn предлагает курсы по применению целей устойчивого развития ООН (SDG) на практике.\nРекомендуется для:\nспециалистов по экологии, ESG и устойчивому развитию\n🌐 unsdglearn.org\n\n🧑🏻‍💻 FAO E-Learning Academy предлагает курсы по продовольственной безопасности, агроинновациям и устойчивому управлению ресурсами.\nРекомендуется для: специалистов в сельском хозяйстве, агроинновациях и изменении климата\n🌐 elearning.fao.org\n\n👩🏻‍💻 UNESCO Open Learning предлагает курсы по инклюзивному образованию, культурному развитию и устойчивому развитию\nДля кого:\nпедагогов, работников культуры, языков и молодежных проектов\n🌐 openlearning.unesco.org\n\n🧑🏻‍💻 UN DESA Learning Center предлагает курсы по управлению госпрограммами, устойчивому развитию и разработке политики\nРекомендуется для:\nспециалистов по госуправлению и аналитике\n🌐 capacity.desa.un.org/digital-Learning-centre\n\n👩🏻‍💻 UN Women Training Center предлагает курсы по гендерному равенству и правам женщин.\nРекомендуется для:\nспециалистов и активистов, работающих с гендерной повесткой\n🌐 portal.trainingcentre.unwomen.org\n\n📌 Выбирайте и проходите курсы по вашему профилю, добавляйте сертификаты в свое резюме.",
-    "summary": "Бесплатные курсы от ООН в 2025 году",
-    "requirements": "",
+    "description": "A Mentoria course listing for students interested in social impact opportunities and preparation.",
+    "summary": "A Mentoria course listing for students interested in social impact opportunities and preparation.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "бесплатные",
       "курсы",
@@ -356,11 +426,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/9",
     "postedAt": "2025-12-21",
-    "views": 470
+    "views": 470,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Course in Social Impact",
+        "description": "A Mentoria course listing for students interested in social impact opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria course listing for students interested in social impact opportunities and preparation."
+      }
+    }
   },
   {
     "id": "tg-253",
-    "title": "Стань ментором в Mentoria",
+    "title": "International volunteering opportunity",
     "category": "Volunteering",
     "direction": "Social Impact",
     "format": "Online",
@@ -375,9 +455,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🎓 Стань ментором Mentoria!\n\nХочешь делиться знаниями и помогать школьникам и студентам развиваться? Mentoria ищет активных и мотивированных менторов!\n\n📌 Что тебя ждёт:\n\n▫️Проведение онлайн-занятий по любимым предметам\n▫️Работа с небольшими группами (до 7 учеников)\n▫️Возможность развивать лидерские и коммуникационные навыки\n▫️Сертификаты, рекомендательные письма, грамоты и признание за твой вклад (С подписью) \n\n💡 Предметы:  \n\n🔹SAT (Verbal  / Math)\n🔹IELTS\n🔹Математика\n🔹Физика\n🔹Английский \n🔹Программирование \n\n⏰ Гибкий график: 1–3 занятия в неделю, онлайн\n\n📋 Присоединяйся прямо сейчас и заполни форму:\n👉 Заполнить заявку\n\nMentoria ждёт тебя! 🌟",
-    "summary": "Стань ментором в Mentoria",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "менторство",
       "онлайн",
@@ -387,36 +467,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/253",
     "postedAt": "2026-04-04",
-    "views": 463
-  },
-  {
-    "id": "tg-448",
-    "title": "Хакатон - чат для коммуникации",
-    "category": "Event",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": null,
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "Ребята, мы создали чат для более удобной коммуникации с вами в рамках Хакатона, чтобы уж точно все ваши вопросы были отвечены.\n\nСсылка: https://t.me/+u8m2wn5-xT9hYzEy",
-    "summary": "Хакатон - чат для коммуникации",
-    "requirements": "",
-    "tags": [
-      "хакатон",
-      "коммуникация",
-      "чат"
-    ],
-    "applyUrl": "https://t.me/mentoria_organization/448",
-    "postedAt": "2026-06-10",
-    "views": 462
+    "views": 463,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-433",
@@ -435,9 +496,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "christmasgirl’s diary | study blog\n\nhi there,\nя Маруся, in short Rue, делюсь всевозможными ресурсами для учебы и своими study буднями\n\nкоротко обо мне:\n- John Locke & Cambridge Re:Think 2025 finalist\n- финалист отбора в сборную рф по астрофизике \n- выпускница ОЦ Сириус, программ HSE, SPbSU, SPbPU, YADRO, TBANK etc\n- feminist\n- ранее работала с профессорами из Yale*, Stanford* (*сейчас признаны нежелательными в рф)\n- менторю (for free); мои менти поступают в топ бординги и университеты мира (Philips Exeter, UWC etc)\n- фанат колы зеро, Гермионы, джаза и кофе\n- говорю на 🇷🇺🇨🇳🇺🇸 и учу 🇫🇷🇮🇹 \n\nв моем тгк вы найдете:\n- подборки international opportunities\n- материалы для подготовки к SAT, DET и другим экзаменам\n- материалы для олимпиад, самообучения и проектов\n- college apps resources\n- motivation\n- random words for ur vocab\n- vlogs and plogs моих учебных будней\n\nкроме того, я регулярно провожу q&a (#anon) и нахожу все нужные именно вам материалы 🤍\n\nfollow: click\nboost: click\nanon: click\ndm: @Christmasvibes_girl",
+    "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
     "summary": "Study Resources and Mentorship by Marusya",
-    "requirements": "",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "study",
       "resources",
@@ -447,11 +508,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/433",
     "postedAt": "2026-06-08",
-    "views": 462
+    "views": 462,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Study Resources and Mentorship by Marusya",
+        "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "Study Resources and Mentorship by Marusya"
+      }
+    }
   },
   {
     "id": "tg-410",
-    "title": "10 лайфхаков для получения стипендии на обучение за границей",
+    "title": "Scholarship preparation opportunity",
     "category": "Scholarship",
     "direction": "General",
     "format": "Online",
@@ -466,9 +537,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🌍 10 лайфхаков для получения стипендии на обучение за границей.\n\n1️⃣ Начинай за 6–12 месяцев\nГотовь документы заранее.\n\n2️⃣ Смотри разные страны. Германия, Южная Корея, Япония — меньше конкуренции.\n\n3️⃣ Следи за дедлайнами\nВеди календарь.\n\n4️⃣Развивай английский\nIELTS или другие языковые сертификаты часто являются обязательным требованием.\n\n5️⃣ Сильное Motivation Letter\nПокажи цели и мотивацию.\n\n6️⃣ Проверяй требования\nФормат, слова, документы.\n\n7️⃣ Учись у других\nИзучай опыт студентов.\n\n8️⃣ Подавайся в несколько мест\nНе ограничивайся одной программой.\n\n9️⃣ Ищи разные фонды\nНе только крупные стипендии!\n\n🔟 Развивай portfolio\nОлимпиады, волонтёрство, проекты.\n\n#OpportunitiesWithMentoria",
-    "summary": "10 лайфхаков для получения стипендии на обучение за границей",
-    "requirements": "",
+    "description": "A scholarship-related listing for students preparing applications, essays, and supporting materials.",
+    "summary": "A scholarship-related listing for students preparing applications, essays, and supporting materials.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "стипендия",
       "обучение",
@@ -477,11 +548,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/410",
     "postedAt": "2026-05-31",
-    "views": 461
+    "views": 461,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Scholarship preparation opportunity",
+        "description": "A scholarship-related listing for students preparing applications, essays, and supporting materials.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A scholarship-related listing for students preparing applications, essays, and supporting materials."
+      }
+    }
   },
   {
     "id": "tg-28",
-    "title": "Проект GoGlobal: Учёба за границей",
+    "title": "Mentoria resource: Admissions",
     "category": "Opportunity",
     "direction": "Admissions",
     "format": "Online",
@@ -496,9 +577,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🔥 Мечтаешь учиться за границей, но не знаешь с чего начать?\nПроект GoGlobal — твой реальный шанс ✈️🌍\nУ нас ты найдёшь:\n✅ Поступление за границу (Корея, и не только)\n✅ Полезные и актуальные материалы \n✅ Курсы и разборы по шагам\n✅ Живые эфиры с людьми, которые реально уже поступили\nНикаких мифов — только опыт, практика и честная инфа 💯\nЕсли хочешь изменить своё будущее — GoGlobal для тебя 🚀\n🌐 Наш сайт:\nhttps://yntymakdev.github.io/goglobal\nTg: https://t.me/GoGlobal_2",
-    "summary": "Проект GoGlobal: Учёба за границей",
-    "requirements": "",
+    "description": "A Mentoria feed resource with more details available in the original announcement.",
+    "summary": "A Mentoria feed resource with more details available in the original announcement.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "учёба",
       "за границей",
@@ -507,11 +588,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/28",
     "postedAt": "2025-12-28",
-    "views": 447
+    "views": 447,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Mentoria resource: Admissions",
+        "description": "A Mentoria feed resource with more details available in the original announcement.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A Mentoria feed resource with more details available in the original announcement."
+      }
+    }
   },
   {
     "id": "tg-437",
-    "title": "Канал для саморазвития и интересных фактов",
+    "title": "Mentoria resource: General",
     "category": "Opportunity",
     "direction": "General",
     "format": "Online",
@@ -526,9 +617,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "٩(๑❛ᴗ❛๑)۶guys все мы стремимся к саморазвитию\n🍵🧘🏻‍♀️🛁🫧☕️\n\nно…как же это сделать правильно без вреда к себе и не превратить это в токсичную учебу…\n\n• превратить саморазвитие в привычную нам рутину \n\nне обязательно начинать со сложных тем, можно просто начать с простого: [ ежедневные подборки интересных фактов, легких книг и цитат, над которыми вам стоит задуматься ]\n\nспециально для этого я нашел данный канал\nгде каждое утро я удивляюсь фактам, о которых никогда даже не задумывалась \n\nпоэтому если вы хотите improve ur brain, то вам сюда 🧘🏻‍♀️🪷🍵🩵🍶",
-    "summary": "Канал для саморазвития и интересных фактов",
-    "requirements": "",
+    "description": "A Mentoria feed resource with more details available in the original announcement.",
+    "summary": "A Mentoria feed resource with more details available in the original announcement.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "саморазвитие",
       "факты",
@@ -537,11 +628,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/437",
     "postedAt": "2026-06-09",
-    "views": 446
+    "views": 446,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Mentoria resource: General",
+        "description": "A Mentoria feed resource with more details available in the original announcement.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A Mentoria feed resource with more details available in the original announcement."
+      }
+    }
   },
   {
     "id": "tg-446",
-    "title": "ChotamOffer: Учебные стратегии и стипендии",
+    "title": "Test preparation resource",
     "category": "Opportunity",
     "direction": "Admissions",
     "format": "Online",
@@ -556,9 +657,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Хочешь учиться в топовых универах США, Европы и Азии?\n\nТогда тебе в ChotamOffer!\n\nВ канале:\n• Стратегии поступления и дедлайны\n• Разборы эссе и типичные ошибки\n• Стипендии и фин помощь для internationals\n• SAT/IELTS и полезные лайфхаки\n• Реальные кейсы и пошаговые планы\n\nПодпишись: https://t.me/ChotamOffer",
-    "summary": "ChotamOffer: Учебные стратегии и стипендии",
-    "requirements": "",
+    "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "учеба",
       "стипендии",
@@ -567,7 +668,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/446",
     "postedAt": "2026-06-10",
-    "views": 417
+    "views": 417,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Test preparation resource",
+        "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness."
+      }
+    }
   },
   {
     "id": "tg-436",
@@ -586,9 +697,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🇺🇸 Harvard University: обзор и советы для поступления\n\nHarvard University — один из самых престижных университетов мира и символ академического excellence\n\n📚 Чем известен Harvard?\n• сильная академическая среда\n• выдающиеся преподаватели\n• сильные программы: law, business, medicine, CS\n• большие research opportunities\n• мощное сообщество выпускников\n\n🎯 Что важно для поступления?\n• высокие оценки\n• сильный английский (TOEFL / IELTS при необходимости)\n• SAT / ACT (если требуется)\n• внеклассные активности\n• эссе и рекомендации\n• интервью\n\n💡 Что усиливает заявку:\n🧠 research и проекты\n•чтение beyond school\n🏆олимпиады и конкурсы\n•MUN, дебаты, лидерство\n•личные проекты и волонтёрство\n\nOfficial website:\nHarvard University⁠\n\n#OpportunitiesWithMentoria",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
     "summary": "Harvard University: Overview and Admission Tips",
-    "requirements": "",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "harvard",
       "admissions",
@@ -598,32 +709,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/436",
     "postedAt": "2026-06-08",
-    "views": 416
-  },
-  {
-    "id": "tg-449",
-    "title": "Заполнение ячеек при регистрации",
-    "category": "Opportunity",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": null,
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "Ребят, обязательно подписывайте все ячейки правильно. Чтобы не было вот такого. Зарегался а все ячейки пустые",
-    "summary": "Заполнение ячеек при регистрации",
-    "requirements": "",
-    "tags": [],
-    "applyUrl": "https://t.me/mentoria_organization/449",
-    "postedAt": "2026-06-10",
-    "views": 415
+    "views": 416,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Harvard University: Overview and Admission Tips",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "Harvard University: Overview and Admission Tips"
+      }
+    }
   },
   {
     "id": "tg-112",
@@ -642,9 +738,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🌱 Eco Business Case Competition 2026 с призовым фондом 200 000тг❗️\n\nEBCC 2026 — это командное образовательное соревнование, где школьники анализируют реальные экологические и бизнес-кейсы и предлагают практичные, инновационные решения для устойчивого будущего  \n\n📍Формат: \n- Отборочный этап — онлайн (21.02.26)\n- Финал — онлайн / оффлайн в г. Алматы (28.02.26)\n\n👥 Кто может участвовать:\n- Ученики 7–12 классов\n- Командный формат — до 4 участников в команде\n\n💰Участие:\n- Взнос — 3000 ₸ за команду\n\n🏆 Призовой фонд — 200 000 ₸, который будет распределён между тремя лучшими командами.\n\n🗓 Срок регистрации: до 18.02.26\n\n📌Форма регистрации: в телеграм чате https://t.me/+TSeNzFlFf4BkZGE6\n\n🤝 Нет команды? Не проблема!\nПрисоединяйтесь к Telegram-группе, где вы сможете:\n- найти команду\n- объединиться с единомышленниками\n- задать вопросы организаторам\n\nЕсли тебе интересны экология, бизнес и реальные кейсы — это твой шанс заявить о себе💚",
+    "description": "A Mentoria competition listing for students interested in business opportunities and preparation.",
     "summary": "Eco Business Case Competition 2026",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "eco",
       "business",
@@ -653,36 +749,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/112",
     "postedAt": "2026-02-02",
-    "views": 415
-  },
-  {
-    "id": "tg-438",
-    "title": "ребят, остаются считанные минуты🔥",
-    "category": "Opportunity",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": null,
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "ребят, остаются считанные минуты🔥",
-    "summary": "ребят, остаются считанные минуты🔥",
-    "requirements": "",
-    "tags": [],
-    "applyUrl": "https://t.me/mentoria_organization/438",
-    "postedAt": "2026-06-09",
-    "views": 414
+    "views": 415,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Eco Business Case Competition 2026",
+        "description": "A Mentoria competition listing for students interested in business opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "Eco Business Case Competition 2026"
+      }
+    }
   },
   {
     "id": "tg-429",
-    "title": "Вебинар: От мечты до NYU - реальная история поступления",
+    "title": "NYUAD scholarship admissions webinar",
     "category": "Event",
     "direction": "Admissions",
     "format": "Online",
@@ -697,9 +778,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "ВЕБИНАР: «От мечты до NYU: реальная история поступления»\n\nКАК ПОСТУПИТЬ В ТОП-УНИВЕРСИТЕТЫ США И ПОЛУЧИТЬ ГРАНТ $90,000+?\n\n📎 Дата: 20 июня\n📎 Время: 11:00 NY / 18:00 МСК / 20:00 KZ\n📎 Формат: Google Meet\n📎 Длительность: ~1 час\n\n✨ Реальная история поступления в New York University Abu Dhabi + разбор пути к гранту и поступлению в топ-вузы США.\n\n🤍 Что узнаешь: • Пошаговый путь поступления в США\n• Как получить грант и финансирование\n• Что важно для сильного профиля\n• Проекты, достижения и активности\n• Ошибки абитуриентов\n• Учёба и жизнь в NYUAD\n• Q&A сессия\n\n💓 Спикер: Студентка NYU Abu Dhabi\n• Грант $90,000+\n• SAT 1550\n• IELTS 8.5\n• Исследовательские проекты\n\n🎯 Для школьников, мечтающих об обучении за рубежом и грантах.\n\n❔ Как попасть: Подпишись: Telegram https://t.me/GoGlobal_2 | Instagram @_ta1on\nОтправь скрин в ЛС: @um1ttll\n(Подписки проверяются)",
-    "summary": "Вебинар: От мечты до NYU - реальная история поступления",
-    "requirements": "",
+    "description": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities.",
+    "summary": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "вебинар",
       "nyu",
@@ -710,11 +791,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/429",
     "postedAt": "2026-06-07",
-    "views": 401
+    "views": 401,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "NYUAD scholarship admissions webinar",
+        "description": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "An admissions webinar about scholarship pathways and application preparation for students targeting NYUAD or similar universities."
+      }
+    }
   },
   {
     "id": "tg-430",
-    "title": "ShineYourCV - Конкурсы и возможности для студентов",
+    "title": "International volunteering opportunity",
     "category": "Opportunity",
     "direction": "General",
     "format": "Online",
@@ -729,9 +820,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "⚡ Хочешь, чтобы тебя заметили топовые университеты?\n\n•ShineYourCV — канал, где обычный ученик становится кандидатом мечты.\n\n✨ Мы делимся:\n✅ Конкурсами, конференциями, волонтёрскими проектами и стажировками.\n✅ Программами обменов и уникальными возможностями.\n✅ Советами по CV и эссе, которые реально работают.\n✅ Брендингом и fashion маркетингом.\n✅ Кейсами и трендами в бизнесе и маркетинге. \n✅ Путём от студента до будущего лидера\n\n💡 «Opportunities don't wait. Neither should you.»\n\n📌 Подписывайся и действуй:\nhttps://t.me/ShineYourCV\n📩 Ads & Collab: https://t.me/+QfRgVgM9mBlhNTcy",
-    "summary": "ShineYourCV - Конкурсы и возможности для студентов",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "конкурсы",
       "волонтёрство",
@@ -741,11 +832,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/430",
     "postedAt": "2026-06-08",
-    "views": 400
+    "views": 400,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-356",
-    "title": "Вебинары QazInnovations про грант на 20млн",
+    "title": "Mentoria hackathon registration",
     "category": "Event",
     "direction": "Business",
     "format": "Online",
@@ -760,9 +861,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "📆 Какие планы, стартаперы?\n\nДвиж до конца мая t.me/startup_course_com?boost\n\nпн. ср. пт. в 15:00 до 13.05.2026  📹 Вебинары QazInnovations про грант на 20млн t.me/startup_course_com/5654\n\n13.05 в 16:00 🇺🇸 MeetUp про Рынок США @ MOST IT Hub https://t.me/startup_course_com/5771\n\n14.05 в 18:00 🔥Kolesa Marketing Meetup @ офис Колёс https://t.me/startup_course_com/5763\n\n14.05 ⏩ Хакатон NIS SynergyX 2026 @ Астана https://t.me/startup_course_com/5770\n\n15.05 👨🏽‍💻 AppSecFest @ Farabi Hub Almaty https://t.me/uppertunity/354\n\n15.05 n❗️ nFactorial Incubator 2026: запустить стартап за 8 недель с доходом 1000$ уже в 1-ый месяц @ SmArtPoint t.me/startup_course_com/5749\n\n16, 23.05 🏆 NU Founder’s School. Bootcamp @ NU Astana https://t.me/startup_course_com/5768\n\n22.05 в 10:00 💰 Solana Summit Kazakhstan 2026 @ Swissotel Almaty https://t.me/startup_course_com/5766\n\n23.05 в 10:00🐝🐧 Главная IT-конференция весны Beetech Conf @ Narxoz https://t.me/uppertunity/352\n\n28.05 в 16:00 💾 Kubernetes для бизнеса: интеграции, архитектура, реальные сценарии от Яндекса @ InterContinental Almaty https://t.me/uppertunity/355\n\n30.05 🏆 VENTURE CASE CUP 2026 @ Алматы https://t.me/startup_course_com/5761",
-    "summary": "Вебинары QazInnovations про грант на 20млн",
-    "requirements": "",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "вебинары",
       "грант",
@@ -770,36 +871,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/356",
     "postedAt": "2026-05-13",
-    "views": 400
-  },
-  {
-    "id": "tg-444",
-    "title": "Обновление веб-сайта с FAQ",
-    "category": "Opportunity",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": null,
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "Ребята, мы обновили веб-сайт. Теперь вся информация находится там. В самом низу есть ответы на часто задаваемые вопросы🔥🔥🔥",
-    "summary": "Обновление веб-сайта с FAQ",
-    "requirements": "",
-    "tags": [
-      "веб-сайт",
-      "информация",
-      "faq"
-    ],
-    "applyUrl": "https://t.me/mentoria_organization/444",
-    "postedAt": "2026-06-10",
-    "views": 399
+    "views": 400,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria hackathon registration",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving."
+      }
+    }
   },
   {
     "id": "tg-130",
@@ -818,9 +900,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Horizon Hackathon 2026\n\nОнлайн-хакатон для школьников и студентов, которые хотят прокачать навыки, поработать в команде и получить реальный опыт.\n\n⚙️ Что будет\n• 48 часов разработки проекта\n• Работа в команде над собственной идеей\n• Онлайн-формат\n\n👥 Участники\nШкольники и студенты\n\n💵 Взнос\n3000 тг с команды\n\n🏅 Призы\n🥇 1 место — 50 000 тг\n🥈 2 место — 30 000 тг\n🥉 3 место — 20 000 тг\n\n🎓 Каждому участнику\n• Именной сертификат\n• Электронная книжка с актуальными Telegram-каналами:\n— SAT, IELTS\n— поступление за границу\n— портфолио\n— конкурсы и возможности\n\n📆 Даты проведения\n14–15 февраля\n📍 Онлайн\n\n⏳ Регистрация до\n12 февраля, 23:59\n\n📎 Регистрация:\nhttps://forms.gle/HT8pLZC2g2SEoaCVA\n\n❓По вопросам: \nhttps://www.instagram.com/leader_ofthefuture?igsh=MWM5Yjc4ZW02Zm1xaw%3D%3D&utm_source=qr",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
     "summary": "Horizon Hackathon 2026",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "хакатон",
       "программирование",
@@ -830,11 +912,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/130",
     "postedAt": "2026-02-10",
-    "views": 395
+    "views": 395,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Horizon Hackathon 2026",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "Horizon Hackathon 2026"
+      }
+    }
   },
   {
     "id": "tg-453",
-    "title": "M.I.N.D: Международное движение волонтёров",
+    "title": "International volunteering opportunity",
     "category": "Volunteering",
     "direction": "Social Impact",
     "format": "Online",
@@ -849,9 +941,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "900+ человек. 15+ стран. 1 цель💜\n\nМы—M.I.N.D, международное движение, которое переросло рамки обычного волонтёрства. Мы меняем культуру вокруг mental health,боремся с буллингом,насилием и гендерным неравенством.\nМы трансформируем eco-anxiety в реальные actions. Наш проект—это не только онлайн задания, это real offline impact\n\n•Что делают наши волонтёры прямо сейчас:\n🎨Создают плакаты против буллинга для своих школ и uni\n🎤Проводят уроки и презентации против травли\n🌱Собирают пластик, сдают бутылки на переработку и сажают trees\n\nНас почти тысяча. И мы доказываем каждый день: “Small actions create global change”\n\n•Что даёт участие в M.I.N.D?\n 👥Глобальный нетворкинг: твои будущие друзья живут по всему миру.\n💫Реальные кейсы: масштабные проекты и задания в сфере mental health и экологии для твоего CV\n📝Буст для CV: международные сертификаты,рек.письма и вол.часы для топовых программ и зарубежных вузов.\n\nМы не ждем, пока мир изменится.Мы меняем его сами. \n \n👉 Join us!\nНаши соцсети: inst | tt | tg\n\n❓По вопросам: @mlkjwq",
-    "summary": "M.I.N.D: Международное движение волонтёров",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "volunteering",
       "mental health",
@@ -861,11 +953,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/453",
     "postedAt": "2026-06-11",
-    "views": 394
+    "views": 394,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-53",
-    "title": "Next Step Uni - Платформа для роста и развития",
+    "title": "International volunteering opportunity",
     "category": "Opportunity",
     "direction": "General",
     "format": "Online",
@@ -880,9 +982,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🎯 Next Step Uni - это платформа для тех, кто стремится расти и развиваться! \n\nУ нас вы найдете:\n✔️Конкурсы и международные челленджи, олимпиады\n✔️Стипендии и программы (летние программы/программы по обмену)\n✔️Проекты, стартапы, волонтёрство\n✔️Мероприятия, конференции и форумы \n✔️MUN (модели ООН)\n✔️Полезные материалы для подготовки к SAT, IELTS и тд\n\nNext Step Uni\n— это место, где каждая возможность действительно помогает тебе расти. \n\nhttps://t.me/nextstepuni",
-    "summary": "Next Step Uni - Платформа для роста и развития",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "конкурсы",
       "челленджи",
@@ -903,11 +1005,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/53",
     "postedAt": "2026-01-11",
-    "views": 394
+    "views": 394,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-406",
-    "title": "ShineYourCV - Конкурсы и возможности для студентов",
+    "title": "International volunteering opportunity",
     "category": "Opportunity",
     "direction": "General",
     "format": "Online",
@@ -922,9 +1034,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "⚡ Хочешь, чтобы тебя заметили топовые университеты?\n\n•ShineYourCV — канал, где обычный ученик становится кандидатом мечты.\n\n✨ Мы делимся:\n✅ Конкурсами, конференциями, волонтёрскими проектами и стажировками.\n✅ Программами обменов и уникальными возможностями.\n✅ Советами по CV и эссе, которые реально работают.\n✅ Брендингом и fashion маркетингом.\n✅ Кейсами и трендами в бизнесе и маркетинге. \n✅ Путём от студента до будущего лидера\n\n💡 «Opportunities don't wait. Neither should you.»\n\n📌 Подписывайся и действуй:\nhttps://t.me/ShineYourCV\n📩 Ads & Collab: https://t.me/+QfRgVgM9mBlhNTcy",
-    "summary": "ShineYourCV - Конкурсы и возможности для студентов",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "конкурсы",
       "волонтёрство",
@@ -934,7 +1046,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/406",
     "postedAt": "2026-05-31",
-    "views": 393
+    "views": 393,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-458",
@@ -953,9 +1075,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "FEMUN 2026 REGISTRATION IS NOW OPEN! \n\n📍 Astana, Kazakhstan\n📅 July 5, 2026\n💰 Registration Fee: 5,000 KZT\n🏆 Prize Pool: 200,000 KZT\n\nFEMUN is a youth-led Model United Nations conference dedicated to addressing issues related to women’s rights, education, economic development, international security, and social challenges. The conference is open to everyone — both girls and boys — regardless of prior MUN experience.\n\n🌍 Our Committees:\n🏛️ UN Women\n🏛️ Human Rights Council\n🏛️ UNESCO\n🏛️ ECOSOC\n🏛️ Crisis Committee 1: Women in Military Service during World War II (1942–1945)\n🏛️ Crisis Committee 2: Legalization of Sex Work in the Netherlands (1999–2000)\n\n📍The exact conference venue will be announced soon on our Instagram page.\n\n🚨 We will also be announcing additional ONLINE committees for participants from other cities and countries very soon! Follow our Instagram for updates and registration announcements.\n\n📝 Registration Form:\nhttps://forms.gle/HnayUtXD3fzy9Tg97\n\n📸 Instagram:\nhttps://www.instagram.com/femun_astana?igsh=MXgweXpncGxmNWR3Yg%3D%3D&utm_source=qr",
-    "summary": "FEMUN 2026 Registration Now Open",
-    "requirements": "",
+    "description": "A Mentoria event listing for students interested in social impact opportunities and preparation.",
+    "summary": "A Mentoria event listing for students interested in social impact opportunities and preparation.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "femun",
       "model united nations",
@@ -967,32 +1089,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/458",
     "postedAt": "2026-06-13",
-    "views": 392
-  },
-  {
-    "id": "tg-460",
-    "title": "Ребята , дизлайки не ставим🥺",
-    "category": "Opportunity",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": null,
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "Ребята , дизлайки не ставим🥺",
-    "summary": "Ребята , дизлайки не ставим🥺",
-    "requirements": "",
-    "tags": [],
-    "applyUrl": "https://t.me/mentoria_organization/460",
-    "postedAt": "2026-06-13",
-    "views": 391
+    "views": 392,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "FEMUN 2026 Registration Now Open",
+        "description": "A Mentoria event listing for students interested in social impact opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria event listing for students interested in social impact opportunities and preparation."
+      }
+    }
   },
   {
     "id": "tg-450",
@@ -1011,9 +1118,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🇺🇸 SAT Exam: overview and how to get ready\n\nThe SAT is a standardized test used for university admissions in the USA and other countries. It measures your skills in reading, writing, and math.\n\n📚 What does the SAT include?\n• Reading section (comprehension and analysis)\n• Writing & Language (grammar and editing)\n• Math (algebra, problem solving, data analysis)\n• Multiple-choice, timed questions\n\n🎯 How to prepare for the SAT?\n• Learn core math topics (algebra, functions, percentages)\n• Read academic texts daily\n• Improve grammar and sentence structure\n• Practice full-length tests regularly\n• Work on time management\n\n💡 What improves your score:\n• Consistent daily practice\n• Solving real SAT questions\n• Learning 10–15 new words daily\n• Reviewing mistakes after each test\n• Building a clear test strategy\n\n#OpportunitiesWithMentoria",
-    "summary": "SAT Exam Overview and Preparation Tips",
-    "requirements": "",
+    "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "sat",
       "test preparation",
@@ -1022,40 +1129,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/450",
     "postedAt": "2026-06-11",
-    "views": 391
-  },
-  {
-    "id": "tg-445",
-    "title": "Регистрация для капитанов команды",
-    "category": "Opportunity",
-    "direction": "General",
-    "format": "Online",
-    "deadline": null,
-    "eventDate": null,
-    "isRecurring": false,
-    "grades": [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "location": "Global",
-    "description": "Ребята, регаются только капитаны команды",
-    "summary": "Регистрация для капитанов команды",
-    "requirements": "",
-    "tags": [
-      "регистрация",
-      "команда",
-      "капитаны"
-    ],
-    "applyUrl": "https://t.me/mentoria_organization/445",
-    "postedAt": "2026-06-10",
-    "views": 391
+    "views": 391,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "SAT Exam Overview and Preparation Tips",
+        "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness."
+      }
+    }
   },
   {
     "id": "tg-78",
-    "title": "Набор команды для SDG Design Challenge 2026",
+    "title": "Competition in Social Impact",
     "category": "Competition",
     "direction": "Social Impact",
     "format": "Online",
@@ -1070,9 +1158,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Набор команды для SDG Design Challenge 2026 (онлайн, 24 - 30 января)\nЯ собираю международную команду для участия в SDG Design Challenge 2026, где требуется за 6 дней создать решение под цели устойчивого развития ООН.\n\nПланируется выступить с проектом AidMap AI, подразумевающая AI-платформу, которая объединяет открытые гуманитарные и социально-экономические данные и визуализирует их в виде интерактивной карты, показывающей уровень срочности гуманитарных потребностей в конфликтных регионах (Афганистан, Сирия и др).\n\nСтарт челленджа:\n📅 24 - 30 января 2026.\nВсе полностью онлайн.\nЦель: создать рабочий MVP и демонстрационную карту для конкурса\nДедлайн набора в команду: 20 января.\n\nКого ищу в команду:\n👨‍💻👩‍💻AI / Data / Tech - обработка данных, логика scoring, простая модель приоритизации\n\n👩‍🎨🎨Product / UX - интерактивная карта, dashboard, визуализация данных\n\nЧто важно:\n✓ готовность работать параллельно над задачами\n✓ серьёзный подход к результату\n✓ способность участвовать в ежедневных онлайн-сессиях (или через день)\n✓ довести дело до конца \n\nЧто вы получите:\n✓ Опыт в разработке impact-project \n✓ Призовой фонд в размере 50к $\n✓ Сертификат об участии и рек.письмо \n\nЕсли заинтересовало заполните форму:\nhttps://docs.google.com/forms/d/e/1FAIpQLSdT9zV3nzhQfY4N98kUpFuxdJQt2VBV1NLJ40NNLwLbgyLryA/viewform?usp=header\n\nВозникли вопросы? Пишите сюда: @Fistajl",
-    "summary": "Набор команды для SDG Design Challenge 2026",
-    "requirements": "",
+    "description": "A Mentoria competition listing for students interested in social impact opportunities and preparation.",
+    "summary": "A Mentoria competition listing for students interested in social impact opportunities and preparation.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "sdg",
       "design",
@@ -1083,11 +1171,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/78",
     "postedAt": "2026-01-18",
-    "views": 391
+    "views": 391,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Competition in Social Impact",
+        "description": "A Mentoria competition listing for students interested in social impact opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria competition listing for students interested in social impact opportunities and preparation."
+      }
+    }
   },
   {
     "id": "tg-459",
-    "title": "Мобилограф для летнего лагеря Shenber",
+    "title": "International volunteering opportunity",
     "category": "Volunteering",
     "direction": "Social Impact",
     "format": "Online",
@@ -1102,9 +1200,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "📢 Внимание! Ищем мобилографа для летнего лагеря Shenber\n\nКоманда Shenber ищет опытного и ответственного мобилографа для мероприятия, который пройдет на базе NIS IB.\n\nЧто нужно делать:\n• Снимать качественный контент для социальных сетей\n• Создавать Reels, Stories, фото и другие материалы\n• Передавать атмосферу лагеря и активно участвовать в создании медиа-контента\n\nДаты работы:\n📅 29 июня — 5 июля (включительно)\n⏰ Каждый день с 09:00 до 13:00\n\n❗️Важно: необходимо присутствовать все дни без отсутствий\n\nЧто получает мобилограф:\n\n✅ Ценный опыт работы на крупном образовательном проекте\n✅ Официальный сертификат участия\n✅ Возможность пополнить сильное портфолио и поработать с командой, развивающей STEM-образование в Казахстане\n\nЕсли вы уверены в своих навыках и готовы стать частью проекта:\n\nTelegram: @sulaakula\nНомер Телефона: +7 777 817 0007 \n\n\nС уважением,\nКоманда Shenber",
-    "summary": "Мобилограф для летнего лагеря Shenber",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "мобилограф",
       "летний лагерь",
@@ -1114,11 +1212,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/459",
     "postedAt": "2026-06-13",
-    "views": 390
+    "views": 390,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-455",
-    "title": "Ошибки, снижающие баллы на IELTS, TOEFL и SAT",
+    "title": "Test preparation resource",
     "category": "Course",
     "direction": "General",
     "format": "Online",
@@ -1133,9 +1241,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🚨 Ошибки, которые снижают баллы на IELTS, TOEFL и SAT\n\nГотовишься месяцами, но баллы не растут? Возможно, проблема в этих ошибках\n\n1️⃣ Не читаешь задание до конца\nПодчеркивай ключевые слова и внимательно читай вопрос.\n\n2️⃣ Неправильный объём ответа\n📌 Например, IELTS Writing Task 2 требует минимум 250 слов.\n\n3️⃣ Повторяешь одни и те же слова\nИспользуй синонимы и расширяй vocabulary.\n\n4️⃣ Нет структуры\nДаже короткий план поможет сделать ответ логичнее.\n\n5️⃣Теряешь время из-за паники\n⏳ Не застревай на одном вопросе — двигайся дальше.\n\n6️⃣ Не проверяешь ошибки\nАртикли, окончания и запятые могут стоить баллов.\n\n7️⃣ Только теория, мало практики\nЭкзамен требует тренировки, а не только знаний.\n\n8️⃣ Не знаешь формат теста\nIELTS ≠ TOEFL. SAT имеет свои правила — изучи структуру заранее.\n\n🎯 Хороший результат = правильная стратегия + регулярная практика.\n\n#OpportunitiesWithMentoria",
-    "summary": "Ошибки, снижающие баллы на IELTS, TOEFL и SAT",
-    "requirements": "",
+    "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "ielts",
       "toefl",
@@ -1145,11 +1253,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/455",
     "postedAt": "2026-06-12",
-    "views": 387
+    "views": 387,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Test preparation resource",
+        "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness."
+      }
+    }
   },
   {
     "id": "tg-461",
-    "title": "Регистрация на хакатон",
+    "title": "Mentoria hackathon registration",
     "category": "Competition",
     "direction": "Programming",
     "format": "Online",
@@ -1164,9 +1282,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Остались считанные часы до закрытия регистрации📌\n\n Регистрация доступна на нашем веб-сайте👇🏻\n\nhttps://mentoria-hackathon.vercel.app/",
-    "summary": "Регистрация на хакатон",
-    "requirements": "",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "хакатон",
       "программирование",
@@ -1174,7 +1292,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/461",
     "postedAt": "2026-06-13",
-    "views": 386
+    "views": 386,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria hackathon registration",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving."
+      }
+    }
   },
   {
     "id": "tg-426",
@@ -1193,9 +1321,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Ищете полезный и современный контент для личного и профессионального роста?\n\nОбратите внимание на Telegram-канал: https://t.me/nextyouchannel\n\nNextYou — это пространство для тех, кто стремится развиваться, мыслить шире и быть на шаг впереди. Здесь вы найдете:\n— актуальные идеи и инсайты\n— материалы по саморазвитию и мышлению\n— возможности для участия в проектах\n— вдохновение для действий\n\nПрисоединяйтесь к сообществу, где ценятся развитие, инициативность и результат: https://t.me/nextyouchannel",
+    "description": "A Mentoria opportunity listing for students interested in general opportunities and preparation.",
     "summary": "NextYou Telegram Channel for Personal and Professional Growth",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "selfdevelopment",
       "growth",
@@ -1204,11 +1332,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/426",
     "postedAt": "2026-06-07",
-    "views": 386
+    "views": 386,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "NextYou Telegram Channel for Personal and Professional Growth",
+        "description": "A Mentoria opportunity listing for students interested in general opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "NextYou Telegram Channel for Personal and Professional Growth"
+      }
+    }
   },
   {
     "id": "tg-456",
-    "title": "Хакатон - продление регистрации",
+    "title": "Mentoria hackathon registration",
     "category": "Competition",
     "direction": "Programming",
     "format": "Online",
@@ -1223,9 +1361,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Ребята, регистрация на хакатон был продлен на еще один день по множественным запросам 👌🏻",
-    "summary": "Хакатон - продление регистрации",
-    "requirements": "",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "хакатон",
       "программирование",
@@ -1233,7 +1371,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/456",
     "postedAt": "2026-06-13",
-    "views": 382
+    "views": 382,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria hackathon registration",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving."
+      }
+    }
   },
   {
     "id": "tg-415",
@@ -1252,9 +1400,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🎧 Best Free Resources for Improving English\n\nWant to improve your English without expensive courses? Here are some free resources that can make a real difference.\n\n🎙️ BBC Learning English\nShort lessons, videos, and podcasts for different levels.\n\n🧠 Gabble AI\nPractice speaking with AI, get feedback, and improve your communication skills.\n\n📺 TED-Ed & TED Talks\nEngaging talks on a wide range of topics with authentic English.\n\n🎧 Spotify Podcasts\nA great way to improve listening skills and expand your vocabulary.\n\n📖 Readlang\nRead articles and books in English with instant translations for unfamiliar words.\n\n🎬 YouTube Channels\nEnglish with Lucy, Learn English with TV Series, BBC Learning English, and more.\n\n📚 Quizlet\nUse flashcards to learn vocabulary, phrases, and key terms.\n\n✍️ Grammarly\nImprove your writing and catch mistakes more effectively.\n\n“To learn a language is to have one more window from which to look at the world”\nChinese proverb \n\n#OpportunitiesWithMentoria",
-    "summary": "Best Free Resources for Improving English",
-    "requirements": "",
+    "description": "A Mentoria feed resource with more details available in the original announcement.",
+    "summary": "A Mentoria feed resource with more details available in the original announcement.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "english",
       "learning",
@@ -1263,11 +1411,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/415",
     "postedAt": "2026-06-01",
-    "views": 382
+    "views": 382,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Best Free Resources for Improving English",
+        "description": "A Mentoria feed resource with more details available in the original announcement.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A Mentoria feed resource with more details available in the original announcement."
+      }
+    }
   },
   {
     "id": "tg-259",
-    "title": "Волонтёрская возможность в международном проекте Interrax Education",
+    "title": "International volunteering opportunity",
     "category": "Volunteering",
     "direction": "Social Impact",
     "format": "Online",
@@ -1282,9 +1440,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🚀🌍 ИЩЕМ ВОЛОНТЁРОВ ДЛЯ МЕЖДУНАРОДНОГО ПРОЕКТА!\n\n🌍 Стань частью Interrax Education — международной образовательной платформы, где подростки со всего мира обмениваются знаниями и навыками. \n\n🔧 Кого ищем:\n\n1️⃣ Координатор волонтёров\n • Контроль активности тьюторов и других волонтёров\n • Составление и контроль расписания занятий\n • Обеспечение коммуникации на английском с международными участниками (B1+)\n\n2️⃣ SMM менеджер\n • Создание контент-плана\n • Разработка идей и публикация контента\n • Взаимодействие с дизайнером для визуального оформления\n\n3️⃣ Графический дизайнер & Менеджер сайта\n • Создание визуала для социальных сетей, презентаций и материалов проекта\n • Разработка единого стиля проекта \n • Создание сайта проекта\n\nЧто ты получишь:\n • Опыт работы в команде с подростками и волонтёрами со всего мира\n • Навыки лидерства, коммуникации и работы над реальными задачами\n• Официальный сертификат волонтёра, который станет сильным дополнением к твоему портфолио\n\n📩 Заполни форму прямо сейчас!",
-    "summary": "Волонтёрская возможность в международном проекте Interrax Education",
-    "requirements": "",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "волонтёрство",
       "международный проект",
@@ -1293,7 +1451,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/259",
     "postedAt": "2026-04-08",
-    "views": 382
+    "views": 382,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "International volunteering opportunity",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile."
+      }
+    }
   },
   {
     "id": "tg-65",
@@ -1312,9 +1480,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "📣 Youth World Summit 2026 | Париж, Франция — Fully Funded 🇫🇷✈️\n🌍 Возможность для молодых лидеров, студентов, профессионалов и changemakers!\n\n📅 Даты: 11–14 июня 2026\n📍 Город: Париж, Франция  \n\n🔥 Что это?\nМеждународная молодёжная конференция, где участники обсуждают глобальные вызовы, лидерство, устойчивое развитие, мир и участие молодёжи в принятии решений.  \n\n\n💰 Финансирование:\n🔹 40 Fully Funded мест (полное покрытие):\n✔️ авиаперелёт туда-обратно\n✔️ совместное проживание\n✔️ питание и кофебрейки\n✔️ доступ ко всем сессиям и мероприятиям\n✔️ сертификат участия и сувениры\n\n🔹 60 Partially Funded мест (частичное покрытие)  \n🔹 Остальные места: Summit Pass, Self-Funded  \n\n👥 Кто может подать заявку:\n🧑‍🎓 Студенты (бакалавриат, магистратура, докторантура)\n💼 Молодые профессионалы\n🚀 Предприниматели, волонтёры, активисты, исследователи\nВозраст: 17–46 лет (все страны)  \n\n⏰ Дедлайн: 30 марта 2026 года (для грантовых мест)\n\nОфициальный сайт 📎",
+    "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
     "summary": "Youth World Summit 2026 in Paris",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "youth",
       "leadership",
@@ -1324,7 +1492,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/65",
     "postedAt": "2026-01-15",
-    "views": 374
+    "views": 374,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Youth World Summit 2026 in Paris",
+        "description": "A volunteering listing for students who want to build community impact experience and strengthen their activity profile.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "Youth World Summit 2026 in Paris"
+      }
+    }
   },
   {
     "id": "tg-111",
@@ -1343,9 +1521,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "📘 50 Successful Ivy League App Essays\n\nПодборка реальных эссе абитуриентов, которые успешно поступили в Ivy League. Полезный ресурс, чтобы понять, как выглядят работающие тексты, а не теоретические советы.\n\n✨ Почему стоит посмотреть:\n— живые, не шаблонные эссе\n— понятная логика и структура\n— честная подача без пафоса\n\n💡 Используйте как ориентир для тона и структуры, а не для копирования идей.",
+    "description": "A Mentoria feed resource with more details available in the original announcement.",
     "summary": "50 Successful Ivy League Application Essays",
-    "requirements": "",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "ivy league",
       "essays",
@@ -1354,7 +1532,17 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/111",
     "postedAt": "2026-02-02",
-    "views": 372
+    "views": 372,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "50 Successful Ivy League Application Essays",
+        "description": "A Mentoria feed resource with more details available in the original announcement.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "50 Successful Ivy League Application Essays"
+      }
+    }
   },
   {
     "id": "tg-451",
@@ -1373,9 +1561,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🎓 Поступаешь на Political Science, International Relations, PPE, Government, Economics или Sociology, но бесконечно блуждаешь среди STEM-ориентированных проектов и хакатонов?\n\n⭐️ Central Asia Association of Social Sciences (CAASS) - академически ориентированная студенческая инициатива для тех, кто хочет развиваться в социальных науках через исследование, теорию и письмо.\n\n💠 В CAASS вы найдёте:\n• живые лекции и вебинары\n• материалы по общей гуманитарной эрудиции\n• советы по формированию портфолио\n• мастер-классы по написанию эссе и проведению рисерчей\n• внутренние конкурсы эссе и конференции\n• вебинары с официальными представителями исследовательских программ (Pioneer Academics, Scholar Launch, etc)\n\n🏅 Участники проектов и мероприятий получат сертификаты клубов UNESCO Казахстана. \n\nХотите делиться знаниями и опытом в гуманитарных науках - вступайте в нашу команду!\n\n📍Присоединяйтесь:\nTelegram | Instagram | Linkedin | YouTube \n\n🚀 Усильте своё портфолио реальным академическим вкладом!",
+    "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
     "summary": "Central Asia Association of Social Sciences (CAASS) Initiative",
-    "requirements": "",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "social sciences",
       "research",
@@ -1385,11 +1573,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/451",
     "postedAt": "2026-06-11",
-    "views": 371
+    "views": 371,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Central Asia Association of Social Sciences (CAASS) Initiative",
+        "description": "A Mentoria hackathon listing for students interested in team projects, programming, and practical problem solving.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "Central Asia Association of Social Sciences (CAASS) Initiative"
+      }
+    }
   },
   {
     "id": "tg-353",
-    "title": "Международный летний YRT",
+    "title": "Mentoria mathematics stream",
     "category": "Competition",
     "direction": "Science",
     "format": "Online",
@@ -1404,9 +1602,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "☀️Хотите по-настоящему интересное лето?\n\nОткрыта регистрация на международный летний YRT  \nPhysics • Chemistry • Biology • Mathematics\n\n❓Что это?  \nYRT — это командный научный турнир, где участники: решают практические задачи, требующие экспериментов и анализа, презентуют свои решения на английском языке и участвуют в научных боях-дискуссиях.\n\n📍Где и когда?  \nАлматы, Казахстан  \nРегистрация: до 20 мая  \nОнлайн-отбор: 21–27 мая  \nФинальный офлайн этап: 6–9 июля\n\n👥 Для кого?  \n— участники 2008–2011 г. р.  \n— школьники и студенты 1–2 курсов колледжей  \n— любой город и любая страна\n— бесплатное проживание\n\n🏅Почему стоит участвовать?  \n— призовой фонд 1 000 000 тг  \n— гран-при — 250 000 тг  \n— авторские задачи  \n— эксперименты и исследования  \n— Комьюнити \n— формат близкий к настоящим конференциям  \n— дополнение к вашему портфолио\n\nЛето может пройти обычно.  \nА может — в атмосфере науки, сильных команд, экспериментов и большого международного турнира.\n\nРегистрация:\nhttps://yrt.kz/\n\nДля связи:\nАлина — +7 (705) 100-13-00\nИнст — @kaz_yrt",
-    "summary": "Международный летний YRT",
-    "requirements": "",
+    "description": "A Mentoria learning stream for students strengthening mathematics foundations for future academic opportunities.",
+    "summary": "A Mentoria learning stream for students strengthening mathematics foundations for future academic opportunities.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "летний",
       "турнир",
@@ -1418,11 +1616,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/353",
     "postedAt": "2026-05-12",
-    "views": 369
+    "views": 369,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Mentoria mathematics stream",
+        "description": "A Mentoria learning stream for students strengthening mathematics foundations for future academic opportunities.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria learning stream for students strengthening mathematics foundations for future academic opportunities."
+      }
+    }
   },
   {
     "id": "tg-325",
-    "title": "Поток по математике от Mentoria",
+    "title": "Test preparation resource",
     "category": "Course",
     "direction": "STEM",
     "format": "Online",
@@ -1437,9 +1645,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "🚀 Mentoria объявляет набор на Поток по математике\n\nХочешь наконец начать понимать математику, а не просто заучивать формулы перед контрольной?\nТогда этот поток для тебя.\n\nМы запускаем закрытую онлайн-группу для школьников, где ты будешь не просто проходить темы, а реально разбираться в математике и применять её на практике.\n\nЧто тебя ждёт:\n— амбициозное и дружелюбное коммьюнити\n— понятные разборы сложных тем\n— практика задач разного уровня\n— разборы экзаменационных заданий (включая SAT и школьные экзамены)\n— обсуждения и объяснения, чтобы ты реально понял логику, а не зазубрил\n\n📌 Важно:\nмы собираем небольшую группу, поэтому берём только тех, кто готов быть активным и не пропадать\n\n🎓 По окончании:\n— сертификат каждому участнику\n— грамота с подписью для самого активного\n\nСтарт уже скоро, количество мест ограничено.\n\n👉 Заполнить анкету для участия: [ссылка]",
-    "summary": "Поток по математике от Mentoria",
-    "requirements": "",
+    "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "математика",
       "онлайн",
@@ -1448,11 +1656,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/325",
     "postedAt": "2026-05-05",
-    "views": 366
+    "views": 366,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Test preparation resource",
+        "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness."
+      }
+    }
   },
   {
     "id": "tg-452",
-    "title": "GoGlobal: Канал о поступлении и IELTS",
+    "title": "Test preparation resource",
     "category": "Opportunity",
     "direction": "Admissions",
     "format": "Online",
@@ -1467,9 +1685,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Если честно, сейчас очень сложно найти нормальный канал про поступление и IELTS без воды 🥲\n\nно недавно наткнулась на GoGlobal и прям понравился формат ✈️\n\nтам выкладывают:\n— полезные советы для IELTS\n— гайды по грантам и scholarship\n— разборы поступления за рубеж\n— помощь с визой\n— эфиры со студентами, которые уже учатся abroad\n— разные ресурсы и сайты для подготовки\n\nи самое нормальное — всё коротко, понятно и без ощущения «сухого prep-канала»\n\nкороче, если вы тоже планируете учёбу за границей или только начинаете разбираться во всём этом — советую заглянуть 💌\n\nhttps://t.me/GoGlobal_2",
-    "summary": "GoGlobal: Канал о поступлении и IELTS",
-    "requirements": "",
+    "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+    "requirements": "Open the source announcement to review how the resource can be used.",
     "tags": [
       "ielts",
       "поступление",
@@ -1480,11 +1698,21 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/452",
     "postedAt": "2026-06-11",
-    "views": 362
+    "views": 362,
+    "sourceKind": "resource",
+    "recommendationEligible": false,
+    "translations": {
+      "en": {
+        "title": "Test preparation resource",
+        "description": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness.",
+        "requirements": "Open the source announcement to review how the resource can be used.",
+        "summary": "A test preparation resource for students working on English, SAT, IELTS, TOEFL, or university application readiness."
+      }
+    }
   },
   {
     "id": "tg-29",
-    "title": "Сюрприз на 400 подписчиков",
+    "title": "Event in General",
     "category": "Event",
     "direction": "General",
     "format": "Online",
@@ -1499,9 +1727,9 @@
       "12"
     ],
     "location": "Global",
-    "description": "Нас уже 200 Подписчиков ребят!!! Благодарим каждого из вас! на 400 подписчиков сделаем для вас небольшой сюрприз🙈🤩🥳",
-    "summary": "Сюрприз на 400 подписчиков",
-    "requirements": "",
+    "description": "A Mentoria event listing for students interested in general opportunities and preparation.",
+    "summary": "A Mentoria event listing for students interested in general opportunities and preparation.",
+    "requirements": "Open the source announcement to confirm eligibility and application steps.",
     "tags": [
       "сюрприз",
       "подписчики",
@@ -1509,6 +1737,16 @@
     ],
     "applyUrl": "https://t.me/mentoria_organization/29",
     "postedAt": "2025-12-29",
-    "views": 361
+    "views": 361,
+    "sourceKind": "actionable",
+    "recommendationEligible": true,
+    "translations": {
+      "en": {
+        "title": "Event in General",
+        "description": "A Mentoria event listing for students interested in general opportunities and preparation.",
+        "requirements": "Open the source announcement to confirm eligibility and application steps.",
+        "summary": "A Mentoria event listing for students interested in general opportunities and preparation."
+      }
+    }
   }
 ]

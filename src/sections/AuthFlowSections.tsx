@@ -191,7 +191,7 @@ export function RegistrationSection({
             <button className="secondary-action compact-action auth-back-button" type="button" onClick={onBack}>
               Back
             </button>
-            <h1 id="auth-title">{profileCompletion ? "Finish profile" : isSignup ? "Create account" : "Sign in"}</h1>
+            <h1 id="auth-title">{profileCompletion ? "Confirm registration" : isSignup ? "Create account" : "Sign in"}</h1>
           </div>
 
           {!supabaseReady ? (
@@ -256,7 +256,7 @@ export function RegistrationSection({
           ) : null}
 
           <button className="primary-action auth-submit" type="submit" disabled={loading || !supabaseReady}>
-            {loading ? "Working..." : profileCompletion ? "Save profile" : isSignup ? "Create account" : "Sign in"}
+            {loading ? "Working..." : profileCompletion ? "Continue to onboarding" : isSignup ? "Create account" : "Sign in"}
           </button>
 
           {!profileCompletion ? (

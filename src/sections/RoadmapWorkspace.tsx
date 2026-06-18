@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowClockwise, BookOpen, Flag, Target } from "@phosphor-icons/react";
 import { WorkspaceRail } from "./WorkspaceSections";
 import type { StudentProfile } from "./AuthFlowSections";
-import { courses, opportunities as fallbackOpportunities } from "../data/content";
+import { courses, getOpportunityPool } from "../data/content";
 import type { Opportunity } from "../data/content";
 import { clearCachedRoadmap, generateRoadmap } from "../lib/roadmap";
 import type { Roadmap, RoadmapProfile, RoadmapStep } from "../lib/roadmap";
@@ -41,7 +41,7 @@ const stepTypeLabels: Record<RoadmapStep["type"], string> = {
 };
 
 export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }: Props) {
-  const opportunityPool = extraOpportunities.length > 0 ? extraOpportunities : fallbackOpportunities;
+  const opportunityPool = getOpportunityPool(extraOpportunities);
 
   const [selected, setSelected] = useState<string[]>(
     () => profile.opportunityPreferences.directions.slice(0, MAX_DIRECTIONS)
@@ -57,6 +57,8 @@ export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }:
       interests: profile.interests,
       academicDirection: profile.academicDirection,
       directions: selected,
+      formats: profile.opportunityPreferences.formats,
+      locations: profile.opportunityPreferences.locations,
     }),
     [profile, selected]
   );

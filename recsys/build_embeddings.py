@@ -26,6 +26,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
+load_dotenv(Path(__file__).parent.parent / ".env")
 load_dotenv(Path(__file__).parent / ".env")
 
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("VITE_OPENAI_API_KEY")
@@ -35,7 +36,7 @@ IN_FILE = Path(__file__).parent / "opportunities.json"
 OUT_FILE = Path(__file__).parent / "opportunities_embeddings.json"
 PUBLIC_COPY = Path(__file__).parent.parent / "public" / "recsys" / "opportunities_embeddings.json"
 
-client = OpenAI(api_key=OPENAI_KEY)
+client = OpenAI(api_key=OPENAI_KEY) if OPENAI_KEY else None
 
 
 def embedding_text(opp: dict) -> str:
@@ -60,6 +61,47 @@ def embedding_text(opp: dict) -> str:
 def main() -> None:
     opportunities = json.loads(IN_FILE.read_text(encoding="utf-8"))
     texts = [embedding_text(o) for o in opportunities]
+
+    if client is None:
+        if not OUT_FILE.exists():
+            raise SystemExit("OPENAI_API_KEY or VITE_OPENAI_API_KEY is required to create embeddings from scratch.")
+
+        existing_payload = json.loads(OUT_FILE.read_text(encoding="utf-8"))
+        existing_by_id = {item["id"]: item for item in existing_payload.get("items", [])}
+        dimensions = existing_payload.get("dimensions", 1536)
+        items = []
+        missing = []
+
+        for opp in opportunities:
+            existing = existing_by_id.get(opp["id"])
+            if existing:
+                items.append({
+                    "id": opp["id"],
+                    "title": opp.get("title", ""),
+                    "embedding": existing["embedding"],
+                })
+            else:
+                missing.append(opp["id"])
+                items.append({
+                    "id": opp["id"],
+                    "title": opp.get("title", ""),
+                    "embedding": [0.0] * dimensions,
+                })
+
+        payload = {
+            "model": existing_payload.get("model", MODEL),
+            "dimensions": dimensions,
+            "items": items,
+        }
+        OUT_FILE.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        PUBLIC_COPY.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(OUT_FILE, PUBLIC_COPY)
+        print("OPENAI_API_KEY or VITE_OPENAI_API_KEY is not set; reused existing embeddings for matching IDs.")
+        if missing:
+            print(f"Warning: wrote zero-vector placeholders for missing IDs: {', '.join(missing)}")
+        print(f"Saved {len(items)} vectors -> {OUT_FILE}")
+        print(f"Copied -> {PUBLIC_COPY}")
+        return
 
     print(f"Embedding {len(texts)} opportunities with {MODEL}...")
     # The embeddings endpoint accepts a batch, so this is a single API call.
@@ -86,6 +128,9 @@ def main() -> None:
 def search_demo(query: str, top_k: int = 5) -> None:
     """Quick local test: python -c 'import build_embeddings as b; b.search_demo("physics olympiad")'"""
     import math
+
+    if client is None:
+        raise SystemExit("OPENAI_API_KEY or VITE_OPENAI_API_KEY is required for search_demo.")
 
     data = json.loads(OUT_FILE.read_text(encoding="utf-8"))
     q_vec = client.embeddings.create(model=MODEL, input=[query]).data[0].embedding

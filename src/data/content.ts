@@ -1,4 +1,4 @@
-import type { SupportedLocale } from "../lib/language";
+import { containsCyrillic, type SupportedLocale } from "../lib/language";
 
 export type OpportunityTranslation = {
   title: string;
@@ -6,6 +6,8 @@ export type OpportunityTranslation = {
   requirements: string;
   summary?: string;
 };
+
+export type OpportunitySourceKind = "actionable" | "resource" | "noise";
 
 export type Opportunity = {
   id: string;
@@ -27,6 +29,8 @@ export type Opportunity = {
   sourceTitle?: string;
   sourceDescription?: string;
   sourceRequirements?: string;
+  sourceKind?: OpportunitySourceKind;
+  recommendationEligible?: boolean;
   translations?: Partial<Record<SupportedLocale, OpportunityTranslation>>;
 };
 
@@ -1491,29 +1495,32 @@ const opportunityKeywordTags: Array<[RegExp, string[]]> = [
   [/(global|international|world|международ)/i, ["global"]]
 ];
 
+const weakRecommendationTags = new Set([
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "online",
+  "offline",
+  "hybrid",
+  "global",
+  "general",
+  "opportunity",
+  "event",
+  "course"
+]);
+
+const fallbackDisplayDescriptions = new Set([
+  "Details are available in the source announcement.",
+  "Review the source announcement for participation details."
+]);
+
+const genericFallbackTitlePattern =
+  /^(opportunity|competition|event|course|scholarship|volunteering|internship|research|summer school) opportunity$/i;
+
 function normalizeTag(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, "-");
-}
-
-function getProfileTags(profile: OnboardingProfile) {
-  const tags = new Set<string>();
-  const profileValues = [
-    profile.grade,
-    profile.academicDirection,
-    ...profile.interests,
-    ...profile.directions,
-    ...profile.formats,
-    ...profile.locations
-  ];
-
-  profileValues.forEach((value) => {
-    if (!value) return;
-    const normalized = normalizeTag(value);
-    tags.add(normalized);
-    tagExpansions[normalized]?.forEach((tag) => tags.add(normalizeTag(tag)));
-  });
-
-  return tags;
 }
 
 export function getOpportunityTags(opportunity: Opportunity) {
@@ -1543,6 +1550,46 @@ export function getOpportunityTags(opportunity: Opportunity) {
   });
 
   return [...tags];
+}
+
+function getOpportunityEnglishFields(opportunity: Opportunity) {
+  const english = opportunity.translations?.en;
+
+  return {
+    title: (english?.title ?? opportunity.title).trim(),
+    description: (english?.description ?? opportunity.description).trim(),
+    requirements: (english?.requirements ?? opportunity.requirements).trim(),
+    summary: (english?.summary ?? english?.description ?? opportunity.description).trim()
+  };
+}
+
+export function hasCleanOpportunityDisplay(opportunity: Opportunity) {
+  const display = getOpportunityEnglishFields(opportunity);
+
+  return (
+    Boolean(display.title) &&
+    Boolean(display.description) &&
+    !containsCyrillic(display.title) &&
+    !containsCyrillic(display.description) &&
+    !genericFallbackTitlePattern.test(display.title) &&
+    !fallbackDisplayDescriptions.has(display.description)
+  );
+}
+
+export function isOpportunityRecommendationEligible(opportunity: Opportunity) {
+  const sourceKind = opportunity.sourceKind ?? "actionable";
+  const recommendationEligible = opportunity.recommendationEligible ?? true;
+
+  return sourceKind === "actionable" && recommendationEligible && hasCleanOpportunityDisplay(opportunity);
+}
+
+export function getOpportunityPool(extraOpportunities: Opportunity[] = [], baseOpportunities: Opportunity[] = opportunities) {
+  const opportunityMap = new Map<string, Opportunity>();
+
+  baseOpportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
+  extraOpportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
+
+  return [...opportunityMap.values()];
 }
 
 function parseOpportunityDeadline(deadline: string) {
@@ -1588,26 +1635,108 @@ export function formatOpportunityDeadline(opportunity: Opportunity) {
   });
 }
 
-export function getRecommendedOpportunities(profile: OnboardingProfile, opportunityPool: Opportunity[] = opportunities, limit = 3) {
-  const selectedTags = getProfileTags(profile);
+export type RankedOpportunity = {
+  opportunity: Opportunity;
+  score: number;
+};
 
-  const ranked = opportunityPool
+function expandProfileTags(values: string[]) {
+  const tags = new Set<string>();
+
+  values.forEach((value) => {
+    if (!value) return;
+    const normalized = normalizeTag(value);
+    tags.add(normalized);
+    tagExpansions[normalized]?.forEach((tag) => tags.add(normalizeTag(tag)));
+  });
+
+  return [...tags].filter((tag) => !weakRecommendationTags.has(tag));
+}
+
+function getDeadlineTime(opportunity: Opportunity) {
+  const deadline = parseOpportunityDeadline(opportunity.deadline);
+
+  return deadline?.getTime() ?? null;
+}
+
+function scoreRecommendedOpportunity(profile: OnboardingProfile, opportunity: Opportunity) {
+  if (!isOpportunityRecommendationEligible(opportunity)) {
+    return null;
+  }
+
+  const priorityProfileTags = expandProfileTags([...profile.interests, ...profile.directions]);
+  const academicProfileTags = expandProfileTags([profile.academicDirection]).filter((tag) => !priorityProfileTags.includes(tag));
+  const opportunityTags = new Set(getOpportunityTags(opportunity).filter((tag) => !weakRecommendationTags.has(tag)));
+  const matchedPriorityTags = priorityProfileTags.filter((tag) => opportunityTags.has(tag));
+  const matchedAcademicTags = academicProfileTags.filter((tag) => opportunityTags.has(tag));
+  const directionTag = normalizeTag(opportunity.direction);
+  const categoryTag = normalizeTag(opportunity.category);
+  const formatTag = normalizeTag(opportunity.format);
+  const locationTag = normalizeTag(opportunity.location);
+
+  const directionScore = priorityProfileTags.includes(directionTag)
+    ? 4.4
+    : academicProfileTags.includes(directionTag)
+      ? 1.2
+      : 0;
+  const categoryScore = priorityProfileTags.includes(categoryTag)
+    ? 1.2
+    : academicProfileTags.includes(categoryTag)
+      ? 0.4
+      : 0;
+  const domainScore = Math.min(matchedPriorityTags.length * 2.4 + matchedAcademicTags.length * 0.85, 11);
+  const gradeScore = opportunity.grades.includes(profile.grade) ? 1.9 : 0;
+  const formatScore = profile.formats.some((format) => normalizeTag(format) === formatTag) ? 1.1 : 0;
+  const locationScore = profile.locations.some((location) => normalizeTag(location) === locationTag) ? 1.1 : 0;
+  const upcomingDeadlineScore = hasUpcomingDeadline(opportunity) ? 1.35 : 0.2;
+  const pastDeadlineScore = isPastDeadline(opportunity) ? -12 : 0;
+  const actionQualityScore = opportunity.applyUrl && opportunity.description.length > 48 ? 0.6 : 0;
+
+  return (
+    directionScore +
+    categoryScore +
+    domainScore +
+    gradeScore +
+    formatScore +
+    locationScore +
+    upcomingDeadlineScore +
+    pastDeadlineScore +
+    actionQualityScore
+  );
+}
+
+export function getRankedOpportunities(
+  profile: OnboardingProfile,
+  opportunityPool: Opportunity[] = opportunities,
+  limit = 3
+): RankedOpportunity[] {
+  return opportunityPool
     .map((opportunity, index) => {
-      const opportunityTags = getOpportunityTags(opportunity);
-      const tagScore = opportunityTags.filter((tag) => selectedTags.has(tag)).length;
-      const gradeScore = opportunity.grades.includes(profile.grade) ? 2 : 0;
-      const futureDeadlineScore = hasUpcomingDeadline(opportunity) ? 0.75 : 0;
-      const pastDeadlineScore = isPastDeadline(opportunity) ? -1.5 : 0;
+      const score = scoreRecommendedOpportunity(profile, opportunity);
 
-      return {
-        opportunity,
-        score: tagScore + gradeScore + futureDeadlineScore + pastDeadlineScore,
-        index
-      };
+      return score === null ? null : { opportunity, score, index };
     })
-    .sort((a, b) => b.score - a.score || a.index - b.index);
+    .filter((item): item is RankedOpportunity & { index: number } => Boolean(item))
+    .sort((a, b) => {
+      const scoreDelta = b.score - a.score;
+      if (scoreDelta !== 0) return scoreDelta;
 
-  return ranked.slice(0, limit).map((item) => item.opportunity);
+      const firstDeadline = getDeadlineTime(a.opportunity);
+      const secondDeadline = getDeadlineTime(b.opportunity);
+      if (firstDeadline !== null && secondDeadline !== null && firstDeadline !== secondDeadline) {
+        return firstDeadline - secondDeadline;
+      }
+      if (firstDeadline !== null && secondDeadline === null) return -1;
+      if (firstDeadline === null && secondDeadline !== null) return 1;
+
+      return a.index - b.index;
+    })
+    .slice(0, limit)
+    .map(({ opportunity, score }) => ({ opportunity, score }));
+}
+
+export function getRecommendedOpportunities(profile: OnboardingProfile, opportunityPool: Opportunity[] = opportunities, limit = 3) {
+  return getRankedOpportunities(profile, opportunityPool, limit).map((item) => item.opportunity);
 }
 
 export function getRecommendedCourses(profile: OnboardingProfile, limit = 3) {
