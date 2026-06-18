@@ -1,9 +1,12 @@
-import { ConsoleShell } from "../components/ConsoleShell";
 import { ChatCircleDots, NotePencil } from "@phosphor-icons/react";
+import { ConsoleShell } from "../components/ConsoleShell";
+import { useT } from "../lib/i18n";
 
 function MentorLMBadge() {
+  const t = useT();
+
   return (
-    <div className="mentorlm-preview-badge" aria-label="MentorLM study assistant mark" role="img">
+    <div className="mentorlm-preview-badge" aria-label={t.public.mentorPreview} role="img">
       <ChatCircleDots aria-hidden="true" size={27} weight="light" />
       <span>LM</span>
     </div>
@@ -11,27 +14,22 @@ function MentorLMBadge() {
 }
 
 export function MentorLMPreviewSection() {
+  const t = useT();
+
   return (
     <section className="product-section mentorlm-preview-section" id="mentorlm" aria-labelledby="mentorlm-preview-title">
       <div className="match-copy product-copy">
-        <h2 id="mentorlm-preview-title">MentorLM keeps lesson context close</h2>
-        <p>
-          When a student gets stuck, MentorLM turns the question into a small note that stays attached to the exact
-          course lesson.
-        </p>
+        <h2 id="mentorlm-preview-title">{t.public.mentorTitle}</h2>
+        <p>{t.public.mentorCopy}</p>
       </div>
 
-      <div className="product-console" aria-label="MentorLM notes and Telegram reminders preview">
-        <ConsoleShell
-          title="Course support"
-          intro="MentorLM appears inside the lesson workflow, beside the video and lesson list."
-          coreClassName="product-core"
-        >
+      <div className="product-console" aria-label={t.public.mentorPreview}>
+        <ConsoleShell title={t.public.courseSupport} intro={t.public.courseSupportIntro} coreClassName="product-core">
           <div className="mentorlm-preview-course-board">
             <article className="mentorlm-preview-video-player" aria-labelledby="mentorlm-preview-video-title">
               <div className="mentorlm-preview-video-topbar">
-                <span>Physics Basics</span>
-                <span>Lesson 2 of 4</span>
+                <span>{t.public.physicsBasics}</span>
+                <span>{t.public.lesson2of4}</span>
               </div>
               <div className="mentorlm-preview-video-screen" aria-hidden="true">
                 <span className="mentorlm-preview-video-route" />
@@ -41,9 +39,9 @@ export function MentorLMPreviewSection() {
                 <span className="mentorlm-preview-play-button" />
               </div>
               <div className="mentorlm-preview-video-copy">
-                <span>Now playing</span>
-                <h3 id="mentorlm-preview-video-title">Newton&apos;s 2nd Law</h3>
-                <p>How does it work?</p>
+                <span>{t.public.nowPlaying}</span>
+                <h3 id="mentorlm-preview-video-title">{t.public.newton}</h3>
+                <p>{t.public.howWorks}</p>
               </div>
               <div className="mentorlm-preview-video-controls" aria-hidden="true">
                 <span>08:14</span>
@@ -55,44 +53,44 @@ export function MentorLMPreviewSection() {
             </article>
 
             <div className="mentorlm-preview-learning-area">
-              <ol className="lesson-list" aria-label="Physics Basics lesson list">
+              <ol className="lesson-list" aria-label={t.public.lessonList}>
                 <li className="lesson-item lesson-item-complete">
                   <span className="lesson-index">01</span>
                   <div className="lesson-content">
-                    <span className="lesson-title">Forces and useful models</span>
+                    <span className="lesson-title">{t.public.forces}</span>
                     <span className="lesson-duration">22 min</span>
                   </div>
-                  <span className="lesson-state">Done</span>
+                  <span className="lesson-state">{t.public.done}</span>
                 </li>
                 <li className="lesson-item lesson-item-active">
                   <span className="lesson-index">02</span>
                   <div className="lesson-content">
-                    <span className="lesson-title">Newton&apos;s 2nd Law</span>
-                    <span className="lesson-duration">24 min · unclear concept</span>
+                    <span className="lesson-title">{t.public.newton}</span>
+                    <span className="lesson-duration">{t.public.unclearConcept}</span>
                     <div className="lesson-note-inline">
-                      <span>MentorLM note</span>
-                      <p>Net force changes motion. More force increases acceleration; more mass needs more force.</p>
+                      <span>{t.public.mentorNote}</span>
+                      <p>{t.public.noteText}</p>
                     </div>
                   </div>
-                  <span className="lesson-state lesson-state-live">Note saved</span>
+                  <span className="lesson-state lesson-state-live">{t.public.noteSaved}</span>
                 </li>
                 <li className="lesson-item">
                   <span className="lesson-index">03</span>
                   <div className="lesson-content">
-                    <span className="lesson-title">Energy methods</span>
+                    <span className="lesson-title">{t.public.energyMethods}</span>
                     <span className="lesson-duration">25 min</span>
                   </div>
                 </li>
                 <li className="lesson-item">
                   <span className="lesson-index">04</span>
                   <div className="lesson-content">
-                    <span className="lesson-title">From problem to research question</span>
+                    <span className="lesson-title">{t.public.researchQuestion}</span>
                     <span className="lesson-duration">20 min</span>
                   </div>
                 </li>
               </ol>
 
-              <aside className="mentorlm-popup-chat" aria-label="MentorLM note popup for Lesson 2">
+              <aside className="mentorlm-popup-chat" aria-label={t.public.popupLabel}>
                 <span className="mentorlm-popup-anchor" aria-hidden="true" />
                 <div className="mentorlm-popup-head">
                   <div className="mentorlm-badge-shell">
@@ -100,36 +98,32 @@ export function MentorLMPreviewSection() {
                   </div>
                   <div className="mentorlm-copy">
                     <strong>
-                      MentorLM <span aria-hidden="true">&middot;</span> Course note mode
+                      MentorLM <span aria-hidden="true">&middot;</span> {t.public.courseNoteMode}
                     </strong>
-                    <span>Next step: Finish Lesson 2</span>
+                    <span>{t.public.nextStepLesson}</span>
                   </div>
-                  <span className="mentorlm-status">Saved</span>
+                  <span className="mentorlm-status">{t.actions.saved}</span>
                 </div>
-                <div className="chat-message chat-message-student">
-                  I didn&apos;t understand Lesson 2. Please leave a note for this lesson.
-                </div>
-                <div className="chat-message chat-message-mentor">
-                  Added under Lesson 2 as a small course note.
-                </div>
+                <div className="chat-message chat-message-student">{t.public.studentMessage}</div>
+                <div className="chat-message chat-message-mentor">{t.public.assistantMessage}</div>
               </aside>
             </div>
           </div>
           <div className="mentorlm-preview-notes">
             <article>
               <NotePencil aria-hidden="true" size={16} weight="light" />
-              <strong>Beginner IELTS</strong>
-              <p>Add a personal note: practice listening before school on Tuesday and Thursday.</p>
+              <strong>{t.public.beginnerIelts}</strong>
+              <p>{t.public.ieltsNote}</p>
             </article>
             <article>
               <NotePencil aria-hidden="true" size={16} weight="light" />
-              <strong>Physics prep</strong>
-              <p>Telegram reminder: review experiment notes two days before the mentor session.</p>
+              <strong>{t.public.physicsPrep}</strong>
+              <p>{t.public.telegramReminder}</p>
             </article>
             <article id="mentors">
               <NotePencil aria-hidden="true" size={16} weight="light" />
-              <strong>Human mentor handoff</strong>
-              <p>When an application needs judgment, MentorLM keeps the context ready for a mentor.</p>
+              <strong>{t.public.humanHandoff}</strong>
+              <p>{t.public.handoffCopy}</p>
             </article>
           </div>
         </ConsoleShell>

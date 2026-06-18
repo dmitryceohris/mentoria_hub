@@ -4,6 +4,7 @@ import { MotionConfig } from "framer-motion";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { RouteProgress } from "./components/RouteProgress";
+import { LocaleProvider } from "./lib/i18n";
 import { initTheme } from "./lib/theme";
 import "./styles.css";
 
@@ -18,10 +19,12 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 120, damping: 24 }}>
-      <BrowserRouter>
-        <RouteProgress />
-        <App />
-      </BrowserRouter>
+      <LocaleProvider>
+        <BrowserRouter>
+          <RouteProgress />
+          <App />
+        </BrowserRouter>
+      </LocaleProvider>
     </MotionConfig>
   </StrictMode>
 );

@@ -1,5 +1,6 @@
-import { navLinks } from "../data/content";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { LanguageSwitcher } from "../components/LanguageSwitcher";
+import { useT } from "../lib/i18n";
 
 type HeroSectionProps = {
   onLogin: () => void;
@@ -7,6 +8,14 @@ type HeroSectionProps = {
 };
 
 export function HeroSection({ onLogin, onStartJourney }: HeroSectionProps) {
+  const t = useT();
+  const navLinks = [
+    { href: "#match-console", label: t.nav.matches },
+    { href: "#courses", label: t.nav.courses },
+    { href: "#mentorlm", label: t.nav.mentorLM },
+    { href: "#faq", label: t.nav.faq }
+  ];
+
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="grain" aria-hidden="true" />
@@ -20,13 +29,14 @@ export function HeroSection({ onLogin, onStartJourney }: HeroSectionProps) {
 
       <div className="hero-inner">
         <ThemeToggle className="hero-theme-toggle" />
+        <LanguageSwitcher className="hero-language-switcher" />
         <button className="hero-login-button" type="button" onClick={onLogin}>
-          Log in
+          {t.hero.login}
         </button>
 
-        <nav className="hero-rail" aria-label="Mentoria Hub sections">
-          <a className="wordmark" href="#hero-title" aria-label="Mentoria Hub home">
-            Mentoria Hub
+        <nav className="hero-rail" aria-label={t.nav.sections}>
+          <a className="wordmark" href="#hero-title" aria-label={t.nav.home}>
+            {t.productName}
           </a>
           <div className="rail-links">
             {navLinks.map((link) => (
@@ -39,16 +49,16 @@ export function HeroSection({ onLogin, onStartJourney }: HeroSectionProps) {
 
         <div className="hero-grid">
           <div className="hero-copy">
-            <h1 id="hero-title">Mentoria Hub</h1>
-            <p className="promise">With you on your way to your dream</p>
-            <p className="all-in-one">.. all in one place</p>
+            <h1 id="hero-title">{t.hero.title}</h1>
+            <p className="promise">{t.hero.promise}</p>
+            <p className="all-in-one">{t.hero.allInOne}</p>
             <p className="hero-lede">
-              <span className="hero-inline-chip">Opportunity Search</span>
-              Find programs that fit your profile.
+              <span className="hero-inline-chip">{t.hero.chip}</span>
+              {t.hero.lede}
             </p>
             <div className="hero-actions">
               <button className="button button-primary" type="button" onClick={onStartJourney}>
-                <span>Start your journey</span>
+                <span>{t.hero.start}</span>
                 <span className="button-mark" aria-hidden="true">
                   &gt;
                 </span>
