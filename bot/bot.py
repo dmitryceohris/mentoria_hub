@@ -15,35 +15,61 @@ from aiogram.types import Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import BOT_TOKEN, REMINDER_INTERVAL_HOURS, is_admin
+import ai
 import reminders
 import storage
 
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 
+GREETING = (
+    "Привет! Меня зовут <b>MentorLM</b> от Mentoria Hub — сообщество, где пересекаются "
+    "новости, общение, олимпиады, конкурсы, гранты и стажировки.\n"
+    "Я очень полезный помощник. Можешь задавать мне любые вопросы. И нет, я не кусаюсь =)\n\n"
+    "──────────\n"
+    "📢 Канал: https://t.me/mentoria_organization\n"
+    "🌐 Сайт: https://mentoria-hub-ruddy.vercel.app/"
+)
+
+ERROR_TEMPLATE = "Упс.. у нас какие-то неполадки. Передайте админу код: <code>{code}</code>"
+
+MAX_REMINDER_DAYS = 7
+
+
+def error_code(exc: Exception) -> str:
+    """Short code to relay to the admin (never leak secrets)."""
+    code = getattr(exc, "code", None)
+    if code:
+        return str(code)
+    return type(exc).__name__
+
 
 # ── User commands ─────────────────────────────────────────────
 
 @dp.message(Command("start"))
 async def cmd_start(message: Message) -> None:
-    storage.add_subscriber(message.chat.id, message.from_user.username if message.from_user else None)
-    await message.answer(
-        "👋 Привет! Я <b>MentorPet</b> от Mentoria Hub.\n\n"
-        "Я буду напоминать о дедлайнах конкурсов и возможностей.\n\n"
-        "• /setreminder N — напоминать за N дней до дедлайна (по умолчанию 3)\n"
-        "• /me — мои настройки\n"
-        "• /stop — отписаться"
-    )
+    try:
+        storage.add_subscriber(message.chat.id, message.from_user.username if message.from_user else None)
+    except Exception as e:
+        await message.answer(ERROR_TEMPLATE.format(code=error_code(e)))
+        return
+    await message.answer(GREETING, disable_web_page_preview=True)
 
 
 @dp.message(Command("setreminder"))
 async def cmd_setreminder(message: Message, command: CommandObject) -> None:
     arg = (command.args or "").strip()
-    if not arg.isdigit() or not (1 <= int(arg) <= 60):
-        await message.answer("Укажи число дней от 1 до 60. Например: <code>/setreminder 5</code>")
+    if not arg.isdigit() or not (1 <= int(arg) <= MAX_REMINDER_DAYS):
+        await message.answer(
+            f"Укажи число дней от 1 до {MAX_REMINDER_DAYS}. Например: <code>/setreminder 5</code>"
+        )
         return
-    storage.set_reminder_days(message.chat.id, int(arg))
-    await message.answer(f"Готово — напомню за <b>{int(arg)}</b> дн. до дедлайна. ✅")
+    try:
+        storage.set_reminder_days(message.chat.id, int(arg))
+    except Exception as e:
+        await message.answer(ERROR_TEMPLATE.format(code=error_code(e)))
+        return
+    await message.answer("Готово! Установлен.")
 
 
 @dp.message(Command("me"))
@@ -105,6 +131,19 @@ async def cmd_raffle(message: Message, command: CommandObject) -> None:
             ", ".join(label(w) for w in winners),
         )
     )
+
+
+# ── Free-form AI chat (any non-command text) ──────────────────
+
+@dp.message(F.text & ~F.text.startswith("/"))
+async def ai_chat(message: Message) -> None:
+    await bot.send_chat_action(message.chat.id, "typing")
+    try:
+        reply = await asyncio.to_thread(ai.answer, message.text)
+    except Exception as e:
+        await message.answer(ERROR_TEMPLATE.format(code=error_code(e)))
+        return
+    await message.answer(reply, disable_web_page_preview=True)
 
 
 # ── Scheduler + entrypoint ────────────────────────────────────

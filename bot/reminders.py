@@ -8,6 +8,7 @@ from datetime import date, datetime
 import requests
 
 from config import LOCAL_OPPORTUNITIES, OPPORTUNITIES_URL
+import ai
 import storage
 
 
@@ -57,6 +58,10 @@ async def run_reminders(bot) -> None:
         opp_id = opp.get("id", title)
         url = opp.get("applyUrl", "")
 
+        # AI text is generated once per event/kind and reused for everyone (cheap).
+        upcoming_text: str | None = None
+        closed_text: str | None = None
+
         for sub in subscribers:
             chat_id = sub["chat_id"]
             threshold = sub.get("reminder_days", 3)
@@ -64,21 +69,19 @@ async def run_reminders(bot) -> None:
             # "Closing soon" — fire once when within the user's window (but not past).
             if 0 <= days_left <= threshold:
                 if not storage.was_reminder_sent(chat_id, opp_id, "upcoming"):
-                    day_word = "день" if days_left == 1 else "дня" if 2 <= days_left <= 4 else "дней"
-                    when = "сегодня" if days_left == 0 else f"через {days_left} {day_word}"
-                    text = (
-                        f"⏰ До <b>{title}</b> осталось {when}!\n"
-                        f"Успей зарегистрироваться 👇"
-                    )
-                    if url:
-                        text += f"\n{url}"
-                    await _safe_send(bot, chat_id, text)
+                    if upcoming_text is None:
+                        upcoming_text = ai.announce(title, days_left)
+                        if url:
+                            upcoming_text += f"\n{url}"
+                    await _safe_send(bot, chat_id, upcoming_text)
                     storage.mark_reminder_sent(chat_id, opp_id, "upcoming")
 
             # "Registration closed" — fire once the day the deadline passes.
             elif days_left < 0:
                 if not storage.was_reminder_sent(chat_id, opp_id, "closed"):
-                    await _safe_send(bot, chat_id, f"🔒 Регистрация на <b>{title}</b> закончилась.")
+                    if closed_text is None:
+                        closed_text = ai.announce(title, None, closed=True)
+                    await _safe_send(bot, chat_id, closed_text)
                     storage.mark_reminder_sent(chat_id, opp_id, "closed")
 
 
