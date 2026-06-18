@@ -1656,7 +1656,6 @@ export function LessonWorkspace({ profile, onLogout }: WorkspaceProps) {
 }
 
 export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onLogout }: OpportunitiesWorkspaceProps) {
-  const [searchQuery, setSearchQuery] = useState("");
   const onboardingProfile = buildOnboardingProfile(profile);
   const allOpportunities = getOpportunityPool(extraOpportunities);
   const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities, allOpportunities.length);
