@@ -1,0 +1,514 @@
+/* Responsive */
+
+@media (max-width: 1040px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding-top: 34px;
+  }
+
+  .match-section {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .match-copy {
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .match-console {
+    width: min(100%, 660px);
+    justify-self: center;
+  }
+
+  .iypt-popover-anchor {
+    display: grid;
+    gap: 8px;
+  }
+
+  .opportunity-popover {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 1;
+    width: 100%;
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .criteria-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .console-core {
+    min-height: auto;
+  }
+
+  .ethno-route {
+    opacity: 0.28;
+  }
+
+  .product-section,
+  .faq-section {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .product-copy,
+  .faq-copy {
+    position: static;
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .product-console,
+  .faq-console {
+    width: min(100%, 660px);
+    justify-self: center;
+  }
+
+  .course-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-hero,
+  .dashboard-columns,
+  .workspace-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-centered-shell {
+    padding: 24px 0 40px;
+  }
+
+  .flow-console,
+  .auth-console {
+    max-width: 100%;
+  }
+
+  .profile-summary {
+    justify-content: flex-start;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace-course-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero-inner {
+    padding: 12px 14px 0 18px;
+  }
+
+  .hero::before {
+    background-size: 44px 44px;
+  }
+
+  .hero::after,
+  .grain,
+  .ethno-route {
+    display: none;
+  }
+
+  .hero-login-button {
+    position: relative;
+    top: auto;
+    right: auto;
+    justify-self: end;
+    min-height: 38px;
+    margin-bottom: 8px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+
+  .hero-rail {
+    width: 100%;
+    align-items: stretch;
+    flex-wrap: wrap;
+    min-width: 0;
+    border-radius: 22px;
+  }
+
+  .wordmark {
+    display: grid;
+    align-items: center;
+    padding-inline: 12px;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .rail-links {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    row-gap: 2px;
+    overflow: visible;
+  }
+
+  .rail-links a {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .hero-grid {
+    gap: 14px;
+    padding: 22px 0 4px;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(34px, 10.6vw, 42px);
+  }
+
+  .promise {
+    margin-top: 14px;
+    font-size: clamp(17px, 5vw, 21px);
+    line-height: 1.2;
+  }
+
+  .all-in-one {
+    margin-top: 8px;
+    font-size: clamp(20px, 6.2vw, 25px);
+  }
+
+  .hero-lede {
+    margin-top: 13px;
+    font-size: 14px;
+    line-height: 1.42;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .button {
+    width: 100%;
+    justify-content: space-between;
+    min-height: 48px;
+  }
+
+  .match-console {
+    width: 100%;
+    margin-top: 4px;
+    padding: 6px;
+    border-radius: 24px;
+  }
+
+  .console-core {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .companion-course-board {
+    gap: 10px;
+    padding: 5px;
+    border-radius: 23px;
+  }
+
+  .companion-video-player {
+    min-height: 210px;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .companion-video-topbar {
+    align-items: flex-start;
+  }
+
+  .companion-video-topbar span {
+    min-height: 25px;
+    padding-inline: 8px;
+    font-size: 10.5px;
+  }
+
+  .companion-video-copy {
+    max-width: 260px;
+  }
+
+  .companion-video-copy h3 {
+    font-size: clamp(25px, 7.4vw, 32px);
+  }
+
+  .companion-video-controls {
+    gap: 8px;
+    margin-top: 14px;
+    padding: 8px 9px;
+  }
+
+  .companion-video-route {
+    opacity: 0.48;
+  }
+
+  .companion-video-node {
+    display: none;
+  }
+
+  .companion-learning-area {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .lesson-item {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .lesson-index {
+    width: 32px;
+    height: 32px;
+    border-radius: 11px;
+  }
+
+  .lesson-state {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 2px;
+  }
+
+  .mentorpet-popup-chat {
+    padding: 12px;
+    border-radius: 18px;
+    animation-delay: 140ms;
+  }
+
+  .mentorpet-popup-anchor {
+    display: none;
+  }
+
+  .mentorpet-popup-head {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .mentorpet-avatar {
+    width: 64px;
+    height: 76px;
+    border-radius: 18px;
+  }
+
+  .mentorpet-owl {
+    width: 68px;
+  }
+
+  .mentorpet-copy {
+    padding-right: 52px;
+  }
+
+  .result-panel {
+    margin-top: 12px;
+    padding-top: 11px;
+  }
+
+  .showcase-search {
+    min-height: 50px;
+    margin-top: 18px;
+  }
+
+  .criteria-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .criteria-select {
+    min-height: 60px;
+    padding: 10px 26px 10px 11px;
+  }
+
+  .criteria-select:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .opportunity-row {
+    min-height: 0;
+  }
+
+  .keyword-band {
+    width: 100%;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    column-gap: clamp(14px, 4.4vw, 24px);
+    row-gap: 4px;
+    font-size: clamp(24px, 8.2vw, 32px);
+    line-height: 1.02;
+    white-space: normal;
+  }
+
+  .match-section {
+    width: min(100%, calc(100% - 28px));
+    margin-block: 32px;
+    gap: 18px;
+  }
+
+  .match-copy {
+    max-width: 340px;
+  }
+
+  .match-copy h2 {
+    font-size: clamp(27px, 8vw, 34px);
+  }
+
+  .match-copy > p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .opportunity-row {
+    grid-template-columns: 1fr;
+  }
+
+  .match-button {
+    justify-self: start;
+  }
+
+  .product-section {
+    width: min(100%, calc(100% - 28px));
+    margin-block: 38px;
+    gap: 18px;
+  }
+
+  .product-copy {
+    max-width: 340px;
+  }
+
+  .product-copy h2 {
+    font-size: clamp(27px, 8vw, 34px);
+  }
+
+  .product-copy > p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .product-console {
+    width: 100%;
+    padding: 6px;
+    border-radius: 24px;
+  }
+
+  .course-grid {
+    gap: 10px;
+  }
+
+  .course-visual {
+    min-height: 104px;
+  }
+
+  .flow-topbar {
+    grid-template-columns: 1fr;
+    width: min(100%, calc(100% - 28px));
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  .flow-eyebrow {
+    justify-self: stretch;
+    text-align: center;
+  }
+
+  .flow-topbar-actions {
+    justify-content: stretch;
+  }
+
+  .flow-link-button {
+    width: 100%;
+  }
+
+  .flow-centered-shell,
+  .dashboard-shell,
+  .workspace-shell {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .question-block h1,
+  .auth-console-header h1,
+  .dashboard-hero h1,
+  .workspace-heading h1 {
+    font-size: clamp(31px, 9vw, 42px);
+  }
+
+  .dashboard-hero p,
+  .workspace-heading p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .flow-console {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .option-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .option-chip {
+    min-height: 50px;
+  }
+
+  .auth-console-header {
+    gap: 14px;
+  }
+
+  .flow-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .primary-action,
+  .secondary-action,
+  .mode-switch {
+    width: 100%;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .metric-grid article {
+    min-height: 92px;
+    padding: 15px;
+  }
+
+  .panel-heading,
+  .match-summary-row,
+  .course-progress-row,
+  .workspace-opportunity-row {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-heading {
+    display: grid;
+  }
+
+  .course-progress-row .course-progress-track {
+    width: 100%;
+  }
+
+  .workspace-course-card,
+  .workspace-opportunity-row,
+  .dashboard-panel {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .match-badge {
+    justify-self: start;
+  }
+}
+

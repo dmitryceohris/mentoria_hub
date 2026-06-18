@@ -1,0 +1,38 @@
+/* ── Theme toggle + light-theme safety ────────────────────── */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--glass-fill);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.theme-toggle:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.hero-theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 20;
+}
+
+/* Inputs/selects/textareas must follow the theme, not stay dark on light */
+input,
+textarea,
+select {
+  color: var(--text);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+}
+

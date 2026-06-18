@@ -1,0 +1,122 @@
+/* ── Opportunity glow-card grid (Custom Wear-inspired) ────── */
+
+.opportunity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 22px;
+  margin-top: 10px;
+}
+
+.opp-glow-card {
+  --glow1: rgba(17, 198, 207, 0.5);
+  --glow2: rgba(88, 217, 239, 0.3);
+  position: relative;
+  display: block;
+  min-height: 320px;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
+}
+.opp-glow-card::before {
+  content: "";
+  position: absolute;
+  top: 58px;
+  left: 22px;
+  right: 22px;
+  height: 1px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent, rgb(var(--ink-rgb) / 0.28), transparent);
+}
+.opp-glow-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyan);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Per-direction glow tints */
+.opp-glow-card[data-direction="business"],
+.opp-glow-card[data-direction="finance"] {
+  --glow1: rgba(255, 196, 84, 0.5);
+  --glow2: rgba(255, 120, 80, 0.3);
+}
+.opp-glow-card[data-direction="programming"] {
+  --glow1: rgba(124, 140, 255, 0.5);
+  --glow2: rgba(180, 120, 255, 0.3);
+}
+.opp-glow-card[data-direction="social impact"],
+.opp-glow-card[data-direction="social-impact"] {
+  --glow1: rgba(120, 230, 150, 0.5);
+  --glow2: rgba(84, 217, 239, 0.28);
+}
+
+.opp-glow-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(120% 80% at 18% 12%, var(--glow1), transparent 55%),
+    radial-gradient(90% 70% at 88% 28%, var(--glow2), transparent 60%);
+}
+
+.opp-glow-scrim {
+  position: absolute;
+  inset: 35% 0 0 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, transparent, rgb(var(--bg-rgb) / 0.82) 78%);
+}
+
+.opp-glow-tag {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  z-index: 2;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  opacity: 0.85;
+  background: rgb(var(--bg-rgb) / 0.4);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  backdrop-filter: blur(8px);
+}
+
+.opp-glow-content {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 20px 20px;
+}
+
+.opp-glow-text h2 {
+  margin: 0 0 5px;
+  font-size: 25px;
+  line-height: 1.12;
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+.opp-glow-text p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.opp-glow-badge {
+  flex-shrink: 0;
+  align-self: center;
+  background: var(--text);
+  color: var(--navy);
+  border-radius: 999px;
+  padding: 9px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}

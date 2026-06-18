@@ -1,0 +1,56 @@
+:root {
+  color-scheme: light;
+
+  /* Theme channels — flipped by [data-theme="dark"]; drive all alpha fills */
+  --bg-rgb: 255 255 255;
+  --ink-rgb: 15 27 38;
+
+  /* Light theme (default) */
+  --navy: #ffffff;
+  --navy-deep: #eef2f6;
+  --surface: rgb(var(--bg-rgb) / 0.85);
+  --surface-strong: #ffffff;
+  --line: rgba(15, 27, 38, 0.12);
+  --text: #0e1c27;
+  --muted: #5d6f78;
+  --cyan: #0c9aa3;
+  --cyan-light: #11c6cf;
+  --mint: #1594b9;
+  --teal: #1594b9;
+  --blue: #1676b8;
+  --shadow-blue: #c2d6df;
+  --radius: 8px;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --glass-fill: rgb(var(--bg-rgb) / 0.7);
+  --glass-line: rgba(15, 27, 38, 0.1);
+  --glass-highlight: rgb(var(--ink-rgb) / 0.06);
+  --glass-reflection: linear-gradient(135deg, rgb(var(--ink-rgb) / 0.04), transparent 30%);
+  --glass-shadow: 0 26px 82px -60px rgba(17, 198, 207, 0.3);
+  --font-display: "Poppins", "Geist", "Avenir Next", system-ui, sans-serif;
+  --font-sans: "Geist", "Poppins", "Avenir Next", system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-rgb: 3 11 18;
+  --ink-rgb: 239 250 250;
+  --navy: #07131e;
+  --navy-deep: #030b12;
+  --surface: rgb(var(--bg-rgb) / 0.78);
+  --surface-strong: rgb(var(--bg-rgb) / 0.94);
+  --line: rgba(132, 230, 234, 0.18);
+  --text: #effafa;
+  --muted: #93acb5;
+  --cyan: #11c6cf;
+  --cyan-light: #58d9ef;
+  --mint: #84e6ea;
+  --teal: #1594b9;
+  --blue: #1676b8;
+  --shadow-blue: #315a75;
+  --glass-fill: rgb(var(--bg-rgb) / 0.42);
+  --glass-line: rgba(132, 230, 234, 0.2);
+  --glass-highlight: rgb(var(--ink-rgb) / 0.16);
+  --glass-reflection: linear-gradient(135deg, rgb(var(--ink-rgb) / 0.11), transparent 30%);
+  --glass-shadow: 0 26px 82px -60px rgba(17, 198, 207, 0.62);
+}
+
