@@ -1,7 +1,6 @@
 import { ConsoleShell } from "../components/ConsoleShell";
 import { CourseCard } from "../components/CourseCard";
-import { SearchIcon } from "../components/SearchIcon";
-import { courses } from "../data/content";
+import { previewCourses } from "../data/previewContent";
 
 export function CoursesSection() {
   return (
@@ -15,14 +14,11 @@ export function CoursesSection() {
       </div>
 
       <div className="product-console" aria-label="Mentoria courses preview">
-        <ConsoleShell title="Course library" intro="Focused course tracks support the opportunity journey." coreClassName="product-core">
-          <div className="showcase-search course-search" aria-label="Course search preview">
-            <SearchIcon />
-            <span>Search Mentoria courses</span>
-          </div>
+        <ConsoleShell coreClassName="product-core">
+          <p className="course-preview-copy">Try out one of our best courses!</p>
           <div className="course-grid">
-            {courses.map((course) => (
-              <CourseCard course={course} key={course.title} />
+            {previewCourses.map((course) => (
+              <CourseCard course={course} key={course.id} showTrack={false} />
             ))}
           </div>
         </ConsoleShell>

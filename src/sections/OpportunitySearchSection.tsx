@@ -1,7 +1,7 @@
 import { ConsoleShell } from "../components/ConsoleShell";
 import { OpportunityRow } from "../components/OpportunityRow";
 import { SearchIcon } from "../components/SearchIcon";
-import { opportunities } from "../data/content";
+import { previewOpportunities } from "../data/previewContent";
 
 const criteria = [
   ["Direction", "Physics"],
@@ -40,9 +40,9 @@ export function OpportunitySearchSection() {
 
           <div className="result-panel" aria-label="Opportunity showcase">
             <p className="result-heading">4 matched opportunities</p>
-            <OpportunityRow opportunity={opportunities[0]} />
+            {previewOpportunities[0] ? <OpportunityRow opportunity={previewOpportunities[0]} /> : null}
             <div className="iypt-popover-anchor">
-              <OpportunityRow opportunity={opportunities[1]} />
+              {previewOpportunities[1] ? <OpportunityRow opportunity={previewOpportunities[1]} /> : null}
               <aside
                 className="opportunity-popover"
                 aria-label="More information about International Young Physicists' Tournament 2026"
@@ -57,8 +57,8 @@ export function OpportunitySearchSection() {
                 </a>
               </aside>
             </div>
-            <OpportunityRow opportunity={opportunities[2]} />
-            <OpportunityRow opportunity={opportunities[3]} />
+            {previewOpportunities[2] ? <OpportunityRow opportunity={previewOpportunities[2]} /> : null}
+            {previewOpportunities[3] ? <OpportunityRow opportunity={previewOpportunities[3]} /> : null}
           </div>
         </ConsoleShell>
       </div>

@@ -1,16 +1,6 @@
 import type { FormEvent } from "react";
-import {
-  courses,
-  formatOpportunityDeadline,
-  getOptionLabel,
-  getOptionLabels,
-  getRecommendedCourses,
-  getRecommendedOpportunities,
-  hasUpcomingDeadline,
-  onboardingQuestions,
-  opportunities
-} from "../data/content";
-import type { Course, OnboardingProfile, OnboardingQuestion, Opportunity } from "../data/content";
+import { onboardingQuestions } from "../data/content";
+import type { OnboardingProfile, OnboardingQuestion } from "../data/content";
 
 export type AuthMode = "signup" | "signin";
 
@@ -35,33 +25,6 @@ export type StudentProfile = {
     locations: string[];
   };
 };
-
-type FlowTopBarProps = {
-  eyebrow: string;
-  onBack?: () => void;
-  onLogout?: () => void;
-};
-
-function FlowTopBar({ eyebrow, onBack, onLogout }: FlowTopBarProps) {
-  return (
-    <nav className="flow-topbar" aria-label="Mentoria Hub workspace navigation">
-      <span className="flow-wordmark">Mentoria Hub</span>
-      <span className="flow-eyebrow">{eyebrow}</span>
-      <div className="flow-topbar-actions">
-        {onBack ? (
-          <button className="flow-link-button" type="button" onClick={onBack}>
-            Back
-          </button>
-        ) : null}
-        {onLogout ? (
-          <button className="flow-link-button" type="button" onClick={onLogout}>
-            Logout
-          </button>
-        ) : null}
-      </div>
-    </nav>
-  );
-}
 
 function toggleValue(values: string[], optionId: string) {
   return values.includes(optionId) ? values.filter((value) => value !== optionId) : [...values, optionId];
@@ -112,13 +75,22 @@ function isQuestionAnswered(profile: OnboardingProfile, question: OnboardingQues
 type OnboardingSectionProps = {
   profile: OnboardingProfile;
   step: number;
+  finalActionLabel?: string;
   onChange: (profile: OnboardingProfile) => void;
   onNext: () => void;
   onBack: () => void;
   onReturnHome: () => void;
 };
 
-export function OnboardingSection({ profile, step, onChange, onNext, onBack, onReturnHome }: OnboardingSectionProps) {
+export function OnboardingSection({
+  profile,
+  step,
+  finalActionLabel = "Continue to registration",
+  onChange,
+  onNext,
+  onBack,
+  onReturnHome
+}: OnboardingSectionProps) {
   const question = onboardingQuestions[step];
   const selectedValues = getQuestionValues(profile, question);
   const canContinue = isQuestionAnswered(profile, question);
@@ -167,7 +139,7 @@ export function OnboardingSection({ profile, step, onChange, onNext, onBack, onR
               Back
             </button>
             <button className="primary-action" type="button" disabled={!canContinue} onClick={onNext}>
-              {isLastStep ? "Continue to registration" : "Next"}
+              {isLastStep ? finalActionLabel : "Next"}
             </button>
           </div>
         </div>
@@ -299,314 +271,5 @@ export function RegistrationSection({
         </form>
       </div>
     </section>
-  );
-}
-
-function buildOnboardingProfile(profile: StudentProfile): OnboardingProfile {
-  return {
-    grade: profile.grade,
-    interests: profile.interests,
-    academicDirection: profile.academicDirection,
-    directions: profile.opportunityPreferences.directions,
-    formats: profile.opportunityPreferences.formats,
-    locations: profile.opportunityPreferences.locations
-  };
-}
-
-function getOpportunityPool(extraOpportunities: Opportunity[]) {
-  const opportunityMap = new Map<string, Opportunity>();
-
-  opportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
-  extraOpportunities.forEach((opportunity) => opportunityMap.set(opportunity.id, opportunity));
-
-  return [...opportunityMap.values()];
-}
-
-type DashboardSectionProps = {
-  profile: StudentProfile;
-  extraOpportunities?: Opportunity[];
-  onCourses: () => void;
-  onOpportunities: () => void;
-  onLogout: () => void;
-};
-
-function DeadlineCalendar({ opportunities }: { opportunities: Opportunity[] }) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const oppMap = new Map<number, Opportunity>();
-  opportunities.forEach(opp => {
-    const d = new Date(opp.deadline);
-    d.setHours(0, 0, 0, 0);
-    oppMap.set(d.getTime(), opp);
-  });
-
-  const cells = [];
-  const totalDays = 52 * 7;
-  for (let i = 0; i < totalDays; i++) {
-    const date = new Date(today);
-    // Center the calendar roughly around today
-    date.setDate(date.getDate() - Math.floor(totalDays / 2) + i);
-    date.setHours(0, 0, 0, 0);
-    
-    const opp = oppMap.get(date.getTime());
-    cells.push({
-      date,
-      opportunity: opp
-    });
-  }
-
-  return (
-    <section className="dashboard-panel calendar-panel" aria-labelledby="calendar-title">
-      <div className="panel-heading">
-        <div>
-          <span>Timeline</span>
-          <h2 id="calendar-title">Deadline Calendar</h2>
-        </div>
-      </div>
-      <div className="deadline-calendar-grid">
-        {cells.map((cell, idx) => (
-          <div 
-            key={idx} 
-            className={`calendar-cell ${cell.opportunity ? 'has-deadline' : ''}`}
-            title={cell.opportunity ? `${cell.opportunity.title} (Due: ${cell.date.toLocaleDateString()})` : cell.date.toLocaleDateString()}
-          ></div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-export function DashboardSection({ profile, extraOpportunities = [], onCourses, onOpportunities, onLogout }: DashboardSectionProps) {
-  const onboardingProfile = buildOnboardingProfile(profile);
-  const interestLabels = getOptionLabels("interests", profile.interests);
-  const directionLabel = getOptionLabel("academicDirection", profile.academicDirection);
-  const allOpportunities = getOpportunityPool(extraOpportunities);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities);
-  const recommendedCourses = getRecommendedCourses(onboardingProfile);
-  const inProgressCourses = recommendedCourses.filter((course) => course.progress > 0 && course.progress < 100).length;
-  const upcomingDeadlines = recommendedOpportunities.filter((opportunity) => hasUpcomingDeadline(opportunity)).length;
-
-  return (
-    <section className="flow-screen dashboard-screen" aria-labelledby="dashboard-title">
-      <FlowTopBar eyebrow="Student dashboard" onLogout={onLogout} />
-
-      <div className="dashboard-shell">
-        <div className="dashboard-hero">
-          <div>
-            <p className="flow-kicker">Welcome back</p>
-            <h1 id="dashboard-title">{profile.name}</h1>
-            <p>
-              Grade {profile.grade} profile focused on {directionLabel}.{" "}
-              Recommended matches are ranked from your onboarding answers, curated Mentoria programs, and the cleaned
-              Telegram opportunity feed.
-            </p>
-          </div>
-          <div className="profile-summary" aria-label="Onboarding profile summary">
-            {interestLabels.slice(0, 5).map((label) => (
-              <span key={label}>{label}</span>
-            ))}
-          </div>
-        </div>
-
-        <div className="metric-grid" aria-label="Dashboard statistics">
-          <article className="metric-card">
-            <span>Active courses</span>
-            <strong>{courses.length}</strong>
-          </article>
-          <article className="metric-card">
-            <span>In progress</span>
-            <strong>{inProgressCourses}</strong>
-          </article>
-          <article className="metric-card">
-            <span>Recommended matches</span>
-            <strong>{recommendedOpportunities.length}</strong>
-          </article>
-          <article className="metric-card">
-            <span>Upcoming deadlines</span>
-            <strong>{upcomingDeadlines}</strong>
-          </article>
-        </div>
-
-        <DeadlineCalendar opportunities={recommendedOpportunities} />
-
-        <div className="dashboard-columns">
-          <section className="dashboard-panel" aria-labelledby="recommended-matches-title">
-            <div className="panel-heading">
-              <div>
-                <span>Shortlist</span>
-                <h2 id="recommended-matches-title">Recommended matches</h2>
-              </div>
-              <button className="secondary-action compact-action" type="button" onClick={onOpportunities}>
-                Opportunities
-              </button>
-            </div>
-            <div className="match-list">
-              {recommendedOpportunities.length > 0 ? (
-                recommendedOpportunities.map((opportunity) => (
-                  <OpportunitySummary opportunity={opportunity} key={opportunity.id} />
-                ))
-              ) : (
-                <EmptyState
-                  title="No matches yet"
-                  message="Adjust your onboarding interests or check again after the catalog refreshes."
-                />
-              )}
-            </div>
-          </section>
-
-          <section className="dashboard-panel dashboard-panel-soft" aria-labelledby="recommended-courses-title">
-            <div className="panel-heading">
-              <div>
-                <span>Learning</span>
-                <h2 id="recommended-courses-title">Recommended courses</h2>
-              </div>
-              <button className="secondary-action compact-action" type="button" onClick={onCourses}>
-                Courses
-              </button>
-            </div>
-            <div className="course-progress-list">
-              {recommendedCourses.length > 0 ? (
-                recommendedCourses.map((course) => (
-                  <CourseProgressRow course={course} key={course.id} />
-                ))
-              ) : (
-                <EmptyState title="No course path yet" message="Choose more interests so Mentoria can connect courses to matches." />
-              )}
-            </div>
-          </section>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-type CoursesWorkspaceProps = {
-  profile: StudentProfile;
-  onBack: () => void;
-  onLogout: () => void;
-};
-
-export function CoursesWorkspace({ profile, onBack, onLogout }: CoursesWorkspaceProps) {
-  const onboardingProfile = buildOnboardingProfile(profile);
-  const recommendedCourses = getRecommendedCourses(onboardingProfile, courses.length);
-
-  return (
-    <section className="flow-screen workspace-screen" aria-labelledby="workspace-courses-title">
-      <FlowTopBar eyebrow="Courses" onBack={onBack} onLogout={onLogout} />
-      <div className="workspace-shell">
-        <div className="workspace-heading">
-          <p className="flow-kicker">Mentoria courses</p>
-          <h1 id="workspace-courses-title">Continue your preparation path</h1>
-          <p>Course progress is prototype data for now, but the recommendations come from the saved onboarding profile.</p>
-        </div>
-        <div className="workspace-card-grid">
-          {recommendedCourses.map((course) => (
-            <article className="workspace-course-card" key={course.id}>
-              <span>{course.track}</span>
-              <h2>{course.title}</h2>
-              <p>{course.description}</p>
-              <div className="course-meta-row">
-                <span>{course.difficulty}</span>
-                <span>{course.lessons.length} lessons</span>
-              </div>
-              <div className="course-progress-track" aria-label={`${course.title} progress`}>
-                <span style={{ transform: `scaleX(${course.progress / 100})` }} />
-              </div>
-              <button className="secondary-action compact-action" type="button">
-                Continue
-              </button>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-type OpportunitiesWorkspaceProps = {
-  profile: StudentProfile;
-  extraOpportunities?: Opportunity[];
-  onBack: () => void;
-  onLogout: () => void;
-};
-
-export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onBack, onLogout }: OpportunitiesWorkspaceProps) {
-  const onboardingProfile = buildOnboardingProfile(profile);
-  const allOpportunities = getOpportunityPool(extraOpportunities);
-  const recommendedOpportunities = getRecommendedOpportunities(onboardingProfile, allOpportunities, allOpportunities.length);
-
-  return (
-    <section className="flow-screen workspace-screen" aria-labelledby="workspace-opportunities-title">
-      <FlowTopBar eyebrow="Opportunities" onBack={onBack} onLogout={onLogout} />
-      <div className="workspace-shell">
-        <div className="workspace-heading">
-          <p className="flow-kicker">Opportunity shortlist</p>
-          <h1 id="workspace-opportunities-title">Matches from your profile</h1>
-          <p>These cards are a dashboard-level preview of what a full catalog would turn into later.</p>
-        </div>
-        <div className="workspace-opportunity-list">
-          {recommendedOpportunities.length > 0 ? (
-            recommendedOpportunities.map((opportunity) => (
-              <article className="workspace-opportunity-row" key={opportunity.id}>
-                <div>
-                  <span className="deadline-chip">{formatOpportunityDeadline(opportunity)}</span>
-                  <h2>{opportunity.title}</h2>
-                  <p>{opportunity.description}</p>
-                  <div className="opportunity-tags">
-                    <span>{opportunity.direction}</span>
-                    <span>{opportunity.format}</span>
-                    <span>Grades {opportunity.grades.join(", ")}</span>
-                  </div>
-                </div>
-                <span className="match-badge">Match</span>
-              </article>
-            ))
-          ) : (
-            <EmptyState title="No matches yet" message="Try broadening the profile filters or refresh the opportunity feed." />
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function OpportunitySummary({ opportunity }: { opportunity: Opportunity }) {
-  return (
-    <article className="match-summary-row">
-      <div>
-        <h3>{opportunity.title}</h3>
-        <p>
-          {opportunity.category} - {opportunity.format} - {formatOpportunityDeadline(opportunity)}
-        </p>
-      </div>
-      <span>Match</span>
-    </article>
-  );
-}
-
-function EmptyState({ title, message }: { title: string; message: string }) {
-  return (
-    <div className="empty-state" role="status">
-      <span />
-      <strong>{title}</strong>
-      <p>{message}</p>
-    </div>
-  );
-}
-
-function CourseProgressRow({ course }: { course: Course }) {
-  return (
-    <article className="course-progress-row">
-      <div>
-        <h3>{course.title}</h3>
-        <p>
-          {course.difficulty} - {course.lessons.length} lessons
-        </p>
-      </div>
-      <div className="course-progress-track" aria-label={`${course.title} progress`}>
-        <span style={{ transform: `scaleX(${course.progress / 100})` }} />
-      </div>
-    </article>
   );
 }

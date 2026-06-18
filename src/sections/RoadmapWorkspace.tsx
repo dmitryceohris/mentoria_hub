@@ -19,13 +19,13 @@ const MAX_DIRECTIONS = 5;
 
 const DIRECTION_OPTIONS = [
   { id: "stem", label: "STEM" },
-  { id: "science", label: "Наука и исследования" },
-  { id: "programming", label: "Программирование" },
-  { id: "business", label: "Бизнес" },
-  { id: "finance", label: "Финансы" },
-  { id: "social-impact", label: "Социальное влияние" },
-  { id: "admissions", label: "Поступление в вуз" },
-  { id: "english", label: "Английский / IELTS / SAT" },
+  { id: "science", label: "Science and research" },
+  { id: "programming", label: "Programming" },
+  { id: "business", label: "Business" },
+  { id: "finance", label: "Finance" },
+  { id: "social-impact", label: "Social impact" },
+  { id: "admissions", label: "University admission" },
+  { id: "english", label: "English / IELTS / SAT" },
 ];
 
 const typeIcon = {
@@ -33,6 +33,12 @@ const typeIcon = {
   opportunity: Target,
   action: Flag,
 } as const;
+
+const stepTypeLabels: Record<RoadmapStep["type"], string> = {
+  course: "Course",
+  opportunity: "Opportunity",
+  action: "Action",
+};
 
 export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }: Props) {
   const opportunityPool = extraOpportunities.length > 0 ? extraOpportunities : fallbackOpportunities;
@@ -66,10 +72,13 @@ export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }:
   async function build(force = false) {
     setPhase("path");
     setLoading(true);
-    if (force) clearCachedRoadmap(roadmapProfile);
-    const result = await generateRoadmap(roadmapProfile, opportunityPool, courses);
-    setRoadmap(result);
-    setLoading(false);
+    try {
+      if (force) clearCachedRoadmap(roadmapProfile);
+      const result = await generateRoadmap(roadmapProfile, opportunityPool, courses);
+      setRoadmap(result);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function stepLink(step: RoadmapStep): { to?: string; href?: string } {
@@ -88,16 +97,20 @@ export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }:
       <div className="workspace-shell roadmap-shell">
         <div className="workspace-heading roadmap-heading">
           <p className="flow-kicker">Your Mentoria roadmap</p>
-          <h1 id="roadmap-title">Путь развития: 9 → 12 класс</h1>
+          <h1 id="roadmap-title">Development path from grade 9 to 12</h1>
+          <p>
+            Choose the directions you want to grow in, then Mentoria will map courses,
+            opportunities, and preparation steps into one focused route.
+          </p>
         </div>
 
         {phase === "select" ? (
-          <div className="roadmap-select">
+          <div className="roadmap-select roadmap-panel">
             <p className="roadmap-select-intro">
-              Выбери до {MAX_DIRECTIONS} направлений, которые тебе интересны — Mentoria построит маршрут развития под них.
+              Choose up to {MAX_DIRECTIONS} directions. Mentoria will build a grade-by-grade path around your priorities.
             </p>
 
-            <div className="option-grid roadmap-option-grid" role="group" aria-label="Направления развития">
+            <div className="option-grid roadmap-option-grid" role="group" aria-label="Development directions">
               {DIRECTION_OPTIONS.map((option) => {
                 const isSelected = selected.includes(option.id);
                 const disabled = !isSelected && selected.length >= MAX_DIRECTIONS;
@@ -117,21 +130,21 @@ export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }:
             </div>
 
             <div className="roadmap-select-actions">
-              <span className="roadmap-select-count">{selected.length} / {MAX_DIRECTIONS}</span>
+              <span className="roadmap-select-count">{selected.length} of {MAX_DIRECTIONS} selected</span>
               <button
                 className="primary-action"
                 type="button"
                 disabled={selected.length === 0}
                 onClick={() => build(true)}
               >
-                Построить мой путь →
+                Build my roadmap
               </button>
             </div>
           </div>
         ) : (
           <>
             <div className="roadmap-path-header">
-              <p>{roadmap?.summary ?? "Mentoria подбирает шаги под выбранные направления…"}</p>
+              <p aria-live="polite">{roadmap?.summary ?? "Mentoria is matching steps to your selected directions."}</p>
               <button
                 className="secondary-action compact-action"
                 type="button"
@@ -139,14 +152,14 @@ export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }:
                 disabled={loading}
               >
                 <ArrowClockwise size={15} weight="bold" />
-                <span>Изменить направления</span>
+                <span>Change directions</span>
               </button>
             </div>
 
             {loading ? (
               <div className="roadmap-loading" aria-live="polite">
                 <span className="roadmap-pulse" />
-                <p>Mentoria строит твой маршрут…</p>
+                <p>Mentoria is building your roadmap.</p>
               </div>
             ) : (
               <ol className="roadmap-path" aria-label="Roadmap steps">
@@ -167,16 +180,14 @@ export function RoadmapWorkspace({ profile, extraOpportunities = [], onLogout }:
                       <div className="roadmap-card">
                         <div className="roadmap-card-head">
                           <Icon size={18} weight="duotone" />
-                          <span className="roadmap-type">
-                            {step.type === "course" ? "Курс" : step.type === "opportunity" ? "Возможность" : "Шаг"}
-                          </span>
+                          <span className="roadmap-type">{stepTypeLabels[step.type]}</span>
                         </div>
                         <h3>{step.title}</h3>
                         <p>{step.description}</p>
                         {link.to ? (
-                          <Link className="roadmap-card-link" to={link.to}>Открыть курс →</Link>
+                          <Link className="roadmap-card-link" to={link.to}>Open course</Link>
                         ) : link.href ? (
-                          <a className="roadmap-card-link" href={link.href} target="_blank" rel="noreferrer">Подать заявку →</a>
+                          <a className="roadmap-card-link" href={link.href} target="_blank" rel="noreferrer">Open application</a>
                         ) : null}
                       </div>
                     </motion.li>

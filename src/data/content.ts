@@ -1,3 +1,12 @@
+import type { SupportedLocale } from "../lib/language";
+
+export type OpportunityTranslation = {
+  title: string;
+  description: string;
+  requirements: string;
+  summary?: string;
+};
+
 export type Opportunity = {
   id: string;
   title: string;
@@ -14,6 +23,11 @@ export type Opportunity = {
   eventDate?: string | null;
   isRecurring?: boolean;
   postedAt?: string | null;
+  sourceLanguage?: string;
+  sourceTitle?: string;
+  sourceDescription?: string;
+  sourceRequirements?: string;
+  translations?: Partial<Record<SupportedLocale, OpportunityTranslation>>;
 };
 
 export type Course = {
@@ -25,7 +39,74 @@ export type Course = {
   difficulty: "Beginner" | "Intermediate";
   tags: string[];
   progress: number;
+  enrollmentSettings: CourseEnrollmentSettings;
   lessons: Lesson[];
+};
+
+export type CourseEnrollmentSettings = {
+  isOpen: boolean;
+  requiresApproval: boolean;
+  capacity: number | null;
+  adminEditable: true;
+};
+
+export type LessonVideoSourceType = "youtube" | "telegram" | "file" | "external";
+
+export type LessonVideo = {
+  label: string;
+  url?: string;
+  sourceType: LessonVideoSourceType;
+  adminEditable: true;
+};
+
+export type LessonAssignment = {
+  prompt: string;
+  acceptsFiles: boolean;
+  acceptedFileTypes: string[];
+  maxFileSizeMb: number;
+  submitLabel: string;
+  adminEditable: true;
+};
+
+export type LessonMaterialKind = "document" | "download" | "link";
+
+export type LessonMaterial = {
+  id: string;
+  title: string;
+  description?: string;
+  kind: LessonMaterialKind;
+  url: string;
+  downloadable: boolean;
+  adminEditable: true;
+};
+
+export type LessonSelfCheckQuestionType = "radio" | "text";
+
+export type LessonSelfCheckQuestion = {
+  id: string;
+  prompt: string;
+  type: LessonSelfCheckQuestionType;
+  options?: string[];
+  correctAnswer: string;
+  acceptedAnswers?: string[];
+  feedback: {
+    correct: string;
+    incorrect: string;
+  };
+};
+
+export type LessonSelfCheckScore = 0 | 1 | 2 | 3;
+
+export type LessonSelfCheck = {
+  questions: [LessonSelfCheckQuestion, LessonSelfCheckQuestion, LessonSelfCheckQuestion];
+  scoreComments: Record<LessonSelfCheckScore, string>;
+  adminEditable: true;
+};
+
+export type LessonMentorLMNoteConfig = {
+  enabled: boolean;
+  allowStudentSave: boolean;
+  adminEditable: true;
 };
 
 export type Lesson = {
@@ -34,21 +115,27 @@ export type Lesson = {
   description?: string;
   coverUrl?: string;
   duration: string;
-  materials: string[];
-  videoUrl?: string;
-  videoLabel: string;
-  assignment: string;
-  quiz: string;
+  video: LessonVideo;
+  assignment: LessonAssignment;
+  materials: LessonMaterial[];
+  selfCheck: LessonSelfCheck;
+  mentorLMNoteConfig: LessonMentorLMNoteConfig;
 };
 
-export type MentorPetLessonNote = {
-  id: string;
-  courseId: string;
-  lessonId: string;
-  title: string;
-  body: string;
-  createdBy: "mentorpet";
-  prototypeOnly?: boolean;
+type LessonSeed = Omit<Lesson, "assignment" | "materials" | "selfCheck" | "video" | "mentorLMNoteConfig"> & {
+  assignment: string | LessonAssignment;
+  materials: string[] | LessonMaterial[];
+  quiz?: string;
+  selfCheck?: LessonSelfCheck;
+  video?: Partial<LessonVideo>;
+  videoLabel?: string;
+  videoUrl?: string;
+  mentorLMNoteConfig?: Partial<LessonMentorLMNoteConfig>;
+};
+
+type CourseSeed = Omit<Course, "enrollmentSettings" | "lessons"> & {
+  enrollmentSettings?: Partial<CourseEnrollmentSettings>;
+  lessons: LessonSeed[];
 };
 
 export type FaqItem = {
@@ -94,7 +181,7 @@ export type OnboardingProfile = {
 export const navLinks = [
   { href: "#match-console", label: "Matches" },
   { href: "#courses", label: "Courses" },
-  { href: "#companion", label: "MentorPet" },
+  { href: "#mentorlm", label: "MentorLM" },
   { href: "#faq", label: "FAQ" }
 ];
 
@@ -106,6 +193,215 @@ export const emptyOnboardingProfile: OnboardingProfile = {
   formats: [],
   locations: []
 };
+
+const defaultAcceptedFileTypes = [".pdf", ".doc", ".docx", ".txt", ".png", ".jpg", ".jpeg"];
+
+const defaultSelfCheckComments: Record<LessonSelfCheckScore, string> = {
+  0: "Review the lesson once more, then try the check again with the materials open.",
+  1: "You have one solid point. Revisit the weak spots before submitting your assignment.",
+  2: "Good progress. One more careful pass should make the lesson feel stable.",
+  3: "Strong check. You are ready to submit the assignment or move to the next lesson."
+};
+
+const defaultEnrollmentSettings: CourseEnrollmentSettings = {
+  isOpen: true,
+  requiresApproval: false,
+  capacity: null,
+  adminEditable: true
+};
+
+const defaultMentorLMNoteConfig: LessonMentorLMNoteConfig = {
+  enabled: true,
+  allowStudentSave: true,
+  adminEditable: true
+};
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function createMaterialPlaceholderUrl(title: string) {
+  const fileText = `${title}\n\nThis Mentoria lesson material slot is ready for an admin-uploaded file.`;
+
+  return `data:text/plain;charset=utf-8,${encodeURIComponent(fileText)}`;
+}
+
+function inferMaterialKind(title: string): LessonMaterialKind {
+  return /(worksheet|practice|sheet|template|checklist|workbook|rubric|scorecard|set|diagram|table|chart|guide|planner|reference|summary)/i.test(
+    title
+  )
+    ? "download"
+    : "document";
+}
+
+function normalizeMaterial(material: string | LessonMaterial, index: number): LessonMaterial {
+  if (typeof material !== "string") {
+    return {
+      ...material,
+      adminEditable: true
+    };
+  }
+
+  const kind = inferMaterialKind(material);
+
+  return {
+    id: `${slugify(material) || "material"}-${index + 1}`,
+    title: material,
+    description: kind === "download" ? "Downloadable lesson material" : "Lesson reference",
+    kind,
+    url: createMaterialPlaceholderUrl(material),
+    downloadable: kind === "download",
+    adminEditable: true
+  };
+}
+
+function inferVideoSourceType(url?: string): LessonVideoSourceType {
+  if (!url) {
+    return "external";
+  }
+
+  if (/youtu\.be|youtube\.com/i.test(url)) {
+    return "youtube";
+  }
+
+  if (/t\.me|telegram/i.test(url)) {
+    return "telegram";
+  }
+
+  if (/\.(mp4|webm|ogg)(?:$|\?)/i.test(url)) {
+    return "file";
+  }
+
+  return "external";
+}
+
+function normalizeAssignment(assignment: string | LessonAssignment): LessonAssignment {
+  if (typeof assignment !== "string") {
+    return {
+      ...assignment,
+      adminEditable: true
+    };
+  }
+
+  return {
+    prompt: assignment,
+    acceptsFiles: true,
+    acceptedFileTypes: defaultAcceptedFileTypes,
+    maxFileSizeMb: 10,
+    submitLabel: "Submit assignment",
+    adminEditable: true
+  };
+}
+
+function getLessonTitleKeywords(title: string) {
+  const keywords = title
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((word) => word.length > 3);
+
+  return keywords.length > 0 ? keywords.slice(0, 4) : ["lesson"];
+}
+
+function buildSelfCheck(lesson: LessonSeed): LessonSelfCheck {
+  const titleKeywords = getLessonTitleKeywords(lesson.title);
+  const firstOption = "Use the lesson idea and evidence";
+  const finalOption = "Review feedback, then submit or revise the assignment";
+
+  return {
+    questions: [
+      {
+        id: `${lesson.id}-check-1`,
+        prompt: lesson.quiz ?? "Which answer best uses the lesson idea?",
+        type: "radio",
+        options: [firstOption, "Choose the longest answer without checking", "Skip the question and move on"],
+        correctAnswer: firstOption,
+        feedback: {
+          correct: "Correct. This answer uses the lesson idea with evidence.",
+          incorrect: "Review the lesson idea, then choose the answer grounded in evidence."
+        }
+      },
+      {
+        id: `${lesson.id}-check-2`,
+        prompt: "Type one keyword from this lesson title.",
+        type: "text",
+        correctAnswer: titleKeywords[0],
+        acceptedAnswers: titleKeywords,
+        feedback: {
+          correct: "Correct. That keyword connects to the lesson focus.",
+          incorrect: "Look back at the lesson title and type one important keyword."
+        }
+      },
+      {
+        id: `${lesson.id}-check-3`,
+        prompt: "What is the best next step after this self-check?",
+        type: "radio",
+        options: [finalOption, "Ignore the assignment prompt", "Close the lesson without practice"],
+        correctAnswer: finalOption,
+        feedback: {
+          correct: "Correct. Use the check result to submit or revise your work.",
+          incorrect: "Use the check result as feedback before moving on."
+        }
+      }
+    ],
+    scoreComments: defaultSelfCheckComments,
+    adminEditable: true
+  };
+}
+
+function normalizeLesson(lesson: LessonSeed): Lesson {
+  const videoUrl = lesson.video?.url ?? lesson.videoUrl;
+
+  return {
+    id: lesson.id,
+    title: lesson.title,
+    description: lesson.description,
+    coverUrl: lesson.coverUrl,
+    duration: lesson.duration,
+    video: {
+      label: lesson.video?.label ?? lesson.videoLabel ?? "Video placeholder",
+      url: videoUrl,
+      sourceType: lesson.video?.sourceType ?? inferVideoSourceType(videoUrl),
+      adminEditable: true
+    },
+    assignment: normalizeAssignment(lesson.assignment),
+    materials: lesson.materials.map(normalizeMaterial),
+    selfCheck: lesson.selfCheck ?? buildSelfCheck(lesson),
+    mentorLMNoteConfig: {
+      ...defaultMentorLMNoteConfig,
+      ...lesson.mentorLMNoteConfig,
+      adminEditable: true
+    }
+  };
+}
+
+function normalizeCourse(course: CourseSeed): Course {
+  return {
+    ...course,
+    enrollmentSettings: {
+      ...defaultEnrollmentSettings,
+      ...course.enrollmentSettings,
+      adminEditable: true
+    },
+    lessons: course.lessons.map(normalizeLesson)
+  };
+}
+
+export function getLessonAssignmentPrompt(lesson: Lesson) {
+  return lesson.assignment.prompt;
+}
+
+export function getLessonSearchText(lesson: Lesson) {
+  return [
+    lesson.title,
+    lesson.description ?? "",
+    lesson.assignment.prompt,
+    lesson.materials.map((material) => material.title).join(" "),
+    lesson.selfCheck.questions.map((question) => question.prompt).join(" ")
+  ].join(" ");
+}
 
 export const onboardingQuestions: OnboardingQuestion[] = [
   {
@@ -327,7 +623,7 @@ export const opportunities: Opportunity[] = [
   }
 ];
 
-export const courses: Course[] = [
+const courseSeeds: CourseSeed[] = [
   {
     id: "english-academic-success",
     track: "Mentoria English",
@@ -1085,17 +1381,7 @@ export const courses: Course[] = [
   },
 ];
 
-export const mentorPetLessonNotes: MentorPetLessonNote[] = [
-  {
-    id: "mentorpet-newtons-force-check",
-    courseId: "physics-basics",
-    lessonId: "newtons-second-law",
-    title: "MentorPet checkpoint",
-    body: "Before the next task, write one sentence explaining which object you chose as the system and why. This makes the force diagram easier to debug.",
-    createdBy: "mentorpet",
-    prototypeOnly: true
-  }
-];
+export const courses: Course[] = courseSeeds.map(normalizeCourse);
 
 export function getOptionLabel(questionId: OnboardingQuestionId, optionId: string) {
   return onboardingQuestions.find((question) => question.id === questionId)?.options.find((option) => option.id === optionId)

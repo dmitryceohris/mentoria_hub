@@ -106,12 +106,12 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
         }
       );
     } catch (err) {
-      const errorText = err instanceof Error ? err.message : "Неизвестная ошибка";
+      const errorText = err instanceof Error ? err.message : "Unknown error";
       setSessions((prev) =>
         prev.map((s) => {
           if (s.id !== activeId) return s;
           const msgs = [...s.messages];
-          msgs[msgs.length - 1] = { role: "assistant", content: `Ошибка: ${errorText}` };
+          msgs[msgs.length - 1] = { role: "assistant", content: `Error: ${errorText}` };
           return { ...s, messages: msgs };
         })
       );
@@ -189,19 +189,19 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
             </button>
           )}
           <span className="mentorlm-brand">MentorLM</span>
-          <span className="mentorlm-subtitle">Your AI study companion</span>
+          <span className="mentorlm-subtitle">Study and opportunity assistant</span>
         </header>
 
         <div className="mentorlm-messages">
           {activeSession?.messages.length === 0 && (
             <div className="mentorlm-empty">
-              <h2>Привет, {profile.name}</h2>
-              <p>Спроси меня про конкурсы, стипендии, или как подготовиться к поступлению.</p>
+              <h2>Hello, {profile.name}</h2>
+              <p>Ask me about competitions, scholarships, or how to prepare for university admission.</p>
               <div className="mentorlm-suggestions">
                 {[
-                  "Какие конкурсы подходят для моего профиля?",
-                  "Помоги написать мотивационное письмо",
-                  "Что делать в 10 классе для поступления?",
+                  "Which competitions fit my profile?",
+                  "Help me draft a motivation letter",
+                  "What should I do in grade 10 for admission?",
                 ].map((s) => (
                   <button
                     key={s}
@@ -233,7 +233,7 @@ export function MentorLMSection({ profile, opportunities, onLogout }: Props) {
             ref={textareaRef}
             className="mentorlm-input"
             rows={1}
-            placeholder="Напиши вопрос..."
+            placeholder="Write a question..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

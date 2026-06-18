@@ -25,17 +25,24 @@ Return STRICT JSON with these fields:
 - "title": short clean title (max 80 chars)
 - "category": one of "Competition", "Scholarship", "Internship", "Summer School", "Research", "Volunteering", "Course", "Event", "Opportunity"
 - "direction": one of "STEM", "Science", "Business", "Finance", "Programming", "Social Impact", "Admissions", "General"
-- "deadline": application deadline as ISO date "YYYY-MM-DD", ONLY if an explicit day is given (e.g. "до 18 июня", "deadline July 5"). Otherwise null.
+- "deadline": application deadline as ISO date "YYYY-MM-DD", ONLY if an explicit day is given (for example, "until June 18" in any source language, or "deadline July 5"). Otherwise null.
 - "event_date": when the event itself happens as ISO date "YYYY-MM-DD", ONLY if an explicit day is given. Otherwise null.
 - "is_recurring": true if it's a yearly/recurring event (e.g. annual olympiad), else false
 - "tags": array of lowercase keyword tags
+- "source_language": ISO-like language code for the original post, usually "en", "ru", or "kk"
+- "translations": object with an "en" object:
+  - "title": concise English display title (max 80 chars)
+  - "description": concise English student-facing summary, 1-2 sentences
+  - "requirements": concise English participation/eligibility/action details, 1 sentence
+  - "summary": concise English summary, 1 sentence
 
 CRITICAL date rules:
-- Only output a date when the post gives a SPECIFIC DAY. Vague timing like "в июне", "this summer", "осенью", "скоро", "в этом месяце" must be null — do NOT invent a day. Guessing a day can wrongly hide an active opportunity.
+- Only output a date when the post gives a SPECIFIC DAY. Vague timing like "in June", "this summer", "in autumn", "soon", or "this month" in any source language must be null — do NOT invent a day. Guessing a day can wrongly hide an active opportunity.
 - If a date has a day but no year, assume the nearest future year relative to 2026.
 - If registration is described as currently open with no closing day, set deadline null.
 
-The post may be in Russian. Respond with ONLY the JSON object, no markdown."""
+The post may be in Russian or Kazakh. Translate/summarize student-facing display fields into English.
+Respond with ONLY the JSON object, no markdown."""
 
 
 def extract_with_llm(text: str) -> dict:
@@ -62,10 +69,16 @@ def post_to_opportunity(msg: Message) -> dict:
     text = msg.message or ""
     first_line = text.split("\n")[0][:80].strip()
     extracted = extract_with_llm(text)
+    translations = extracted.get("translations") or {}
+    english = translations.get("en") or {}
+    source_title = first_line or f"Post #{msg.id}"
+    display_title = english.get("title") or extracted.get("title") or source_title
+    display_description = english.get("description") or "Details are available in the source announcement."
+    display_requirements = english.get("requirements") or "Review the source announcement for participation details."
 
     return {
         "id": f"tg-{msg.id}",
-        "title": extracted.get("title") or first_line or f"Post #{msg.id}",
+        "title": display_title,
         "category": extracted.get("category", "Opportunity"),
         "direction": extracted.get("direction", "General"),
         "format": "Online",
@@ -74,13 +87,25 @@ def post_to_opportunity(msg: Message) -> dict:
         "isRecurring": extracted.get("is_recurring", False),
         "grades": ["8", "9", "10", "11", "12"],
         "location": "Global",
-        "description": text.strip(),          # full post text — keeps prizes, dates, links
-        "summary": (extracted.get("title") or first_line),
-        "requirements": "",
+        "description": display_description,
+        "summary": english.get("summary") or display_description,
+        "requirements": display_requirements,
         "tags": extracted.get("tags", []),
         "applyUrl": f"https://t.me/{CHANNEL}/{msg.id}",
         "postedAt": msg.date.date().isoformat() if msg.date else None,
         "views": msg.views or 0,
+        "sourceLanguage": extracted.get("source_language") or "ru",
+        "sourceTitle": source_title,
+        "sourceDescription": text.strip(),
+        "sourceRequirements": "",
+        "translations": {
+            "en": {
+                "title": display_title,
+                "description": display_description,
+                "requirements": display_requirements,
+                "summary": english.get("summary") or display_description,
+            }
+        },
     }
 
 

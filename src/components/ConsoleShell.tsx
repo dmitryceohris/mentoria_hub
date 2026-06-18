@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 type ConsoleShellProps = {
-  title: string;
+  title?: string;
   titleId?: string;
   intro?: string;
   coreClassName?: string;
@@ -12,12 +12,14 @@ export function ConsoleShell({ title, titleId, intro, coreClassName = "", childr
   return (
     <div className={`console-core ${coreClassName}`.trim()}>
       <div className="console-frame" aria-hidden="true" />
-      <header className="console-header">
-        <div>
-          <h2 id={titleId}>{title}</h2>
-          {intro ? <p className="console-intro">{intro}</p> : null}
-        </div>
-      </header>
+      {title || intro ? (
+        <header className="console-header">
+          <div>
+            {title ? <h2 id={titleId}>{title}</h2> : null}
+            {intro ? <p className="console-intro">{intro}</p> : null}
+          </div>
+        </header>
+      ) : null}
       {children}
     </div>
   );

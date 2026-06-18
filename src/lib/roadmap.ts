@@ -1,4 +1,5 @@
 import type { Course, Opportunity } from "../data/content";
+import { DEFAULT_LOCALE, containsCyrillic, languageNames } from "./language";
 
 /**
  * AI-built development roadmap (grades 9–12) grounded in Mentoria's real courses
@@ -30,10 +31,25 @@ export type RoadmapProfile = {
   directions: string[];
 };
 
-const STORAGE_PREFIX = "mentoria.roadmap.";
+const STORAGE_PREFIX = "mentoria.roadmap.en.v2.";
 
 function profileKey(p: RoadmapProfile): string {
   return STORAGE_PREFIX + [p.grade, p.academicDirection, [...p.interests].sort().join(","), [...p.directions].sort().join(",")].join("|");
+}
+
+function hasCyrillic(value: string) {
+  return containsCyrillic(value);
+}
+
+function roadmapHasCyrillic(roadmap: Roadmap) {
+  return (
+    hasCyrillic(roadmap.summary) ||
+    roadmap.steps.some((step) => hasCyrillic(step.title) || hasCyrillic(step.description))
+  );
+}
+
+function getEnglishFallbackTitle(value: string, fallback: string) {
+  return hasCyrillic(value) ? fallback : value;
 }
 
 export function loadCachedRoadmap(p: RoadmapProfile): Roadmap | null {
@@ -93,10 +109,13 @@ Rules:
 - 6 to 9 steps total, ordered by grade (start at the student's current grade or grade 9, end at grade 12).
 - Each step must be concrete and tied to the student's interests/direction.
 - Prefer steps of type "course" or "opportunity" with a real "refId" from the lists. Use type "action" (refId null) only for generic prep like building a portfolio or taking a language test.
-- description: one short sentence (in Russian) explaining what to do and why it helps.
+- All generated text must be in ${languageNames[DEFAULT_LOCALE]}.
+- Write the summary, every step title, and every description in ${languageNames[DEFAULT_LOCALE]}.
+- If a listed course or opportunity title is not in English, write a concise English title while keeping its real refId.
+- description: one short ${languageNames[DEFAULT_LOCALE]} sentence explaining what to do and why it helps.
 
 Respond with ONLY this JSON:
-{"summary":"one motivating sentence in Russian","steps":[{"grade":"9","title":"...","description":"...","type":"course|opportunity|action","refId":"id-or-null"}]}`;
+{"summary":"one motivating sentence in ${languageNames[DEFAULT_LOCALE]}","steps":[{"grade":"9","title":"...","description":"...","type":"course|opportunity|action","refId":"id-or-null"}]}`;
 }
 
 export async function generateRoadmap(
@@ -124,7 +143,7 @@ export async function generateRoadmap(
           {
             role: "system",
             content:
-              "You design grade 9–12 development roadmaps for Mentoria Hub students. You respond only with valid JSON, no markdown.",
+              `You design grade 9–12 development roadmaps for Mentoria Hub students. All user-visible roadmap text must be in ${languageNames[DEFAULT_LOCALE]}. You respond only with valid JSON, no markdown.`,
           },
           { role: "user", content: buildPrompt(profile, opportunities, courses) },
         ],
@@ -134,6 +153,7 @@ export async function generateRoadmap(
     const data = await res.json();
     const parsed = JSON.parse(data.choices[0].message.content) as Roadmap;
     if (!parsed.steps?.length) throw new Error("empty roadmap");
+    if (roadmapHasCyrillic(parsed)) throw new Error("roadmap must be English");
     cacheRoadmap(profile, parsed);
     return parsed;
   } catch {
@@ -155,8 +175,8 @@ function fallbackRoadmap(profile: RoadmapProfile, opportunities: Opportunity[], 
   topCourses.forEach((c, i) => {
     steps.push({
       grade: grades[i] ?? "9",
-      title: c.title,
-      description: "Пройди этот курс Mentoria, чтобы заложить базу по своему направлению.",
+      title: getEnglishFallbackTitle(c.title, "Recommended Mentoria course"),
+      description: "Complete this Mentoria course to build a stronger foundation for your direction.",
       type: "course",
       refId: c.id,
     });
@@ -165,8 +185,8 @@ function fallbackRoadmap(profile: RoadmapProfile, opportunities: Opportunity[], 
   topOpps.forEach((o, i) => {
     steps.push({
       grade: grades[Math.min(i + 1, 3)] ?? "11",
-      title: o.title,
-      description: "Подай заявку — это усилит твой профиль для поступления.",
+      title: getEnglishFallbackTitle(o.title, `${o.category} opportunity in ${o.direction}`),
+      description: "Apply to this opportunity to strengthen your academic profile and experience.",
       type: "opportunity",
       refId: o.id,
     });
@@ -174,14 +194,14 @@ function fallbackRoadmap(profile: RoadmapProfile, opportunities: Opportunity[], 
 
   steps.push({
     grade: "12",
-    title: "Собери портфолио и список достижений",
-    description: "К 12 классу оформи всё, что прошёл, в сильную заявку в университет.",
+    title: "Build your portfolio and achievement list",
+    description: "By grade 12, organize your completed courses, projects, and awards into a strong application package.",
     type: "action",
     refId: null,
   });
 
   return {
-    summary: "Твой персональный путь развития с Mentoria — шаг за шагом до 12 класса.",
+    summary: "Your Mentoria roadmap turns courses, opportunities, and preparation into a clear path toward grade 12.",
     steps,
   };
 }

@@ -40,12 +40,19 @@ client = OpenAI(api_key=OPENAI_KEY)
 
 def embedding_text(opp: dict) -> str:
     """The text we turn into a vector — what the search matches against."""
+    english = (opp.get("translations") or {}).get("en") or {}
     parts = [
+        english.get("title", ""),
+        english.get("description", ""),
+        english.get("requirements", ""),
         opp.get("title", ""),
         opp.get("category", ""),
         opp.get("direction", ""),
         " ".join(opp.get("tags", [])),
         opp.get("description", ""),
+        opp.get("sourceTitle", ""),
+        opp.get("sourceDescription", ""),
+        opp.get("sourceRequirements", ""),
     ]
     return "\n".join(p for p in parts if p).strip()
 
@@ -77,7 +84,7 @@ def main() -> None:
 
 
 def search_demo(query: str, top_k: int = 5) -> None:
-    """Quick local test: python -c 'import build_embeddings as b; b.search_demo(\"физика олимпиады\")'"""
+    """Quick local test: python -c 'import build_embeddings as b; b.search_demo("physics olympiad")'"""
     import math
 
     data = json.loads(OUT_FILE.read_text(encoding="utf-8"))

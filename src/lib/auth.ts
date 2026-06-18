@@ -55,10 +55,13 @@ function waitForProfileTrigger() {
 }
 
 export function mapProfileRow(row: ProfileRow): StudentProfile {
+  const email = row.email.trim();
+  const fallbackName = email.split("@")[0] || "Student";
+
   return {
     id: row.id,
-    name: row.name,
-    email: row.email,
+    name: row.name.trim() || fallbackName,
+    email,
     grade: row.grade,
     interests: normalizeStringArray(row.interests),
     academicDirection: row.academic_direction,
@@ -109,22 +112,17 @@ export function onAuthStateChange(listener: (session: Session | null) => void) {
   return () => subscription.unsubscribe();
 }
 
-export async function signUpWithProfile(form: RegistrationForm, onboardingProfile: OnboardingProfile) {
+export async function signUpWithCredentials(form: RegistrationForm) {
   if (!supabase) {
     throw new Error("Supabase is not configured.");
   }
 
-  const profilePayload = buildProfilePayload(form, onboardingProfile);
   const { data, error } = await supabase.auth.signUp({
     email: form.email.trim(),
     password: form.password,
     options: {
       data: {
-        name: profilePayload.name,
-        grade: profilePayload.grade,
-        interests: profilePayload.interests,
-        academic_direction: profilePayload.academic_direction,
-        opportunity_preferences: profilePayload.opportunity_preferences
+        name: form.name.trim()
       }
     }
   });
@@ -206,7 +204,11 @@ export async function updateOwnProfile(userId: string, form: RegistrationForm, o
   return mapProfileRow(data);
 }
 
-export async function upsertOwnProfile(userId: string, form: RegistrationForm, onboardingProfile: OnboardingProfile) {
+export async function saveCompletedOnboardingProfile(
+  userId: string,
+  form: RegistrationForm,
+  onboardingProfile: OnboardingProfile
+) {
   if (!supabase) {
     throw new Error("Supabase is not configured.");
   }
