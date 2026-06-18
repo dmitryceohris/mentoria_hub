@@ -13,6 +13,7 @@ import type {
   RegistrationForm,
   StudentProfile
 } from "./sections/AuthFlowSections";
+import { MentorLMSection } from "./sections/MentorLMSection";
 import { RoadmapWorkspace } from "./sections/RoadmapWorkspace";
 import {
   CourseDetailWorkspace,
@@ -43,7 +44,7 @@ import {
 } from "./lib/auth";
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
-const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet|roadmap)(?:\/|$)/;
+const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-pet|mentor-lm|roadmap)(?:\/|$)/;
 
 type AuthStatus = "bootstrapping" | "signed-out" | "profile-loading" | "profile-ready" | "profile-missing" | "error";
 
@@ -874,6 +875,12 @@ export function App() {
           <Route
             path="/mentor-pet"
             element={protectedRoute(<MentorPetWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
+          />
+          <Route
+            path="/mentor-lm"
+            element={protectedRoute(
+              <MentorLMSection profile={profile as StudentProfile} opportunities={telegramOpportunities} onLogout={logout} />
+            )}
           />
           <Route
             path="/roadmap"

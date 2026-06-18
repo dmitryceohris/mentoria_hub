@@ -9,6 +9,7 @@
 @import "./styles/auth.css";                /* onboarding + auth flow */
 @import "./styles/motion.css";              /* shared motion/keyframes */
 @import "./styles/responsive.css";          /* responsive breakpoints */
+@import "./styles/mentorlm.css";            /* MentorLM chat */
 @import "./styles/dashboard.css";           /* deadline calendar + dashboard tweaks */
 @import "./styles/workspace.css";           /* routed centered workspaces */
 @import "./styles/roadmap.css";             /* roadmap path + direction picker */
