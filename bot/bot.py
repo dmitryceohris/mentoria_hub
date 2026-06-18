@@ -115,7 +115,11 @@ async def main() -> None:
     scheduler.start()
 
     # Run once on startup so reminders aren't delayed until the first interval.
-    await reminders.run_reminders(bot)
+    # Non-fatal: a DB/data hiccup here must not stop the bot from starting.
+    try:
+        await reminders.run_reminders(bot)
+    except Exception as e:
+        print(f"Startup reminder run skipped: {e}")
 
     print("MentoriaHub bot is running (polling). Press Ctrl+C to stop.")
     await dp.start_polling(bot)
