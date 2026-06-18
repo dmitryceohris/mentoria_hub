@@ -598,22 +598,28 @@ export function OpportunitiesWorkspace({ profile, extraOpportunities = [], onLog
           kicker="Opportunity search"
           title="Matches from your profile"
         />
-        <div className="workspace-opportunity-list centered-opportunity-list">
+        <div className="opportunity-grid">
           {recommendedOpportunities.length > 0 ? (
             recommendedOpportunities.map((opportunity) => (
-              <article className="workspace-opportunity-row centered-glass-panel" key={opportunity.id}>
-                <div>
-                  <span className="deadline-chip">{formatOpportunityDeadline(opportunity)}</span>
-                  <h2>{opportunity.title}</h2>
-                  <p>{opportunity.description}</p>
-                  <div className="opportunity-tags">
-                    <span>{opportunity.direction}</span>
-                    <span>{opportunity.format}</span>
-                    <span>Grades {opportunity.grades.join(", ")}</span>
+              <a
+                className="opp-glow-card"
+                data-direction={(opportunity.direction || "").toLowerCase()}
+                href={opportunity.applyUrl}
+                target="_blank"
+                rel="noreferrer"
+                key={opportunity.id}
+              >
+                <span className="opp-glow-bg" aria-hidden="true" />
+                <span className="opp-glow-scrim" aria-hidden="true" />
+                <span className="opp-glow-tag">{opportunity.direction} · Grades {opportunity.grades.join(", ")}</span>
+                <div className="opp-glow-content">
+                  <div className="opp-glow-text">
+                    <h2>{opportunity.title}</h2>
+                    <p>{opportunity.category} · {opportunity.format}</p>
                   </div>
+                  <span className="opp-glow-badge">{formatOpportunityDeadline(opportunity)}</span>
                 </div>
-                <span className="match-badge">Match</span>
-              </article>
+              </a>
             ))
           ) : (
             <WorkspaceEmptyState title="No matches yet" message="Try broadening the profile filters or refresh the opportunity feed." />
