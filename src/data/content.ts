@@ -59,12 +59,30 @@ export type LessonVideo = {
   adminEditable: true;
 };
 
+export type LessonAssignmentRubricItem = {
+  id: string;
+  label: string;
+  description: string;
+  maxScore: number;
+  adminEditable: true;
+};
+
+export type LessonAssignmentManagementConfig = {
+  reviewMode: "manual" | "mentor-assisted";
+  visibleToMentors: boolean;
+  adminEditable: true;
+};
+
 export type LessonAssignment = {
+  id?: string;
+  title?: string;
   prompt: string;
   acceptsFiles: boolean;
   acceptedFileTypes: string[];
   maxFileSizeMb: number;
   submitLabel: string;
+  rubric?: LessonAssignmentRubricItem[];
+  managementConfig?: LessonAssignmentManagementConfig;
   adminEditable: true;
 };
 
@@ -123,7 +141,7 @@ export type Lesson = {
 };
 
 type LessonSeed = Omit<Lesson, "assignment" | "materials" | "selfCheck" | "video" | "mentorLMNoteConfig"> & {
-  assignment: string | LessonAssignment;
+  assignment: string | (Partial<LessonAssignment> & { prompt: string });
   materials: string[] | LessonMaterial[];
   quiz?: string;
   selfCheck?: LessonSelfCheck;
@@ -216,6 +234,12 @@ const defaultMentorLMNoteConfig: LessonMentorLMNoteConfig = {
   adminEditable: true
 };
 
+const defaultAssignmentManagementConfig: LessonAssignmentManagementConfig = {
+  reviewMode: "manual",
+  visibleToMentors: true,
+  adminEditable: true
+};
+
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -278,20 +302,66 @@ function inferVideoSourceType(url?: string): LessonVideoSourceType {
   return "external";
 }
 
-function normalizeAssignment(assignment: string | LessonAssignment): LessonAssignment {
+function buildDefaultAssignmentRubric(lessonId: string): LessonAssignmentRubricItem[] {
+  return [
+    {
+      id: `${lessonId}-rubric-concept`,
+      label: "Concept accuracy",
+      description: "The answer uses the lesson concept correctly.",
+      maxScore: 4,
+      adminEditable: true
+    },
+    {
+      id: `${lessonId}-rubric-evidence`,
+      label: "Evidence and reasoning",
+      description: "The answer explains the reasoning with enough detail for review.",
+      maxScore: 4,
+      adminEditable: true
+    },
+    {
+      id: `${lessonId}-rubric-clarity`,
+      label: "Clarity",
+      description: "The response is organized, readable, and ready for mentor feedback.",
+      maxScore: 2,
+      adminEditable: true
+    }
+  ];
+}
+
+function normalizeAssignment(assignment: string | (Partial<LessonAssignment> & { prompt: string }), lessonId: string): LessonAssignment {
   if (typeof assignment !== "string") {
     return {
       ...assignment,
+      id: assignment.id ?? `${lessonId}-assignment`,
+      title: assignment.title ?? "Lesson assignment",
+      prompt: assignment.prompt,
+      acceptsFiles: assignment.acceptsFiles ?? true,
+      acceptedFileTypes: assignment.acceptedFileTypes ?? defaultAcceptedFileTypes,
+      maxFileSizeMb: assignment.maxFileSizeMb ?? 10,
+      submitLabel: assignment.submitLabel ?? "Submit assignment",
+      rubric: (assignment.rubric ?? buildDefaultAssignmentRubric(lessonId)).map((rubricItem) => ({
+        ...rubricItem,
+        adminEditable: true
+      })),
+      managementConfig: {
+        ...defaultAssignmentManagementConfig,
+        ...assignment.managementConfig,
+        adminEditable: true
+      },
       adminEditable: true
     };
   }
 
   return {
+    id: `${lessonId}-assignment`,
+    title: "Lesson assignment",
     prompt: assignment,
     acceptsFiles: true,
     acceptedFileTypes: defaultAcceptedFileTypes,
     maxFileSizeMb: 10,
     submitLabel: "Submit assignment",
+    rubric: buildDefaultAssignmentRubric(lessonId),
+    managementConfig: defaultAssignmentManagementConfig,
     adminEditable: true
   };
 }
@@ -366,7 +436,7 @@ function normalizeLesson(lesson: LessonSeed): Lesson {
       sourceType: lesson.video?.sourceType ?? inferVideoSourceType(videoUrl),
       adminEditable: true
     },
-    assignment: normalizeAssignment(lesson.assignment),
+    assignment: normalizeAssignment(lesson.assignment, lesson.id),
     materials: lesson.materials.map(normalizeMaterial),
     selfCheck: lesson.selfCheck ?? buildSelfCheck(lesson),
     mentorLMNoteConfig: {
@@ -397,7 +467,9 @@ export function getLessonSearchText(lesson: Lesson) {
   return [
     lesson.title,
     lesson.description ?? "",
+    lesson.assignment.title ?? "",
     lesson.assignment.prompt,
+    lesson.assignment.rubric?.map((rubricItem) => `${rubricItem.label} ${rubricItem.description}`).join(" ") ?? "",
     lesson.materials.map((material) => material.title).join(" "),
     lesson.selfCheck.questions.map((question) => question.prompt).join(" ")
   ].join(" ");

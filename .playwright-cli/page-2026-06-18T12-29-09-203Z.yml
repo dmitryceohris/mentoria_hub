@@ -1,0 +1,207 @@
+- main [ref=e3]:
+  - region "Mentoria Hub" [ref=e4]:
+    - img [ref=e5]
+    - generic [ref=e11]:
+      - button "Switch to dark theme" [ref=e12] [cursor=pointer]:
+        - img [ref=e13]
+      - button "Log in" [ref=e15] [cursor=pointer]
+      - navigation "Mentoria Hub sections" [ref=e16]:
+        - link "Mentoria Hub home" [ref=e17] [cursor=pointer]:
+          - /url: "#hero-title"
+          - text: Mentoria Hub
+        - generic [ref=e18]:
+          - link "Matches" [ref=e19] [cursor=pointer]:
+            - /url: "#match-console"
+          - link "Courses" [ref=e20] [cursor=pointer]:
+            - /url: "#courses"
+          - link "MentorLM" [ref=e21] [cursor=pointer]:
+            - /url: "#mentorlm"
+          - link "FAQ" [ref=e22] [cursor=pointer]:
+            - /url: "#faq"
+      - generic [ref=e24]:
+        - heading "Mentoria Hub" [level=1] [ref=e25]
+        - paragraph [ref=e26]: With you on your way to your dream
+        - paragraph [ref=e27]: .. all in one place
+        - paragraph [ref=e28]:
+          - generic [ref=e29]: Opportunity Search
+          - text: Find programs that fit your profile.
+        - button "Start your journey" [ref=e31] [cursor=pointer]:
+          - generic [ref=e32]: Start your journey
+          - generic [ref=e33]: ">"
+  - region "Find programs that fit your profile" [ref=e34]:
+    - generic [ref=e35]:
+      - heading "Find programs that fit your profile" [level=2] [ref=e36]
+      - paragraph [ref=e37]: Search competitions, scholarships, internships, summer schools, and courses from one focused Mentoria workspace.
+    - generic "Opportunity Search" [ref=e38]:
+      - generic [ref=e39]:
+        - heading "Opportunity Search" [level=2] [ref=e42]
+        - generic "Search query" [ref=e43]:
+          - img [ref=e44]
+          - generic [ref=e46]: physics competitions
+        - generic "Selected opportunity filters" [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: Direction
+            - generic [ref=e50]: Physics
+          - generic [ref=e51]:
+            - generic [ref=e52]: Format
+            - generic [ref=e53]: Any
+          - generic [ref=e54]:
+            - generic [ref=e55]: Location
+            - generic [ref=e56]: Global
+          - generic [ref=e57]:
+            - generic [ref=e58]: Grade
+            - generic [ref=e59]: Grade 10
+          - generic [ref=e60]:
+            - generic [ref=e61]: Type
+            - generic [ref=e62]: Competition
+        - generic "Opportunity showcase" [ref=e63]:
+          - paragraph [ref=e64]: 4 matched opportunities
+          - article [ref=e65]:
+            - generic [ref=e66]:
+              - heading "Almaty Physics Battles 2026" [level=3] [ref=e67]
+              - paragraph [ref=e68]: An international team-based physics competition for secondary school students, held in Almaty with online selection stages.
+            - button "Match Almaty Physics Battles 2026" [ref=e69] [cursor=pointer]: Match
+          - generic [ref=e70]:
+            - article [ref=e71]:
+              - generic [ref=e72]:
+                - heading "International Young Physicists' Tournament 2026" [level=3] [ref=e73]
+                - paragraph [ref=e74]: A team-based physics tournament with research, experiments, and scientific discussion.
+              - button "Match International Young Physicists' Tournament 2026" [ref=e75] [cursor=pointer]: Match
+            - complementary "More information about International Young Physicists' Tournament 2026" [ref=e76]:
+              - strong [ref=e77]: International Young Physicists' Tournament
+              - paragraph [ref=e78]: Teams prepare original research and discuss their solutions through Physics Fights. The 2026 tournament is hosted in Zurich.
+              - link "https://www.iypt.org/" [ref=e79] [cursor=pointer]:
+                - /url: https://www.iypt.org/
+          - article [ref=e80]:
+            - generic [ref=e81]:
+              - heading "Beamline for Schools 2026" [level=3] [ref=e82]
+              - paragraph [ref=e83]: A CERN, DESY, and ELSA physics proposal competition where high-school teams design an accelerator experiment.
+            - button "Match Beamline for Schools 2026" [ref=e84] [cursor=pointer]: Match
+          - article [ref=e85]:
+            - generic [ref=e86]:
+              - heading "Online Physics Olympiad Invitational 2026" [level=3] [ref=e87]
+              - paragraph [ref=e88]: An online contest pathway with an invitational round and international participation from physics students.
+            - button "Match Online Physics Olympiad Invitational 2026" [ref=e89] [cursor=pointer]: Match
+  - region "Keep every next step visible" [ref=e90]:
+    - generic [ref=e91]:
+      - heading "Keep every next step visible" [level=2] [ref=e92]
+      - paragraph [ref=e93]: Review matched programs, watch valid deadlines, and keep course preparation attached to the same student workspace.
+    - generic "Recommended matches dashboard preview" [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e97]:
+          - heading "Student dashboard" [level=2] [ref=e98]
+          - paragraph [ref=e99]: A quiet workspace for recommended programs, prep tasks, and mentor handoff.
+        - generic [ref=e100]:
+          - article [ref=e101]:
+            - strong [ref=e102]: International Young Physicists' Tournament 2026
+            - generic [ref=e103]: Research outline and national selection prep
+          - article [ref=e104]:
+            - strong [ref=e105]: Beamline for Schools 2026
+            - generic [ref=e106]: Draft experiment proposal with mentor review
+          - article [ref=e107]:
+            - strong [ref=e108]: Course prep
+            - generic [ref=e109]: Physics fundamentals, academic English, and writing support stay linked to recommended matches.
+        - generic [ref=e110]: Recommended matches stay connected to deadlines, prep notes, and mentor review.
+  - region "Free courses that support the journey" [ref=e111]:
+    - generic [ref=e112]:
+      - heading "Free courses that support the journey" [level=2] [ref=e113]
+      - paragraph [ref=e114]: Mentoria courses sit beside opportunity search, so students can prepare for language tests, science tracks, and applications in one place.
+    - generic "Mentoria courses preview" [ref=e115]:
+      - generic [ref=e116]:
+        - paragraph [ref=e117]: Try out one of our best courses!
+        - generic [ref=e118]:
+          - article [ref=e119]:
+            - heading "English for Academic Success" [level=3] [ref=e121]
+            - paragraph [ref=e122]: Academic vocabulary, reading, writing, and communication skills for school, programs, and applications.
+          - article [ref=e123]:
+            - heading "Physics Basics" [level=3] [ref=e125]
+            - paragraph [ref=e126]: Kinematics, dynamics, statics, and mechanics modeling for school science and competitions.
+          - article [ref=e127]:
+            - heading "Biology Basics" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Cells, genetics, evolution, and ecology in a 14-lesson school biology curriculum.
+  - region "MentorLM keeps lesson context close" [ref=e131]:
+    - generic [ref=e132]:
+      - heading "MentorLM keeps lesson context close" [level=2] [ref=e133]
+      - paragraph [ref=e134]: When a student gets stuck, MentorLM turns the question into a small note that stays attached to the exact course lesson.
+    - generic "MentorLM notes and Telegram reminders preview" [ref=e135]:
+      - generic [ref=e136]:
+        - generic [ref=e138]:
+          - heading "Course support" [level=2] [ref=e139]
+          - paragraph [ref=e140]: MentorLM appears inside the lesson workflow, beside the video and lesson list.
+        - generic [ref=e141]:
+          - article "Newton's 2nd Law" [ref=e142]:
+            - generic [ref=e143]:
+              - generic [ref=e144]: Physics Basics
+              - generic [ref=e145]: Lesson 2 of 4
+            - generic [ref=e146]:
+              - text: Now playing
+              - heading "Newton's 2nd Law" [level=3] [ref=e147]
+              - paragraph [ref=e148]: How does it work?
+            - generic [ref=e149]:
+              - generic [ref=e150]: 08:14
+              - generic [ref=e153]: 24:00
+          - generic [ref=e154]:
+            - list "Physics Basics lesson list" [ref=e155]:
+              - listitem [ref=e156]:
+                - generic [ref=e157]: "01"
+                - generic [ref=e158]:
+                  - generic [ref=e159]: Forces and useful models
+                  - generic [ref=e160]: 22 min
+                - generic [ref=e161]: Done
+              - listitem [ref=e162]:
+                - generic [ref=e163]: "02"
+                - generic [ref=e164]:
+                  - generic [ref=e165]: Newton's 2nd Law
+                  - generic [ref=e166]: 24 min · unclear concept
+                  - generic [ref=e167]:
+                    - generic [ref=e168]: MentorLM note
+                    - paragraph [ref=e169]: Net force changes motion. More force increases acceleration; more mass needs more force.
+                - generic [ref=e170]: Note saved
+              - listitem [ref=e171]:
+                - generic [ref=e172]: "03"
+                - generic [ref=e173]:
+                  - generic [ref=e174]: Energy methods
+                  - generic [ref=e175]: 25 min
+              - listitem [ref=e176]:
+                - generic [ref=e177]: "04"
+                - generic [ref=e178]:
+                  - generic [ref=e179]: From problem to research question
+                  - generic [ref=e180]: 20 min
+            - complementary "MentorLM note popup for Lesson 2" [ref=e181]:
+              - generic [ref=e183]:
+                - img "MentorLM study assistant mark" [ref=e185]:
+                  - img [ref=e186]
+                  - generic [ref=e188]: LM
+                - generic [ref=e189]:
+                  - strong [ref=e190]: MentorLM · Course note mode
+                  - generic [ref=e191]: "Next step: Finish Lesson 2"
+                - generic [ref=e192]: Saved
+              - generic [ref=e193]: I didn't understand Lesson 2. Please leave a note for this lesson.
+              - generic [ref=e194]: Added under Lesson 2 as a small course note.
+        - generic [ref=e195]:
+          - article [ref=e196]:
+            - img [ref=e197]
+            - strong [ref=e199]: Beginner IELTS
+            - paragraph [ref=e200]: "Add a personal note: practice listening before school on Tuesday and Thursday."
+          - article [ref=e201]:
+            - img [ref=e202]
+            - strong [ref=e204]: Physics prep
+            - paragraph [ref=e205]: "Telegram reminder: review experiment notes two days before the mentor session."
+          - article [ref=e206]:
+            - img [ref=e207]
+            - strong [ref=e209]: Human mentor handoff
+            - paragraph [ref=e210]: When an application needs judgment, MentorLM keeps the context ready for a mentor.
+  - region "Quick answers" [ref=e211]:
+    - generic [ref=e212]:
+      - heading "Quick answers" [level=2] [ref=e213]
+      - paragraph [ref=e214]: A few basics for students, schools, and Mentoria partners.
+    - generic "Frequently asked questions" [ref=e215]:
+      - group [ref=e216]:
+        - generic "Who is Mentoria Hub for?" [ref=e217] [cursor=pointer]
+        - paragraph [ref=e218]: Students in grades 8-11 who want to find opportunities and prepare through Mentoria courses.
+      - group [ref=e219]:
+        - generic "What opportunities can students find?" [ref=e220] [cursor=pointer]
+      - group [ref=e221]:
+        - generic "Are Mentoria courses included?" [ref=e222] [cursor=pointer]
+      - group [ref=e223]:
+        - generic "What happens after a match appears?" [ref=e224] [cursor=pointer]

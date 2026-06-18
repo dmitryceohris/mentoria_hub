@@ -13,6 +13,7 @@ import type {
   RegistrationForm,
   StudentProfile
 } from "./sections/AuthFlowSections";
+import { AdminWorkspace } from "./sections/AdminWorkspace";
 import { MentorLMSection } from "./sections/MentorLMSection";
 import { RoadmapWorkspace } from "./sections/RoadmapWorkspace";
 import {
@@ -43,7 +44,7 @@ import {
 } from "./lib/auth";
 
 const onboardingDraftKey = "mentoria.onboardingDraft";
-const protectedPathPattern = /^\/(?:dashboard|courses|opportunities|mentor-lm|roadmap)(?:\/|$)/;
+const protectedPathPattern = /^\/(?:admin|dashboard|courses|opportunities|mentor-lm|roadmap)(?:\/|$)/;
 
 type AuthStatus =
   | "bootstrapping"
@@ -851,6 +852,10 @@ export function App() {
             element={protectedRoute(
               <RoadmapWorkspace profile={profile as StudentProfile} extraOpportunities={activeOpportunities} onLogout={logout} />
             )}
+          />
+          <Route
+            path="/admin"
+            element={protectedRoute(<AdminWorkspace profile={profile as StudentProfile} onLogout={logout} />)}
           />
           <Route path="*" element={<Navigate replace to={profile ? "/dashboard" : "/"} />} />
         </Routes>
