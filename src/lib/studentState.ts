@@ -7,6 +7,7 @@ export type StudentOpportunitySource = StudentOpportunity["source"];
 export type StudentOpportunityStatus = StudentOpportunity["status"];
 export type StudentWorkspaceState = Database["public"]["Tables"]["student_workspace_state"]["Row"];
 export type MentorLMLessonNote = Database["public"]["Tables"]["mentor_lm_lesson_notes"]["Row"];
+export type LessonAssignmentSubmission = Database["public"]["Tables"]["lesson_assignment_submissions"]["Row"];
 
 export const defaultStudentWorkspaceState = (studentId: string): StudentWorkspaceState => ({
   student_id: studentId,
@@ -74,6 +75,21 @@ export async function fetchStudentOpportunities(studentId: string) {
     .select("id, student_id, opportunity_id, status, source, saved_at, created_at, updated_at")
     .eq("student_id", studentId)
     .order("saved_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function fetchStudentAssignmentSubmissions(studentId: string) {
+  const client = ensureSupabase();
+  const { data, error } = await client
+    .from("lesson_assignment_submissions")
+    .select("id, student_id, course_id, lesson_id, answer, attachment_path, attachment_name, review_status, score, feedback_text, reviewed_by, reviewed_at, submitted_at, created_at, updated_at")
+    .eq("student_id", studentId)
+    .order("submitted_at", { ascending: false });
 
   if (error) {
     throw error;

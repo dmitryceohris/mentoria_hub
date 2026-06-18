@@ -522,6 +522,99 @@ export type Database = {
         };
         Relationships: [];
       };
+      telegram_course_announcements: {
+        Row: {
+          id: string;
+          source_id: string;
+          title: string;
+          description: string;
+          course_title: string | null;
+          deadline: string | null;
+          starts_at: string | null;
+          apply_url: string;
+          tags: Json;
+          payload: Json;
+          status: "draft" | "imported" | "archived";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          source_id: string;
+          title: string;
+          description?: string;
+          course_title?: string | null;
+          deadline?: string | null;
+          starts_at?: string | null;
+          apply_url?: string;
+          tags?: Json;
+          payload?: Json;
+          status?: "draft" | "imported" | "archived";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          source_id?: string;
+          title?: string;
+          description?: string;
+          course_title?: string | null;
+          deadline?: string | null;
+          starts_at?: string | null;
+          apply_url?: string;
+          tags?: Json;
+          payload?: Json;
+          status?: "draft" | "imported" | "archived";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      telegram_ingest_events: {
+        Row: {
+          id: number;
+          source_id: string;
+          payload_type: "deadline" | "opportunity" | "course";
+          payload: Json;
+          status: "received" | "processed" | "failed";
+          target_table: string | null;
+          target_id: string | null;
+          error_message: string | null;
+          received_at: string;
+          processed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          source_id: string;
+          payload_type: "deadline" | "opportunity" | "course";
+          payload?: Json;
+          status?: "received" | "processed" | "failed";
+          target_table?: string | null;
+          target_id?: string | null;
+          error_message?: string | null;
+          received_at?: string;
+          processed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          source_id?: string;
+          payload_type?: "deadline" | "opportunity" | "course";
+          payload?: Json;
+          status?: "received" | "processed" | "failed";
+          target_table?: string | null;
+          target_id?: string | null;
+          error_message?: string | null;
+          received_at?: string;
+          processed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       student_course_enrollments: {
         Row: {
           id: number;

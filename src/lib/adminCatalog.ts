@@ -41,6 +41,15 @@ function safeId(value: string) {
     .replace(/^-+|-+$/g, "") || "item";
 }
 
+function createLocalId(prefix: string) {
+  const randomId =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
+
+  return `${prefix}-${Date.now().toString(36)}-${randomId}`;
+}
+
 function getAssignmentRubric(lesson: Lesson) {
   return lesson.assignment.rubric ?? [
     {
@@ -249,19 +258,21 @@ export async function seedCatalogFromStaticContent() {
   );
   const opportunityRows = opportunities.map(toOpportunityRow);
 
-  const results = await Promise.all([
-    client.from("catalog_courses").upsert(courseRows, { onConflict: "id" }),
-    client.from("catalog_lessons").upsert(lessonRows, { onConflict: "id" }),
-    client.from("catalog_materials").upsert(materialRows, { onConflict: "id" }),
-    client.from("catalog_quiz_questions").upsert(questionRows, { onConflict: "id" }),
-    client.from("catalog_quiz_choices").upsert(choiceRows, { onConflict: "id" }),
-    client.from("catalog_opportunities").upsert(opportunityRows, { onConflict: "id" })
-  ]);
+  const orderedSeedSteps = [
+    () => client.from("catalog_courses").upsert(courseRows, { onConflict: "id" }),
+    () => client.from("catalog_lessons").upsert(lessonRows, { onConflict: "id" }),
+    () => client.from("catalog_materials").upsert(materialRows, { onConflict: "id" }),
+    () => client.from("catalog_quiz_questions").upsert(questionRows, { onConflict: "id" }),
+    () => client.from("catalog_quiz_choices").upsert(choiceRows, { onConflict: "id" }),
+    () => client.from("catalog_opportunities").upsert(opportunityRows, { onConflict: "id" })
+  ];
 
-  const firstError = results.find((result) => result.error)?.error;
+  for (const seedStep of orderedSeedSteps) {
+    const { error } = await seedStep();
 
-  if (firstError) {
-    throw firstError;
+    if (error) {
+      throw error;
+    }
   }
 
   return fetchAdminCatalog();
@@ -276,6 +287,94 @@ export async function updateCatalogCourse(courseId: string, patch: Database["pub
   }
 
   return data;
+}
+
+export async function createCatalogCourse(input: { sortOrder: number }) {
+  const client = ensureSupabase();
+  const courseId = createLocalId("course");
+  const lessonId = `${courseId}-lesson-1`;
+  const courseRow: Database["public"]["Tables"]["catalog_courses"]["Insert"] = {
+    id: courseId,
+    title: "Untitled course",
+    description: "",
+    track: "",
+    difficulty: "Beginner",
+    cover_url: null,
+    tags: asJson([]),
+    enrollment_settings: asJson({
+      adminEditable: true,
+      capacity: null,
+      isOpen: false,
+      requiresApproval: false
+    }),
+    status: "draft",
+    sort_order: input.sortOrder
+  };
+  const lessonRow: Database["public"]["Tables"]["catalog_lessons"]["Insert"] = {
+    id: lessonId,
+    course_id: courseId,
+    title: "First lesson",
+    description: "",
+    duration: "",
+    video_label: "Video placeholder",
+    video_url: null,
+    video_source_type: "external",
+    assignment_title: "Lesson assignment",
+    assignment_prompt: "",
+    assignment_accepts_files: true,
+    assignment_accepted_file_types: asJson([]),
+    assignment_max_file_size_mb: 10,
+    assignment_submit_label: "Submit assignment",
+    assignment_rubric: asJson([
+      {
+        id: `${lessonId}-rubric-concept`,
+        label: "Concept accuracy",
+        description: "The answer uses the lesson concept correctly.",
+        maxScore: 4,
+        adminEditable: true
+      },
+      {
+        id: `${lessonId}-rubric-evidence`,
+        label: "Evidence and reasoning",
+        description: "The answer explains the reasoning with enough detail for review.",
+        maxScore: 4,
+        adminEditable: true
+      },
+      {
+        id: `${lessonId}-rubric-clarity`,
+        label: "Clarity",
+        description: "The response is organized, readable, and ready for mentor feedback.",
+        maxScore: 2,
+        adminEditable: true
+      }
+    ]),
+    assignment_management_config: asJson({
+      reviewMode: "manual",
+      visibleToMentors: true,
+      adminEditable: true
+    }),
+    mentor_lm_note_config: asJson({
+      adminEditable: true,
+      allowStudentSave: true,
+      enabled: true
+    }),
+    status: "draft",
+    sort_order: 0
+  };
+
+  const { data: course, error: courseError } = await client.from("catalog_courses").insert(courseRow).select("*").single();
+
+  if (courseError) {
+    throw courseError;
+  }
+
+  const { data: lesson, error: lessonError } = await client.from("catalog_lessons").insert(lessonRow).select("*").single();
+
+  if (lessonError) {
+    throw lessonError;
+  }
+
+  return { course, lesson };
 }
 
 export async function updateCatalogLesson(lessonId: string, patch: Database["public"]["Tables"]["catalog_lessons"]["Update"]) {
