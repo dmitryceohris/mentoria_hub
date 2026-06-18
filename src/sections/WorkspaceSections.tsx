@@ -5,7 +5,6 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import {
   ArrowRight,
   BookOpen,
-  ChatCircleDots,
   Compass,
   MagnifyingGlass,
   MapTrifold,
@@ -85,8 +84,7 @@ export function WorkspaceRail({ onLogout }: { onLogout: () => void }) {
     { to: "/roadmap", label: "Roadmap", icon: MapTrifold },
     { to: "/courses", label: "My courses", icon: BookOpen },
     { to: "/opportunities", label: "Opportunity search", icon: Compass },
-    { to: "/mentor-pet", label: "MentorPet", icon: PawPrint },
-    { to: "/mentor-lm", label: "MentorLM", icon: ChatCircleDots }
+    { to: "/mentor-pet", label: "MentorPet", icon: PawPrint }
   ];
 
   return (
